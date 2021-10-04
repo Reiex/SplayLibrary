@@ -44,5 +44,8 @@
     <ClCompile Include="..\..\src\SplayLibrary\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\SplayLibrary\Glsl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

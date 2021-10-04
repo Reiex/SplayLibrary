@@ -29,6 +29,7 @@
     <ClInclude Include="..\..\include\SplayLibrary\types.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\SplayLibrary\Glsl.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Shader.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -10,30 +10,40 @@
 
 namespace spl
 {
-    template<typename ElementType, uint8_t N, typename AliasType> class _vec;
-    template<typename ElementType> struct _vec2;
-    template<typename ElementType> struct _vec3;
-    template<typename ElementType> struct _vec4;
-    typedef _vec2<float> vec2;
-    typedef _vec3<float> vec3;
-    typedef _vec4<float> vec4;
-    typedef _vec2<int32_t> ivec2;
-    typedef _vec3<int32_t> ivec3;
-    typedef _vec4<int32_t> ivec4;
-    typedef _vec2<uint32_t> uvec2;
-    typedef _vec3<uint32_t> uvec3;
-    typedef _vec4<uint32_t> uvec4;
-    typedef _vec2<uint32_t> bvec2;
-    typedef _vec3<uint32_t> bvec3;
-    typedef _vec4<uint32_t> bvec4;
-    template<typename ElementType, uint8_t M, uint8_t N, typename ColumnType, typename RowType> struct _mat;
-    typedef _mat<float, 2, 2, _vec2<float>, _vec2<float>> mat2;
-    typedef _mat<float, 3, 2, _vec3<float>, _vec2<float>> mat2x3;
-    typedef _mat<float, 4, 2, _vec4<float>, _vec2<float>> mat2x4;
-    typedef _mat<float, 2, 3, _vec2<float>, _vec3<float>> mat3x2;
-    typedef _mat<float, 3, 3, _vec3<float>, _vec3<float>> mat3;
-    typedef _mat<float, 4, 3, _vec4<float>, _vec3<float>> mat3x4;
-    typedef _mat<float, 2, 4, _vec2<float>, _vec4<float>> mat4x2;
-    typedef _mat<float, 3, 4, _vec3<float>, _vec4<float>> mat4x3;
-    typedef _mat<float, 4, 4, _vec4<float>, _vec4<float>> mat4;
+	template<typename EltType, uint8_t Col, uint8_t Row, typename ColType> struct _Mat;
+
+	struct vec2; struct vec3; struct vec4;
+	struct dvec2; struct dvec3; struct dvec4;
+	struct ivec2; struct ivec3; struct ivec4;
+	struct uvec2; struct uvec3; struct uvec4;
+	struct bvec2; struct bvec3; struct bvec4;
+
+	typedef _Mat<float, 2, 2, vec2> mat2x2;
+	typedef _Mat<float, 3, 2, vec3> mat3x2;
+	typedef _Mat<float, 4, 2, vec4> mat4x2;
+	typedef _Mat<float, 2, 3, vec2> mat2x3;
+	typedef _Mat<float, 3, 3, vec3> mat3x3;
+	typedef _Mat<float, 4, 3, vec4> mat4x3;
+	typedef _Mat<float, 2, 4, vec2> mat2x4;
+	typedef _Mat<float, 3, 4, vec3> mat3x4;
+	typedef _Mat<float, 4, 4, vec4> mat4x4;
+	typedef mat2x2 mat2;
+	typedef mat3x3 mat3;
+	typedef mat4x4 mat4;
+
+	typedef _Mat<double, 2, 2, dvec2> dmat2x2;
+	typedef _Mat<double, 3, 2, dvec3> dmat3x2;
+	typedef _Mat<double, 4, 2, dvec4> dmat4x2;
+	typedef _Mat<double, 2, 3, dvec2> dmat2x3;
+	typedef _Mat<double, 3, 3, dvec3> dmat3x3;
+	typedef _Mat<double, 4, 3, dvec4> dmat4x3;
+	typedef _Mat<double, 2, 4, dvec2> dmat2x4;
+	typedef _Mat<double, 3, 4, dvec3> dmat3x4;
+	typedef _Mat<double, 4, 4, dvec4> dmat4x4;
+	typedef dmat2x2 dmat2;
+	typedef dmat3x3 dmat3;
+	typedef dmat4x4 dmat4;
+
+	
+	class Shader;
 }
