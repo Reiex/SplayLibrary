@@ -25,13 +25,14 @@ namespace spl
 				return 0;
 			}
 
-			char* shaderSource = nullptr;
 			std::ifstream file(filename, std::ios::ate | std::ios::binary);
-
 			if (!file)
 			{
-				SPL_DEBUG("File not found: %s", filename);
+				SPL_DEBUG("Could not open file : '%s'", filename);
+				return 0;
 			}
+
+			char* shaderSource = nullptr;
 
 			uint64_t length = file.tellg();
 			file.seekg(0);
@@ -59,7 +60,7 @@ namespace spl
 					char* infoLog = new char[infoLogLength];
 					glGetShaderInfoLog(shader, infoLogLength, nullptr, infoLog);
 
-					SPL_DEBUG(infoLog);
+					SPL_DEBUG("Failed to compile shader :\n%s", infoLog);
 
 					delete[] infoLog;
 				}
@@ -116,7 +117,7 @@ namespace spl
 				char* infoLog = new char[infoLogLength];
 				glGetProgramInfoLog(_glShaderProgram, infoLogLength, nullptr, infoLog);
 
-				SPL_DEBUG(infoLog);
+				SPL_DEBUG("Failed to link shader :\n%s", infoLog);
 
 				delete[] infoLog;
 			}

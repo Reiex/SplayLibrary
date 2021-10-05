@@ -82,7 +82,7 @@ namespace spl
 	template<typename EltType, uint8_t RowA, uint8_t ColARowB, uint8_t ColB, typename ColAType, typename ColBType>
 	_Mat<EltType, ColB, RowA, ColBType> operator*(const _Mat<EltType, ColARowB, RowA, ColAType>& A, const _Mat<EltType, ColB, ColARowB, ColBType>& B)
 	{
-		_Mat<EltType, Col, Row, ColType> C(0);
+		_Mat<EltType, ColB, RowA, ColBType> C(0);
 
 		for (uint8_t i = 0; i < RowA; ++i)
 		{

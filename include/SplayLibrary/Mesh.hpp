@@ -16,8 +16,6 @@ namespace spl
 
 			void draw(/* projection, view, model */) const;
 
-			mat4 _projection;
-			mat4 _view;
 			mat4 _model;
 
 			uint32_t _vao;

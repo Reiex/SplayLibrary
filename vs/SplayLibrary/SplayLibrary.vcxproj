@@ -19,17 +19,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\SplayLibrary\Event.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Glsl.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\GlslT.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Mesh.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\MeshT.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Private.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\RenderWindow.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Shader.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\SplayLibrary.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\types.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\SplayLibrary\Glsl.cpp" />
+    <ClCompile Include="..\..\src\SplayLibrary\RenderWindow.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Shader.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

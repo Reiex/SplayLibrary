@@ -1,9 +1,12 @@
 #pragma once
 
+#include <atomic>
 #include <cassert>
 #include <cmath>
 #include <cstdint>
 #include <fstream>
+#include <memory>
+#include <queue>
 #include <string>
 #include <vector>
 
@@ -44,6 +47,10 @@ namespace spl
 	typedef dmat3x3 dmat3;
 	typedef dmat4x4 dmat4;
 
+	struct Event;
+	struct ResizeEvent;
 	
+	class RenderWindow;
+
 	class Shader;
 }

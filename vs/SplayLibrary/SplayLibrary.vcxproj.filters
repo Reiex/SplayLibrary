@@ -39,12 +39,21 @@
     <ClInclude Include="..\..\include\SplayLibrary\GlslT.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\RenderWindow.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Event.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\SplayLibrary\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\SplayLibrary\Glsl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\SplayLibrary\RenderWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

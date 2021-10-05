@@ -2,4 +2,7 @@
 
 #include <SplayLibrary/Glsl.hpp>
 
+#include <SplayLibrary/Event.hpp>
+#include <SplayLibrary/RenderWindow.hpp>
+
 #include <SplayLibrary/Shader.hpp>
