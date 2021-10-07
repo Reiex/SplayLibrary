@@ -5,17 +5,6 @@
 
 #include <iostream>
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
-}
-
-void processInput(GLFWwindow* window)
-{
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
-}
-
 int main()
 {
 	spl::RenderWindow window({ 800, 600 }, "SPL Example");
@@ -49,23 +38,23 @@ int main()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	spl::Shader shader("examples/shaders/main.vert", "examples/shaders/main.frag");
-	glUseProgram(shader.getHandle());
+	shader.use();
 
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-
+	uint32_t i = 0;
 	while (!window.shouldClose())
 	{
 		spl::Event* event = nullptr;
 		while (window.pollEvent(event)) {}
 
-		glClear(GL_COLOR_BUFFER_BIT);
+		window.clear({ 0.2f, 0.3f, 0.3f });
+
+		shader.setUniform("t", (float)(2.f * scp::pi * ++i / 144 ));
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		window.display();
-	}
 
-	glfwTerminate();
+	}
 
 	return 0;
 }

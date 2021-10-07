@@ -41,9 +41,10 @@ namespace spl
 
 	RenderWindow::RenderWindow() :
 		_window(nullptr),
-		_size(0, 0)
+		_size(0, 0),
+		_clearColor(0.f, 0.f, 0.f),
+		_events({ new Event() })
 	{
-		_events.push(new Event());
 	}
 
 	RenderWindow::RenderWindow(const uvec2& size, const std::string& title) : RenderWindow()
@@ -79,6 +80,8 @@ namespace spl
 		glViewport(0, 0, size.x, size.y);
 
 		glfwSetFramebufferSizeCallback(static_cast<GLFWwindow*>(_window), glfwFramebufferSizeCallback);
+
+		glClearColor(_clearColor.x, _clearColor.y, _clearColor.z, 1.0f);
 	}
 
 	bool RenderWindow::pollEvent(Event*& event)
@@ -99,6 +102,17 @@ namespace spl
 		}
 
 		return processEvent(event);
+	}
+
+	void RenderWindow::clear(const vec3& color)
+	{
+		if (color != _clearColor)
+		{
+			_clearColor = color;
+			glClearColor(_clearColor.x, _clearColor.y, _clearColor.z, 1.0f);
+		}
+
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
 	void RenderWindow::display()

@@ -9,22 +9,27 @@ SPLD_VEC_SPECIAL_FUNC(vecName, vecSize, eltType)
 
 
 #define SPLD_vec_EXTERNAL_OP(vecName, vecSize, eltType)																											\
-	SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																										\
-	SPLD_VEC##vecSize##_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)
+SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																											\
+SPLD_VEC##vecSize##_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)																								\
+SPLD_VEC##vecSize##_EXTERNAL_OP_CMP(vecName, vecSize, eltType)
 
 #define SPLD_dvec_EXTERNAL_OP(vecName, vecSize, eltType)																										\
-	SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																										\
-	SPLD_VEC##vecSize##_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)
+SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																											\
+SPLD_VEC##vecSize##_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)																								\
+SPLD_VEC##vecSize##_EXTERNAL_OP_CMP(vecName, vecSize, eltType)
 
 #define SPLD_ivec_EXTERNAL_OP(vecName, vecSize, eltType)																										\
-	SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																										\
-	SPLD_VEC##vecSize##_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)
+SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																											\
+SPLD_VEC##vecSize##_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)																								\
+SPLD_VEC##vecSize##_EXTERNAL_OP_CMP(vecName, vecSize, eltType)
 
 #define SPLD_uvec_EXTERNAL_OP(vecName, vecSize, eltType) 																										\
-	SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)
+SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																											\
+SPLD_VEC##vecSize##_EXTERNAL_OP_CMP(vecName, vecSize, eltType)
 
 #define SPLD_bvec_EXTERNAL_OP(vecName, vecSize, eltType) 																										\
-	SPLD_VEC##vecSize##_EXTERNAL_OP_LOGIC(vecName, vecSize, eltType)
+SPLD_VEC##vecSize##_EXTERNAL_OP_LOGIC(vecName, vecSize, eltType)																								\
+SPLD_VEC##vecSize##_EXTERNAL_OP_CMP(vecName, vecSize, eltType)
 
 
 #define SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																									\
@@ -86,6 +91,19 @@ vecName##4 operator&&(const vecName##4& u, eltType x) { return { u.x && x, u.y &
 																																								\
 vecName##4 operator||(eltType x, const vecName##4& u) { return { u.x || x, u.y || x, u.z || x, u.w || x }; }													\
 vecName##4 operator&&(eltType x, const vecName##4& u) { return { u.x && x, u.y && x, u.z && x, u.w && x }; }
+
+
+#define SPLD_VEC2_EXTERNAL_OP_CMP(vecName, vecSize, eltType)																									\
+bool operator==(const vecName##2& u, const vecName##2& v) { return u.x == v.x && u.y == v.y; }																	\
+bool operator!=(const vecName##2& u, const vecName##2& v) { return u.x != v.x || u.y != v.y; }
+
+#define SPLD_VEC3_EXTERNAL_OP_CMP(vecName, vecSize, eltType)																									\
+bool operator==(const vecName##3& u, const vecName##3& v) { return u.x == v.x && u.y == v.y && u.z == v.z; }													\
+bool operator!=(const vecName##3& u, const vecName##3& v) { return u.x != v.x || u.y != v.y || u.z != v.z; }
+
+#define SPLD_VEC4_EXTERNAL_OP_CMP(vecName, vecSize, eltType)																									\
+bool operator==(const vecName##4& u, const vecName##4& v) { return u.x == v.x && u.y == v.y && u.z == v.z && u.w == v.w; }										\
+bool operator!=(const vecName##4& u, const vecName##4& v) { return u.x != v.x || u.y != v.y || u.z != v.z || u.w != v.w; }
 
 
 #define SPLD_VEC_SPECIAL_FUNC(vecName, vecSize, eltType) SPLD_##vecName##_SPECIAL_FUNC(vecName, vecSize, eltType)

@@ -8,7 +8,10 @@
 #include <memory>
 #include <queue>
 #include <string>
+#include <unordered_map>
 #include <vector>
+
+#include <SciPP/SciPP.hpp>
 
 
 namespace spl

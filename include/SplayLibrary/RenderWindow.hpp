@@ -15,7 +15,8 @@ namespace spl
 
 			bool pollEvent(Event*& event);
 			bool waitEvent(Event*& event, double timeout = 0.0);
-
+			
+			void clear(const vec3& color);
 			void display();
 
 			bool shouldClose() const;
@@ -31,6 +32,8 @@ namespace spl
 
 			void* _window;
 			uvec2 _size;
+
+			vec3 _clearColor;
 
 			std::queue<Event*> _events;
 

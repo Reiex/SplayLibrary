@@ -53,7 +53,7 @@ vecName##4(eltType xValue, const vecName##3& v) : x(xValue), y(v.x), z(v.y), w(v
 #define SPLD_uvec_INTERNAL_OP(vecName, vecSize, eltType) SPLD_VEC##vecSize##_INTERNAL_OP_ARITH(vecName, vecSize, eltType)
 #define SPLD_bvec_INTERNAL_OP(vecName, vecSize, eltType)
 
-																																								\
+\
 #define SPLD_VEC2_INTERNAL_OP_ARITH(vecName, vecSize, eltType)																									\
 vecName##2& operator+=(const vecName##2& v) { x += v.x; y += v.y; return *this; }																				\
 vecName##2& operator-=(const vecName##2& v) { x -= v.x; y -= v.y; return *this; }																				\
@@ -79,12 +79,12 @@ vecName##4& operator/=(const vecName##4& v) { x /= v.x; y /= v.y; z /= v.z; w /=
 eltType& operator[](uint8_t i) { assert(i < 2); switch (i) { case 0: return x; default: return y; } }															\
 const eltType& operator[](uint8_t i) const { assert(i < 2); switch (i) { case 0: return x; default: return y; } }												\
 eltType x, y;																																					
-																																								
+
 #define SPLD_VEC3_ACCESSORS(vecName, vecSize, eltType)																											\
 eltType& operator[](uint8_t i) { assert(i < 2); switch (i) { case 0: return x; case 1: return y; default: return z; } }											\
 const eltType& operator[](uint8_t i) const { assert(i < 3); switch (i) { case 0: return x; case 1: return y; default: return z; } }								\
 eltType x, y, z;																																				
-																																								
+
 #define SPLD_VEC4_ACCESSORS(vecName, vecSize, eltType)																											\
 eltType& operator[](uint8_t i) { assert(i < 2); switch (i) { case 0: return x; case 1: return y; case 2: return z; default: return w; } }						\
 const eltType& operator[](uint8_t i) const { assert(i < 4); switch (i) { case 0: return x; case 1: return y; case 2: return z; default: return w; } }			\
@@ -97,22 +97,27 @@ eltType x, y, z, w;
 
 
 #define SPLD_vec_EXTERNAL_OP(vecName, vecSize, eltType) 																										\
-	SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																										\
-	SPLD_VEC_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)
+SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																											\
+SPLD_VEC_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)																											\
+SPLD_VEC_EXTERNAL_OP_CMP(vecName, vecSize, eltType)
 
 #define SPLD_dvec_EXTERNAL_OP(vecName, vecSize, eltType) 																										\
-	SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																										\
-	SPLD_VEC_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)
+SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																											\
+SPLD_VEC_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)																											\
+SPLD_VEC_EXTERNAL_OP_CMP(vecName, vecSize, eltType)
 
 #define SPLD_ivec_EXTERNAL_OP(vecName, vecSize, eltType) 																										\
-	SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																										\
-	SPLD_VEC_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)
+SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																											\
+SPLD_VEC_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)																											\
+SPLD_VEC_EXTERNAL_OP_CMP(vecName, vecSize, eltType)
 
 #define SPLD_uvec_EXTERNAL_OP(vecName, vecSize, eltType) 																										\
-	SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)
+SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																											\
+SPLD_VEC_EXTERNAL_OP_CMP(vecName, vecSize, eltType)
 
 #define SPLD_bvec_EXTERNAL_OP(vecName, vecSize, eltType) 																										\
-	SPLD_VEC_EXTERNAL_OP_LOGIC(vecName, vecSize, eltType)
+SPLD_VEC_EXTERNAL_OP_LOGIC(vecName, vecSize, eltType)																											\
+SPLD_VEC_EXTERNAL_OP_CMP(vecName, vecSize, eltType)
 
 
 #define SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																									\
@@ -146,6 +151,10 @@ vecName##vecSize operator&&(const vecName##vecSize##& u, eltType x);												
 																																								\
 vecName##vecSize operator||(eltType x, const vecName##vecSize##& u);																							\
 vecName##vecSize operator&&(eltType x, const vecName##vecSize##& u);
+
+#define SPLD_VEC_EXTERNAL_OP_CMP(vecName, vecSize, eltType)																										\
+bool operator==(const vecName##vecSize##& u, const vecName##vecSize##& v);																						\
+bool operator!=(const vecName##vecSize##& u, const vecName##vecSize##& v);
 
 
 // Vec special functions

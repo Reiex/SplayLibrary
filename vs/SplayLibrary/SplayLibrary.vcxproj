@@ -28,6 +28,7 @@
     <ClInclude Include="..\..\include\SplayLibrary\RenderWindow.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Shader.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\SplayLibrary.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Transformable.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\types.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -129,7 +130,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)external\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3-$(Configuration)-$(Platform).lib;glad-$(Configuration)-$(Platform).lib</AdditionalDependencies>
+      <AdditionalDependencies>SciPP-$(Configuration)-$(Platform).lib;glfw3-$(Configuration)-$(Platform).lib;glad-$(Configuration)-$(Platform).lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -154,7 +155,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)external\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3-$(Configuration)-$(Platform).lib;glad-$(Configuration)-$(Platform).lib</AdditionalDependencies>
+      <AdditionalDependencies>SciPP-$(Configuration)-$(Platform).lib;glfw3-$(Configuration)-$(Platform).lib;glad-$(Configuration)-$(Platform).lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -175,7 +176,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)external\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3-$(Configuration)-$(Platform).lib;glad-$(Configuration)-$(Platform).lib</AdditionalDependencies>
+      <AdditionalDependencies>SciPP-$(Configuration)-$(Platform).lib;glfw3-$(Configuration)-$(Platform).lib;glad-$(Configuration)-$(Platform).lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -200,7 +201,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)external\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3-$(Configuration)-$(Platform).lib;glad-$(Configuration)-$(Platform).lib</AdditionalDependencies>
+      <AdditionalDependencies>SciPP-$(Configuration)-$(Platform).lib;glfw3-$(Configuration)-$(Platform).lib;glad-$(Configuration)-$(Platform).lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
