@@ -10,8 +10,10 @@ namespace spl
 
 			RenderWindow(const uvec2& size, const std::string& title);
 			RenderWindow(const RenderWindow& window) = delete;
+			RenderWindow(RenderWindow&& window) = delete;
 
 			const RenderWindow& operator=(const RenderWindow& window) = delete;
+			const RenderWindow& operator=(RenderWindow&& window) = delete;
 
 			bool pollEvent(Event*& event);
 			bool waitEvent(Event*& event, double timeout = 0.0);

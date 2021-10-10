@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\SplayLibrary\3D\Mesh.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Drawable.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Glsl.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\RenderWindow.cpp" />

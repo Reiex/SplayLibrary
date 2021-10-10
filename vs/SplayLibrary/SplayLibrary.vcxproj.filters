@@ -22,6 +22,9 @@
     <Filter Include="Header Files\3D">
       <UniqueIdentifier>{2643c459-1512-4ae1-9990-0b2396343cb7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\3D">
+      <UniqueIdentifier>{5c78c3eb-27ce-47cf-a4e9-f3ed836c1027}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\SplayLibrary\Core\Drawable.cpp">
@@ -35,6 +38,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\SplayLibrary\Core\Shader.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\SplayLibrary\3D\Mesh.cpp">
+      <Filter>Source Files\3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
