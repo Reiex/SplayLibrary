@@ -13,51 +13,72 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Core">
+      <UniqueIdentifier>{dfccefee-f103-408c-b3fa-f65d78409b07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{e311c327-8c36-47cb-a80e-989e60edc0b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\3D">
+      <UniqueIdentifier>{2643c459-1512-4ae1-9990-0b2396343cb7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\SplayLibrary\Core\Drawable.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\SplayLibrary\Core\Glsl.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\SplayLibrary\Core\RenderWindow.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\SplayLibrary\Core\Shader.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Drawable.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Event.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Glsl.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\GlslT.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Private.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\RenderWindow.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Shader.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\types.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\SplayLibrary.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Shader.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Core.hpp">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\types.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\include\SplayLibrary\3D\3D.hpp">
+      <Filter>Header Files\3D</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Private.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\include\SplayLibrary\3D\Mesh.hpp">
+      <Filter>Header Files\3D</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Mesh.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\include\SplayLibrary\3D\MeshT.hpp">
+      <Filter>Header Files\3D</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\MeshT.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\include\SplayLibrary\3D\types.hpp">
+      <Filter>Header Files\3D</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Glsl.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\GlslT.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\RenderWindow.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Event.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Transformable.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\src\SplayLibrary\Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\SplayLibrary\Glsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\SplayLibrary\RenderWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

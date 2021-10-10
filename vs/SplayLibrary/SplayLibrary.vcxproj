@@ -19,22 +19,26 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\SplayLibrary\Event.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\Glsl.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\GlslT.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\Mesh.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\MeshT.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\Private.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\RenderWindow.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\Shader.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\SplayLibrary.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\Transformable.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\types.hpp" />
+    <ClCompile Include="..\..\src\SplayLibrary\Core\Drawable.cpp" />
+    <ClCompile Include="..\..\src\SplayLibrary\Core\Glsl.cpp" />
+    <ClCompile Include="..\..\src\SplayLibrary\Core\RenderWindow.cpp" />
+    <ClCompile Include="..\..\src\SplayLibrary\Core\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\SplayLibrary\Glsl.cpp" />
-    <ClCompile Include="..\..\src\SplayLibrary\RenderWindow.cpp" />
-    <ClCompile Include="..\..\src\SplayLibrary\Shader.cpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\3D\3D.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\3D\Mesh.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\3D\MeshT.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\3D\types.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Core.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Drawable.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Event.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Glsl.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\GlslT.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Private.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\RenderWindow.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Shader.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\types.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\SplayLibrary.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
