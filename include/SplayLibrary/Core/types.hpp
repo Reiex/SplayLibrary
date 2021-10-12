@@ -50,6 +50,10 @@ namespace spl
 	typedef dmat3x3 dmat3;
 	typedef dmat4x4 dmat4;
 
+	enum class BufferBindingTarget;
+	enum class BufferUsage;
+	class Buffer;
+
 	struct VertexAttribute;
 	enum class DrawableStorage;
 	class Drawable;
