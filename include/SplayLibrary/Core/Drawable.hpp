@@ -64,8 +64,8 @@ namespace spl
 			DrawableStorage _type;
 
 			uint32_t _vao;
-			uint32_t _vbo;
-			uint32_t _ebo;
+			Buffer _vbo;
+			Buffer _ebo;
 
 			uint32_t _indicesCount;
 

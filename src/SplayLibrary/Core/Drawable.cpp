@@ -6,8 +6,8 @@ namespace spl
 	Drawable::Drawable() :
 		_type(DrawableStorage::Static),
 		_vao(0),
-		_vbo(0),
-		_ebo(0),
+		_vbo(),
+		_ebo(),
 		_indicesCount(0)
 	{
 	}
@@ -15,23 +15,21 @@ namespace spl
 	void Drawable::create(const void* vertices, uint32_t verticesSize, const uint32_t* indices, uint32_t indicesSize, DrawableStorage type, const std::vector<VertexAttribute>& attributes)
 	{
 		assert(_vao == 0);
-		assert(_vbo == 0);
-		assert(_ebo == 0);
 
 		_type = type;
 		_indicesCount = indicesSize / sizeof(uint32_t);
 
-		GLenum usage = GL_STATIC_DRAW;
+		BufferUsage usage = BufferUsage::StaticDraw;
 		switch (_type)
 		{
 		case DrawableStorage::Static:
-			usage = GL_STATIC_DRAW;
+			usage = BufferUsage::StaticDraw;
 			break;
 		case DrawableStorage::Stream:
-			usage = GL_STREAM_DRAW;
+			usage = BufferUsage::StreamDraw;
 			break;
 		case DrawableStorage::Dynamic:
-			usage = GL_DYNAMIC_DRAW;
+			usage = BufferUsage::DynamicDraw;
 			break;
 		default:
 			assert(false);
@@ -40,13 +38,11 @@ namespace spl
 		glGenVertexArrays(1, &_vao);
 		glBindVertexArray(_vao);
 
-		glGenBuffers(1, &_vbo);
-		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-		glBufferData(GL_ARRAY_BUFFER, verticesSize, vertices, usage);
+		_vbo.createNew(verticesSize, vertices, usage);
+		_ebo.createNew(indicesSize, indices, usage);
 
-		glGenBuffers(1, &_ebo);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize, indices, usage);
+		Buffer::bind(_vbo, BufferBindingTarget::Array);
+		Buffer::bind(_ebo, BufferBindingTarget::ElementArray);
 
 		for (const VertexAttribute& attrib : attributes)
 		{
@@ -75,8 +71,8 @@ namespace spl
 		}
 
 		glBindVertexArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		Buffer::unbind(BufferBindingTarget::Array);
+		Buffer::unbind(BufferBindingTarget::ElementArray);
 	}
 
 	void Drawable::draw() const
@@ -93,19 +89,10 @@ namespace spl
 			glDeleteVertexArrays(1, &_vao);
 		}
 
-		if (_vbo != 0)
-		{
-			glDeleteBuffers(1, &_vbo);
-		}
-
-		if (_ebo != 0)
-		{
-			glDeleteBuffers(1, &_ebo);
-		}
+		_vbo.destroy();
+		_ebo.destroy();
 
 		_vao = 0;
-		_vbo = 0;
-		_ebo = 0;
 	}
 
 	Drawable::~Drawable()
