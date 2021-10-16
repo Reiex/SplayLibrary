@@ -244,4 +244,40 @@ namespace spl
 	_Mat<EltType, ColB, RowA, ColBType> operator*(const _Mat<EltType, ColARowB, RowA, ColAType>& A, const _Mat<EltType, ColB, ColARowB, ColBType>& B);
 }
 
+#undef SPLD_VEC
+#undef SPLD_VEC2_CONSTRUCTORS
+#undef SPLD_VEC3_CONSTRUCTORS
+#undef SPLD_VEC4_CONSTRUCTORS
+#undef SPLD_vec_INTERNAL_OP
+#undef SPLD_dvec_INTERNAL_OP
+#undef SPLD_ivec_INTERNAL_OP
+#undef SPLD_uvec_INTERNAL_OP
+#undef SPLD_bvec_INTERNAL_OP
+#undef SPLD_VEC2_INTERNAL_OP_ARITH
+#undef SPLD_VEC3_INTERNAL_OP_ARITH
+#undef SPLD_VEC4_INTERNAL_OP_ARITH
+#undef SPLD_VEC2_ACCESSORS
+#undef SPLD_VEC3_ACCESSORS
+#undef SPLD_VEC4_ACCESSORS
+#undef SPLD_VEC_EXTERNAL_OP
+#undef SPLD_vec_EXTERNAL_OP
+#undef SPLD_dvec_EXTERNAL_OP
+#undef SPLD_ivec_EXTERNAL_OP
+#undef SPLD_uvec_EXTERNAL_OP
+#undef SPLD_bvec_EXTERNAL_OP
+#undef SPLD_VEC_EXTERNAL_OP_U_ARITH
+#undef SPLD_VEC_EXTERNAL_OP_S_ARITH
+#undef SPLD_VEC_EXTERNAL_OP_LOGIC
+#undef SPLD_VEC_EXTERNAL_OP_CMP
+#undef SPLD_VEC_SPECIAL_FUNC
+#undef SPLD_vec_SPECIAL_FUNC
+#undef SPLD_dvec_SPECIAL_FUNC
+#undef SPLD_ivec_SPECIAL_FUNC
+#undef SPLD_uvec_SPECIAL_FUNC
+#undef SPLD_bvec_SPECIAL_FUNC
+#undef SPLD_VEC_REAL_FUNC
+#undef SPLD_VEC2_REAL_FUNC
+#undef SPLD_VEC3_REAL_FUNC
+#undef SPLD_VEC4_REAL_FUNC
+
 #include <SplayLibrary/Core/GlslT.hpp>

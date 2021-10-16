@@ -65,7 +65,7 @@ namespace spl
 				assert(false);
 			}
 
-			glVertexAttribPointer(attrib.index, size, type, attrib.normalized, attrib.stride, reinterpret_cast<void*>(attrib.offset));
+			glVertexAttribPointer(attrib.index, size, type, attrib.normalized, attrib.stride, reinterpret_cast<void*>(static_cast<size_t>(attrib.offset)));
 			glEnableVertexAttribArray(attrib.index);
 			glVertexAttribDivisor(attrib.index, attrib.divisor);
 		}

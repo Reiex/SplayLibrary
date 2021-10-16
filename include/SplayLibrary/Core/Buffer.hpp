@@ -11,6 +11,7 @@ namespace spl
 		CopyRead,
 		CopyWrite,
 		DispatchIndirect,
+		DrawIndirect,
 		ElementArray,
 		Parameter,
 		PixelPack,
@@ -36,23 +37,23 @@ namespace spl
 		DynamicCopy
 	};
 
-	enum class BufferStorageFlags
+	namespace BufferStorageFlags
 	{
-		None			= 0,
-		DynamicStorage	= 1 << 0,
-		MapRead			= 1 << 1,
-		MapWrite		= 1 << 2,
-		MapPersistent	= 1 << 3,
-		MapCoherent		= 1 << 4,
-		ClientStorage	= 1 << 5
-	};
-
-	BufferStorageFlags operator|(BufferStorageFlags a, BufferStorageFlags b);
-	BufferStorageFlags operator&(BufferStorageFlags a, BufferStorageFlags b);
+		enum Flags
+		{
+			None = 0,
+			DynamicStorage = 1 << 0,
+			MapRead = 1 << 1,
+			MapWrite = 1 << 2,
+			MapPersistent = 1 << 3,
+			MapCoherent = 1 << 4,
+			ClientStorage = 1 << 5
+		};
+	}
 
 	/*
-	A buffer is an encapsulation of an OpenGL buffer.
-	The user chooses the properties of the underlying OpenGL buffer.
+	The buffer is ONLY an encapsulation of an OpenGL buffer - No restriction nor addition operations.
+	The underlying properties are only modified when explicitely told, during move operations, or during copies if the previous buffer was invalid.
 	All the operations remains possible (might be at high cost).
 	*/
 	class Buffer
@@ -61,7 +62,7 @@ namespace spl
 
 			Buffer();
 			Buffer(uint32_t size, const void* data, BufferUsage usage);
-			Buffer(uint32_t size, const void* data, BufferStorageFlags flags);
+			Buffer(uint32_t size, const void* data, BufferStorageFlags::Flags flags);
 			Buffer(const Buffer& buffer);
 			Buffer(Buffer&& buffer);
 
@@ -69,13 +70,15 @@ namespace spl
 			Buffer& operator=(Buffer&& buffer);
 
 			void createNew(uint32_t size, const void* data, BufferUsage usage);
-			void createNew(uint32_t size, const void* data, BufferStorageFlags flags);
+			void createNew(uint32_t size, const void* data, BufferStorageFlags::Flags flags);
 			void copyFrom(const Buffer& buffer);
 			void moveFrom(Buffer&& buffer);
-			// void update(uint32_t offset, uint32_t size, const void* data);
-			// void update(uint32_t srcOffset, uint32_t dstOffset, uint32_t size, const Buffer& data);
+			void update(uint32_t dstOffset, uint32_t size, const void* data);
+			void update(uint32_t dstOffset, uint32_t size, uint32_t srcOffset, const Buffer& data);
 			void destroy();
 
+			BufferUsage getUsage() const;
+			BufferStorageFlags::Flags getStorageFlags() const;
 			bool isValid() const;
 
 			static void bind(const Buffer& buffer, BufferBindingTarget target);
@@ -88,7 +91,7 @@ namespace spl
 			uint32_t _buffer;
 			uint32_t _size;
 			BufferUsage _usage;
-			BufferStorageFlags _flags;
+			BufferStorageFlags::Flags _flags;
 
 	};
 }

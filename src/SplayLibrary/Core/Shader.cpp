@@ -28,13 +28,13 @@ namespace spl
 			std::ifstream file(filename, std::ios::ate | std::ios::binary);
 			if (!file)
 			{
-				SPL_DEBUG("Could not open file : '%s'", filename);
+				SPL_DEBUG("Could not open file : '%s'", filename.c_str());
 				return 0;
 			}
 
 			char* shaderSource = nullptr;
 
-			uint32_t length = file.tellg();
+			uint64_t length = file.tellg();
 			file.seekg(0);
 
 			shaderSource = new char[length+1];

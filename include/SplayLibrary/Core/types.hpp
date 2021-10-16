@@ -52,6 +52,7 @@ namespace spl
 
 	enum class BufferBindingTarget;
 	enum class BufferUsage;
+	namespace BufferStorageFlags { enum Flags; }
 	class Buffer;
 
 	struct VertexAttribute;

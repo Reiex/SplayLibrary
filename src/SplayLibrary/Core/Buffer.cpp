@@ -3,16 +3,6 @@
 
 namespace spl
 {
-	BufferStorageFlags operator|(BufferStorageFlags a, BufferStorageFlags b)
-	{
-		return static_cast<BufferStorageFlags>(static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
-	}
-
-	BufferStorageFlags operator&(BufferStorageFlags a, BufferStorageFlags b)
-	{
-		return static_cast<BufferStorageFlags>(static_cast<uint32_t>(a) & static_cast<uint32_t>(b));
-	}
-
 	namespace
 	{
 		GLenum bufferBindingTargetToGL(BufferBindingTarget target)
@@ -81,31 +71,31 @@ namespace spl
 			}
 		}
 
-		GLbitfield bufferStorageFlagsToGL(BufferStorageFlags flags)
+		GLbitfield bufferStorageFlagsToGL(BufferStorageFlags::Flags flags)
 		{
 			GLbitfield flagsGL = 0;
 
-			if ((flags & BufferStorageFlags::DynamicStorage) != BufferStorageFlags::None)
+			if (flags & BufferStorageFlags::DynamicStorage)
 			{
 				flagsGL &= GL_DYNAMIC_STORAGE_BIT;
 			}
-			if ((flags & BufferStorageFlags::MapRead) != BufferStorageFlags::None)
+			if (flags & BufferStorageFlags::MapRead)
 			{
 				flagsGL &= GL_MAP_READ_BIT;
 			}
-			if ((flags & BufferStorageFlags::MapWrite) != BufferStorageFlags::None)
+			if (flags & BufferStorageFlags::MapWrite)
 			{
 				flagsGL &= GL_MAP_WRITE_BIT;
 			}
-			if ((flags & BufferStorageFlags::MapPersistent) != BufferStorageFlags::None)
+			if (flags & BufferStorageFlags::MapPersistent)
 			{
 				flagsGL &= GL_MAP_PERSISTENT_BIT;
 			}
-			if ((flags & BufferStorageFlags::MapCoherent) != BufferStorageFlags::None)
+			if (flags & BufferStorageFlags::MapCoherent)
 			{
 				flagsGL &= GL_MAP_COHERENT_BIT;
 			}
-			if ((flags & BufferStorageFlags::ClientStorage) != BufferStorageFlags::None)
+			if (flags & BufferStorageFlags::ClientStorage)
 			{
 				flagsGL &= GL_CLIENT_STORAGE_BIT;
 			}
@@ -127,7 +117,7 @@ namespace spl
 		createNew(size, data, usage);
 	}
 
-	Buffer::Buffer(uint32_t size, const void* data, BufferStorageFlags flags) : Buffer()
+	Buffer::Buffer(uint32_t size, const void* data, BufferStorageFlags::Flags flags) : Buffer()
 	{
 		createNew(size, data, flags);
 	}
@@ -156,6 +146,7 @@ namespace spl
 
 	void Buffer::createNew(uint32_t size, const void* data, BufferUsage usage)
 	{
+		assert(data != nullptr);
 		assert(size > 0);
 		assert(bufferUsageToGL(usage) != 0);
 
@@ -169,8 +160,9 @@ namespace spl
 		_flags = BufferStorageFlags::None;
 	}
 
-	void Buffer::createNew(uint32_t size, const void* data, BufferStorageFlags flags)
+	void Buffer::createNew(uint32_t size, const void* data, BufferStorageFlags::Flags flags)
 	{
+		assert(data != nullptr);
 		assert(size > 0);
 
 		destroy();
@@ -185,11 +177,7 @@ namespace spl
 
 	void Buffer::copyFrom(const Buffer& buffer)
 	{
-		if (!buffer.isValid())
-		{
-			assert(false);
-			return;
-		}
+		assert(buffer.isValid());
 
 		if (!isValid())
 		{
@@ -232,6 +220,33 @@ namespace spl
 		buffer._flags = BufferStorageFlags::None;
 	}
 
+	void Buffer::update(uint32_t dstOffset, uint32_t size, const void* data)
+	{
+		assert(data != nullptr);
+		assert(isValid());
+		assert(dstOffset + size < _size);
+
+		if (_usage != BufferUsage::Undefined || _flags & BufferStorageFlags::DynamicStorage)
+		{
+			glNamedBufferSubData(_buffer, dstOffset, size, data);
+		}
+		else
+		{
+			Buffer tmp(size, data, BufferStorageFlags::None);
+			update(dstOffset, size, 0, tmp);
+		}
+	}
+
+	void Buffer::update(uint32_t dstOffset, uint32_t size, uint32_t srcOffset, const Buffer& data)
+	{
+		assert(isValid());
+		assert(dstOffset + size < _size);
+		assert(data.isValid());
+		assert(srcOffset + size < data._size);
+
+		glCopyNamedBufferSubData(data._buffer, _buffer, srcOffset, dstOffset, size);
+	}
+
 	void Buffer::destroy()
 	{
 		assert(_buffer != 0 || (_size == 0 && _usage == BufferUsage::Undefined && _flags == BufferStorageFlags::None));
@@ -245,6 +260,16 @@ namespace spl
 			_usage = BufferUsage::Undefined;
 			_flags = BufferStorageFlags::None;
 		}
+	}
+
+	BufferUsage Buffer::getUsage() const
+	{
+		return _usage;
+	}
+
+	BufferStorageFlags::Flags Buffer::getStorageFlags() const
+	{
+		return _flags;
 	}
 
 	bool Buffer::isValid() const

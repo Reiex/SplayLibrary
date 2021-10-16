@@ -35,8 +35,8 @@ namespace spl
 	enum class DrawableStorage
 	{
 		Static,
-		Stream,
-		Dynamic
+		Dynamic,
+		Stream
 	};
 
 	class Drawable
@@ -52,6 +52,14 @@ namespace spl
 			~Drawable();
 
 		protected:
+
+			/*
+			DrawableStorage:
+				Immutable
+				Static
+				Dynamic
+				Stream
+			*/
 
 			Drawable();
 			void create(const void* vertices, uint32_t verticesSize, const uint32_t* indices, uint32_t indicesSize, DrawableStorage type, const std::vector<VertexAttribute>& attributes);

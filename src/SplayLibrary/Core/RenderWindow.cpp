@@ -14,7 +14,7 @@ namespace spl
 
 		RenderWindow* getRenderWindowByHandle(GLFWwindow* window)
 		{
-			for (uint64_t i = 0; i < SPL_WINDOWS.size(); ++i)
+			for (uint32_t i = 0; i < SPL_WINDOWS.size(); ++i)
 			{
 				if (SPL_WINDOWS[i]->getHandle() == window)
 				{
