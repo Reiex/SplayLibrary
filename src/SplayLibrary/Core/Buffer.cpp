@@ -112,14 +112,14 @@ namespace spl
 	{
 	}
 
-	Buffer::Buffer(uint32_t size, const void* data, BufferUsage usage) : Buffer()
+	Buffer::Buffer(uint32_t size, BufferUsage usage, const void* data) : Buffer()
 	{
-		createNew(size, data, usage);
+		createNew(size, usage, data);
 	}
 
-	Buffer::Buffer(uint32_t size, const void* data, BufferStorageFlags::Flags flags) : Buffer()
+	Buffer::Buffer(uint32_t size, BufferStorageFlags::Flags flags, const void* data) : Buffer()
 	{
-		createNew(size, data, flags);
+		createNew(size, flags, data);
 	}
 
 	Buffer::Buffer(const Buffer& buffer) : Buffer()
@@ -144,7 +144,7 @@ namespace spl
 		return *this;
 	}
 
-	void Buffer::createNew(uint32_t size, const void* data, BufferUsage usage)
+	void Buffer::createNew(uint32_t size, BufferUsage usage, const void* data)
 	{
 		assert(data != nullptr);
 		assert(size > 0);
@@ -160,7 +160,7 @@ namespace spl
 		_flags = BufferStorageFlags::None;
 	}
 
-	void Buffer::createNew(uint32_t size, const void* data, BufferStorageFlags::Flags flags)
+	void Buffer::createNew(uint32_t size, BufferStorageFlags::Flags flags, const void* data)
 	{
 		assert(data != nullptr);
 		assert(size > 0);
@@ -183,26 +183,16 @@ namespace spl
 		{
 			if (buffer._usage != BufferUsage::Undefined)
 			{
-				createNew(buffer._size, nullptr, buffer._usage);
+				createNew(buffer._size, buffer._usage);
 			}
 			else
 			{
-				createNew(buffer._size, nullptr, buffer._flags);
-			}
-		}
-		else if (_size < buffer._size)
-		{
-			if (_usage != BufferUsage::Undefined)
-			{
-				createNew(buffer._size, nullptr, _usage);
-			}
-			else
-			{
-				createNew(buffer._size, nullptr, _flags);
+				createNew(buffer._size, buffer._flags);
 			}
 		}
 
-		glCopyNamedBufferSubData(buffer._buffer, _buffer, 0, 0, buffer._size);
+		const uint32_t size = std::min(_size, buffer._size);
+		glCopyNamedBufferSubData(buffer._buffer, _buffer, 0, 0, size);
 	}
 
 	void Buffer::moveFrom(Buffer&& buffer)
@@ -220,11 +210,11 @@ namespace spl
 		buffer._flags = BufferStorageFlags::None;
 	}
 
-	void Buffer::update(uint32_t dstOffset, uint32_t size, const void* data)
+	void Buffer::update(const void* data, uint32_t size, uint32_t dstOffset)
 	{
 		assert(data != nullptr);
 		assert(isValid());
-		assert(dstOffset + size < _size);
+		assert(dstOffset + size <= _size);
 
 		if (_usage != BufferUsage::Undefined || _flags & BufferStorageFlags::DynamicStorage)
 		{
@@ -232,17 +222,17 @@ namespace spl
 		}
 		else
 		{
-			Buffer tmp(size, data, BufferStorageFlags::None);
-			update(dstOffset, size, 0, tmp);
+			Buffer tmp(size, BufferStorageFlags::None, data);
+			update(tmp, size, dstOffset, 0);
 		}
 	}
 
-	void Buffer::update(uint32_t dstOffset, uint32_t size, uint32_t srcOffset, const Buffer& data)
+	void Buffer::update(const Buffer& data, uint32_t size, uint32_t dstOffset, uint32_t srcOffset)
 	{
 		assert(isValid());
-		assert(dstOffset + size < _size);
+		assert(dstOffset + size <= _size);
 		assert(data.isValid());
-		assert(srcOffset + size < data._size);
+		assert(srcOffset + size <= data._size);
 
 		glCopyNamedBufferSubData(data._buffer, _buffer, srcOffset, dstOffset, size);
 	}
@@ -260,6 +250,16 @@ namespace spl
 			_usage = BufferUsage::Undefined;
 			_flags = BufferStorageFlags::None;
 		}
+	}
+
+	uint32_t Buffer::getHandle() const
+	{
+		return _buffer;
+	}
+
+	uint32_t Buffer::getSize() const
+	{
+		return _size;
 	}
 
 	BufferUsage Buffer::getUsage() const

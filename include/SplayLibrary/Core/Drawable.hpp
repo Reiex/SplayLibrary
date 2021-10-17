@@ -34,6 +34,7 @@ namespace spl
 
 	enum class DrawableStorage
 	{
+		Immutable,
 		Static,
 		Dynamic,
 		Stream
@@ -53,27 +54,28 @@ namespace spl
 
 		protected:
 
-			/*
-			DrawableStorage:
-				Immutable
-				Static
-				Dynamic
-				Stream
-			*/
-
 			Drawable();
-			void create(const void* vertices, uint32_t verticesSize, const uint32_t* indices, uint32_t indicesSize, DrawableStorage type, const std::vector<VertexAttribute>& attributes);
-			void destroy();
+
+			void setVertexAttributes(const std::vector<VertexAttribute>& attributes);
+
+			void createVertices(const void* vertices, uint32_t size, DrawableStorage storage = DrawableStorage::Static);
+			void updateVertices(const void* vertices, uint32_t size, uint32_t offset = 0);
+			void destroyVertices();
+
+			void createIndices(const uint32_t* indices, uint32_t count, DrawableStorage storage = DrawableStorage::Static);
+			void updateIndices(const uint32_t* indices, uint32_t count, uint32_t startIndex = 0);
+			void setIndicesCount(uint32_t count);
+			void destroyIndices();
 
 			virtual void draw() const;
 
 		private:
 
-			DrawableStorage _type;
-
 			uint32_t _vao;
 			Buffer _vbo;
+			DrawableStorage _vboStorage;
 			Buffer _ebo;
+			DrawableStorage _eboStorage;
 
 			uint32_t _indicesCount;
 

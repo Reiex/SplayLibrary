@@ -5,7 +5,7 @@
 namespace spl
 {
 	template<typename VertexType>
-	Mesh<VertexType>::Mesh(const std::vector<VertexType>& vertices, DrawableStorage type) :
+	Mesh<VertexType>::Mesh(const std::vector<VertexType>& vertices, DrawableStorage verticesStorage, DrawableStorage indicesStorage) :
 		_vertices(vertices),
 		_indices()
 	{
@@ -15,14 +15,32 @@ namespace spl
 			_indices[i] = i;
 		}
 
-		create(_vertices.data(), _vertices.size() * sizeof(VertexType), _indices.data(), _indices.size() * sizeof(uint32_t), type, VertexType::getVertexAttributes());
+		createVertices(_vertices.data(), _vertices.size() * sizeof(VertexType), verticesStorage);
+		createIndices(_indices.data(), _indices.size(), indicesStorage);
+		setVertexAttributes(VertexType::getVertexAttributes());
 	}
 
 	template<typename VertexType>
-	Mesh<VertexType>::Mesh(const std::vector<VertexType>& vertices, const std::vector<uint32_t> indices, DrawableStorage type) :
+	Mesh<VertexType>::Mesh(const std::vector<VertexType>& vertices, const std::vector<uint32_t> indices, DrawableStorage verticesStorage, DrawableStorage indicesStorage) :
 		_vertices(vertices),
 		_indices(indices)
 	{
-		create(_vertices.data(), _vertices.size() * sizeof(VertexType), _indices.data(), _indices.size() * sizeof(uint32_t), type, VertexType::getVertexAttributes());
+		createVertices(_vertices.data(), _vertices.size() * sizeof(VertexType), verticesStorage);
+		createIndices(_indices.data(), _indices.size(), indicesStorage);
+		setVertexAttributes(VertexType::getVertexAttributes());
+	}
+
+	template<typename VertexType>
+	void Mesh<VertexType>::updateVertices(const std::vector<VertexType>& vertices)
+	{
+		_vertices = vertices;
+		Drawable::updateVertices(vertices.data(), vertices.size() * sizeof(VertexType));
+	}
+
+	template<typename VertexType>
+	void Mesh<VertexType>::updateIndices(const std::vector<uint32_t>& indices)
+	{
+		_indices = indices;
+		Drawable::updateIndices(indices.data(), indices.size());
 	}
 }

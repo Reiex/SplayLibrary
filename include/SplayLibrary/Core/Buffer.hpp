@@ -53,7 +53,7 @@ namespace spl
 
 	/*
 	The buffer is ONLY an encapsulation of an OpenGL buffer - No restriction nor addition operations.
-	The underlying properties are only modified when explicitely told, during move operations, or during copies if the previous buffer was invalid.
+	The size, usage & storage flags are only modified when explicitely told, during move operations, or during copies if the previous buffer was invalid.
 	All the operations remains possible (might be at high cost).
 	*/
 	class Buffer
@@ -61,22 +61,24 @@ namespace spl
 		public:
 
 			Buffer();
-			Buffer(uint32_t size, const void* data, BufferUsage usage);
-			Buffer(uint32_t size, const void* data, BufferStorageFlags::Flags flags);
+			Buffer(uint32_t size, BufferUsage usage, const void* data = nullptr);
+			Buffer(uint32_t size, BufferStorageFlags::Flags flags, const void* data = nullptr);
 			Buffer(const Buffer& buffer);
 			Buffer(Buffer&& buffer);
 
 			Buffer& operator=(const Buffer& buffer);
 			Buffer& operator=(Buffer&& buffer);
 
-			void createNew(uint32_t size, const void* data, BufferUsage usage);
-			void createNew(uint32_t size, const void* data, BufferStorageFlags::Flags flags);
+			void createNew(uint32_t size, BufferUsage usage, const void* data = nullptr);
+			void createNew(uint32_t size, BufferStorageFlags::Flags flags, const void* data = nullptr);
 			void copyFrom(const Buffer& buffer);
 			void moveFrom(Buffer&& buffer);
-			void update(uint32_t dstOffset, uint32_t size, const void* data);
-			void update(uint32_t dstOffset, uint32_t size, uint32_t srcOffset, const Buffer& data);
+			void update(const void* data, uint32_t size, uint32_t dstOffset = 0);
+			void update(const Buffer& data, uint32_t size, uint32_t dstOffset = 0, uint32_t srcOffset = 0);
 			void destroy();
 
+			uint32_t getHandle() const;
+			uint32_t getSize() const;
 			BufferUsage getUsage() const;
 			BufferStorageFlags::Flags getStorageFlags() const;
 			bool isValid() const;
