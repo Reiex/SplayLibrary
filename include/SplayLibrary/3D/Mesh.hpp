@@ -33,6 +33,13 @@ namespace spl
 	{
 		public:
 			
+			/*
+			Renommer Mesh en DrawableMesh et faire une classe Mesh purement CPU:
+				- Pour gérer plus facilement les algorithmes sur Mesh
+				- Pour permettre les compute shader (dump SSBO)
+				- Pour pouvoir gérer les Mesh en multithread
+			*/
+
 			Mesh(const std::string& filename, DrawableStorage verticesStorage = DrawableStorage::Static, DrawableStorage indicesStorage = DrawableStorage::Static);
 			Mesh(const std::vector<VertexType>& vertices, DrawableStorage verticesStorage = DrawableStorage::Static, DrawableStorage indicesStorage = DrawableStorage::Static);
 			Mesh(const std::vector<VertexType>& vertices, const std::vector<uint32_t> indices, DrawableStorage verticesStorage = DrawableStorage::Static, DrawableStorage indicesStorage = DrawableStorage::Static);

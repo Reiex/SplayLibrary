@@ -31,7 +31,7 @@ int main()
 
 		window.clear({ 0.2f, 0.3f, 0.3f });
 
-		t += 1.0 / 144;
+		t += 1.f / 144;
 		shader.setUniform("t", t);
 
 		vertices[0].pos = {cos(t), sin(t), 0.f};
