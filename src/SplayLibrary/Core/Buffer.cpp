@@ -146,7 +146,6 @@ namespace spl
 
 	void Buffer::createNew(uint32_t size, BufferUsage usage, const void* data)
 	{
-		assert(data != nullptr);
 		assert(size > 0);
 		assert(bufferUsageToGL(usage) != 0);
 
@@ -162,7 +161,6 @@ namespace spl
 
 	void Buffer::createNew(uint32_t size, BufferStorageFlags::Flags flags, const void* data)
 	{
-		assert(data != nullptr);
 		assert(size > 0);
 
 		destroy();

@@ -58,16 +58,25 @@ namespace spl
 
 			void setVertexAttributes(const std::vector<VertexAttribute>& attributes);
 
-			void createVertices(const void* vertices, uint32_t size, DrawableStorage storage = DrawableStorage::Static);
+			void createNewVertices(const void* vertices, uint32_t size, DrawableStorage storage);
+			void updateVertices(DrawableStorage storage);
 			void updateVertices(const void* vertices, uint32_t size, uint32_t offset = 0);
+			void updateVertices(const void* vertices, uint32_t size, DrawableStorage storage, uint32_t offset = 0);
 			void destroyVertices();
 
-			void createIndices(const uint32_t* indices, uint32_t count, DrawableStorage storage = DrawableStorage::Static);
+			void createNewIndices(const uint32_t* indices, uint32_t count, DrawableStorage storage);
+			void updateIndices(DrawableStorage storage);
 			void updateIndices(const uint32_t* indices, uint32_t count, uint32_t startIndex = 0);
+			void updateIndices(const uint32_t* indices, uint32_t count, DrawableStorage storage, uint32_t startIndex = 0);
 			void setIndicesCount(uint32_t count);
 			void destroyIndices();
 
 			virtual void draw() const;
+
+			DrawableStorage getVerticesStorage() const;
+			DrawableStorage getIndicesStorage() const;
+			bool needsAttributesUpdate() const;
+			virtual bool isValid() const;
 
 		private:
 
@@ -78,6 +87,7 @@ namespace spl
 			DrawableStorage _eboStorage;
 
 			uint32_t _indicesCount;
+			bool _needsAttributesUpdate;
 
 		friend RenderWindow;
 	};

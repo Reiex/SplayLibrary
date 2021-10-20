@@ -45,7 +45,8 @@ namespace spl
 		_vboStorage(DrawableStorage::Static),
 		_ebo(),
 		_eboStorage(DrawableStorage::Static),
-		_indicesCount(0)
+		_indicesCount(0),
+		_needsAttributesUpdate(false)
 	{
 		glGenVertexArrays(1, &_vao);
 	}
@@ -89,9 +90,11 @@ namespace spl
 		glBindVertexArray(0);
 		Buffer::unbind(BufferBindingTarget::Array);
 		Buffer::unbind(BufferBindingTarget::ElementArray);
+
+		_needsAttributesUpdate = false;
 	}
 
-	void Drawable::createVertices(const void* vertices, uint32_t size, DrawableStorage storage)
+	void Drawable::createNewVertices(const void* vertices, uint32_t size, DrawableStorage storage)
 	{
 		if (drawableStorageToBufferUsage(storage) != BufferUsage::Undefined)
 		{
@@ -103,29 +106,47 @@ namespace spl
 		}
 
 		_vboStorage = storage;
+		_needsAttributesUpdate = true;
+	}
+
+	void Drawable::updateVertices(DrawableStorage storage)
+	{
+		updateVertices(nullptr, 0, storage, 0);
 	}
 
 	void Drawable::updateVertices(const void* vertices, uint32_t size, uint32_t offset)
 	{
+		updateVertices(vertices, size, _vboStorage, offset);
+	}
+
+	void Drawable::updateVertices(const void* vertices, uint32_t size, DrawableStorage storage, uint32_t offset)
+	{
 		assert(_vbo.isValid());
 
-		if (offset + size > _vbo.getSize())
+		if (offset + size > _vbo.getSize() || storage != _vboStorage)
 		{
+			_vboStorage = storage;
+			const uint32_t newSize = std::max(_vbo.getSize(), offset + size);
+
 			Buffer newVbo;
 			if (drawableStorageToBufferUsage(_vboStorage) != BufferUsage::Undefined)
 			{
-				newVbo.createNew(offset + size, drawableStorageToBufferUsage(_vboStorage));
+				newVbo.createNew(newSize, drawableStorageToBufferUsage(_vboStorage));
 			}
 			else
 			{
-				newVbo.createNew(offset + size, drawableStorageToBufferStorageFlags(_vboStorage));
+				newVbo.createNew(newSize, drawableStorageToBufferStorageFlags(_vboStorage));
 			}
 
 			newVbo.copyFrom(_vbo);
 			_vbo = std::move(newVbo);
+			_needsAttributesUpdate = true;
 		}
 
-		_vbo.update(vertices, size, offset);
+		if (size > 0)
+		{
+			_vbo.update(vertices, size, offset);
+		}
 	}
 
 	void Drawable::destroyVertices()
@@ -133,7 +154,7 @@ namespace spl
 		_vbo.destroy();
 	}
 
-	void Drawable::createIndices(const uint32_t* indices, uint32_t count, DrawableStorage storage)
+	void Drawable::createNewIndices(const uint32_t* indices, uint32_t count, DrawableStorage storage)
 	{
 		const uint32_t size = count * sizeof(uint32_t);
 
@@ -148,32 +169,50 @@ namespace spl
 
 		_eboStorage = storage;
 		_indicesCount = count;
+		_needsAttributesUpdate = true;
+	}
+
+	void Drawable::updateIndices(DrawableStorage storage)
+	{
+		updateIndices(nullptr, 0, storage, 0);
 	}
 
 	void Drawable::updateIndices(const uint32_t* indices, uint32_t count, uint32_t startIndex)
+	{
+		updateIndices(indices, count, _eboStorage, startIndex);
+	}
+
+	void Drawable::updateIndices(const uint32_t* indices, uint32_t count, DrawableStorage storage, uint32_t startIndex)
 	{
 		assert(_ebo.isValid());
 
 		const uint32_t offset = startIndex * sizeof(uint32_t);
 		const uint32_t size = count * sizeof(uint32_t);
 
-		if (offset + size > _ebo.getSize())
+		if (offset + size > _ebo.getSize() || storage != _eboStorage)
 		{
+			_eboStorage = storage;
+			const uint32_t newSize = std::max(_ebo.getSize(), offset + size);
+
 			Buffer newEbo;
 			if (drawableStorageToBufferUsage(_eboStorage) != BufferUsage::Undefined)
 			{
-				newEbo.createNew(offset + size, drawableStorageToBufferUsage(_eboStorage));
+				newEbo.createNew(newSize, drawableStorageToBufferUsage(_eboStorage));
 			}
 			else
 			{
-				newEbo.createNew(offset + size, drawableStorageToBufferStorageFlags(_eboStorage));
+				newEbo.createNew(newSize, drawableStorageToBufferStorageFlags(_eboStorage));
 			}
 
 			newEbo.copyFrom(_ebo);
 			_ebo = std::move(newEbo);
+			_needsAttributesUpdate = true;
 		}
 
-		_ebo.update(indices, size, offset);
+		if (size > 0)
+		{
+			_ebo.update(indices, size, offset);
+		}
 	}
 
 	void Drawable::setIndicesCount(uint32_t count)
@@ -193,6 +232,26 @@ namespace spl
 		glBindVertexArray(_vao);
 		glDrawElements(GL_TRIANGLES, _indicesCount, GL_UNSIGNED_INT, nullptr);
 		glBindVertexArray(0);
+	}
+
+	DrawableStorage Drawable::getVerticesStorage() const
+	{
+		return _vboStorage;
+	}
+
+	DrawableStorage Drawable::getIndicesStorage() const
+	{
+		return _eboStorage;
+	}
+
+	bool Drawable::needsAttributesUpdate() const
+	{
+		return _needsAttributesUpdate;
+	}
+
+	bool Drawable::isValid() const
+	{
+		return _vao != 0 && _vbo.isValid() && _ebo.isValid();
 	}
 
 	Drawable::~Drawable()

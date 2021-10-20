@@ -34,7 +34,7 @@ int main()
 		t += 1.0 / 144;
 		shader.setUniform("t", t);
 
-		vertices[0].pos = { cos(t), sin(t), 0.f };
+		vertices[0].pos = {cos(t), sin(t), 0.f};
 		vertices[1].pos = {-sin(t), cos(t), 0.f };
 		vertices[2].pos = {-cos(t),-sin(t), 0.f };
 		vertices[3].pos = { sin(t),-cos(t), 0.f };
@@ -43,7 +43,6 @@ int main()
 		window.draw(mesh);
 
 		window.display();
-
 	}
 
 	return 0;

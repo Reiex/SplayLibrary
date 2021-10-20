@@ -32,22 +32,32 @@ namespace spl
 	class Mesh : public Drawable
 	{
 		public:
-
-			// Mesh(const std::string& filename, DrawableStorage verticesStorage = DrawableStorage::Static, DrawableStorage indicesStorage = DrawableStorage::Static);
+			
+			Mesh(const std::string& filename, DrawableStorage verticesStorage = DrawableStorage::Static, DrawableStorage indicesStorage = DrawableStorage::Static);
 			Mesh(const std::vector<VertexType>& vertices, DrawableStorage verticesStorage = DrawableStorage::Static, DrawableStorage indicesStorage = DrawableStorage::Static);
 			Mesh(const std::vector<VertexType>& vertices, const std::vector<uint32_t> indices, DrawableStorage verticesStorage = DrawableStorage::Static, DrawableStorage indicesStorage = DrawableStorage::Static);
+			Mesh(const Mesh<VertexType>& mesh) = delete;
+			Mesh(Mesh<VertexType>&& mesh) = delete;
 
-			// Gérer les erreurs : Que faire en cas de mauvais format ? Retourner un bool ? Faire un isValid ? Les deux ?
-			// void loadFromFile(const std::string& filename, DrawableStorage verticesStorage = DrawableStorage::Static, DrawableStorage indicesStorage = DrawableStorage::Static);
+			Mesh<VertexType>& operator=(const Mesh<VertexType>& mesh) = delete;
+			Mesh<VertexType>& operator=(Mesh<VertexType>&& mesh) = delete;
 
-			// void updateVertices(const std::vector<VertexType>& vertices, DrawableStorage storage = DrawableStorage::Static);
-			// void updateIndices(const std::vector<uint32_t>& indices, DrawableStorage storage = DrawableStorage::Static);
+			void loadFromFile(const std::string& filename, DrawableStorage verticesStorage = DrawableStorage::Static, DrawableStorage indicesStorage = DrawableStorage::Static);
+
 			void updateVertices(const std::vector<VertexType>& vertices);
 			void updateIndices(const std::vector<uint32_t>& indices);
+			void updateVertices(const std::vector<VertexType>& vertices, DrawableStorage storage);
+			void updateIndices(const std::vector<uint32_t>& indices, DrawableStorage storage);
+
+			virtual bool isValid() const;
+
+			~Mesh() = default;
 
 		protected:
 
-			// void readFromFile(const std::string& filename);
+			Mesh();
+
+			static void readFromFile(const std::string& filename, std::vector<VertexType>& vertices, std::vector<uint32_t>& indices);
 
 			std::vector<VertexType> _vertices;
 			std::vector<uint32_t> _indices;
