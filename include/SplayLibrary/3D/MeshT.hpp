@@ -12,16 +12,6 @@ namespace spl
 	}
 
 	template<typename VertexType>
-	Mesh<VertexType>::Mesh(const std::string& filename, DrawableStorage verticesStorage, DrawableStorage indicesStorage)
-	{
-		readFromFile(filename, _vertices, _indices);
-
-		Drawable::createNewVertices(_vertices.data(), _vertices.size() * sizeof(VertexType), verticesStorage);
-		Drawable::createNewIndices(_indices.data(), _indices.size(), indicesStorage);
-		Drawable::setVertexAttributes(VertexType::getVertexAttributes());
-	}
-
-	template<typename VertexType>
 	Mesh<VertexType>::Mesh(const std::vector<VertexType>& vertices, DrawableStorage verticesStorage, DrawableStorage indicesStorage) : Mesh<VertexType>()
 	{
 		_vertices = vertices;
@@ -46,34 +36,6 @@ namespace spl
 		Drawable::createNewVertices(_vertices.data(), _vertices.size() * sizeof(VertexType), verticesStorage);
 		Drawable::createNewIndices(_indices.data(), _indices.size(), indicesStorage);
 		Drawable::setVertexAttributes(VertexType::getVertexAttributes());
-	}
-
-	template<typename VertexType>
-	void Mesh<VertexType>::readFromFile(const std::string& filename, std::vector<VertexType>& vertices, std::vector<uint32_t>& indices)
-	{
-		vertices = {
-		{ { 1.f,  0.f, 0.0f} },
-		{ { 0.f,  1.f, 0.0f} },
-		{ {-1.f,  0.f, 0.0f} },
-		{ { 0.f, -1.f, 0.0f} }
-		};
-
-		indices = {
-			0, 1, 2,
-			0, 2, 3
-		};
-	}
-
-	template<typename VertexType>
-	void Mesh<VertexType>::loadFromFile(const std::string& filename, DrawableStorage verticesStorage, DrawableStorage indicesStorage)
-	{
-		std::vector<VertexType> vertices;
-		std::vector<uint32_t> indices;
-
-		readFromFile(filename, vertices, indices);
-
-		updateVertices(vertices, verticesStorage);
-		updateIndices(indices, indicesStorage);
 	}
 
 	template<typename VertexType>

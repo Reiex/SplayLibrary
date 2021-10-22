@@ -32,15 +32,7 @@ namespace spl
 	class Mesh : public Drawable
 	{
 		public:
-			
-			/*
-			Renommer Mesh en DrawableMesh et faire une classe Mesh purement CPU:
-				- Pour gérer plus facilement les algorithmes sur Mesh
-				- Pour permettre les compute shader (dump SSBO)
-				- Pour pouvoir gérer les Mesh en multithread
-			*/
 
-			Mesh(const std::string& filename, DrawableStorage verticesStorage = DrawableStorage::Static, DrawableStorage indicesStorage = DrawableStorage::Static);
 			Mesh(const std::vector<VertexType>& vertices, DrawableStorage verticesStorage = DrawableStorage::Static, DrawableStorage indicesStorage = DrawableStorage::Static);
 			Mesh(const std::vector<VertexType>& vertices, const std::vector<uint32_t> indices, DrawableStorage verticesStorage = DrawableStorage::Static, DrawableStorage indicesStorage = DrawableStorage::Static);
 			Mesh(const Mesh<VertexType>& mesh) = delete;
@@ -48,8 +40,6 @@ namespace spl
 
 			Mesh<VertexType>& operator=(const Mesh<VertexType>& mesh) = delete;
 			Mesh<VertexType>& operator=(Mesh<VertexType>&& mesh) = delete;
-
-			void loadFromFile(const std::string& filename, DrawableStorage verticesStorage = DrawableStorage::Static, DrawableStorage indicesStorage = DrawableStorage::Static);
 
 			void updateVertices(const std::vector<VertexType>& vertices);
 			void updateIndices(const std::vector<uint32_t>& indices);
@@ -63,8 +53,6 @@ namespace spl
 		protected:
 
 			Mesh();
-
-			static void readFromFile(const std::string& filename, std::vector<VertexType>& vertices, std::vector<uint32_t>& indices);
 
 			std::vector<VertexType> _vertices;
 			std::vector<uint32_t> _indices;

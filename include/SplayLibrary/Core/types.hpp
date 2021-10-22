@@ -12,6 +12,7 @@
 #include <vector>
 
 #include <SciPP/SciPP.hpp>
+#include <DejaVu/DejaVu.hpp>
 
 
 namespace spl
