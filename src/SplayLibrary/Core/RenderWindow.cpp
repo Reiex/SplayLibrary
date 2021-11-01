@@ -68,6 +68,8 @@ namespace spl
 		_size = size;
 
 		SPL_WINDOWS.push_back(this);
+		// TODO: Secure for multithreading
+		// TODO: Fill values such as max texture size, max buffer size etc...
 
 		glfwMakeContextCurrent(static_cast<GLFWwindow*>(_window));
 

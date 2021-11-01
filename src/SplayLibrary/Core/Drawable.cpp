@@ -58,8 +58,8 @@ namespace spl
 		assert(_vao != 0);
 
 		glBindVertexArray(_vao);
-		Buffer::bind(_vbo, BufferBindingTarget::Array);
-		Buffer::bind(_ebo, BufferBindingTarget::ElementArray);
+		Buffer::bind(_vbo, BufferTarget::Array);
+		Buffer::bind(_ebo, BufferTarget::ElementArray);
 
 		for (const VertexAttribute& attrib : attributes)
 		{
@@ -88,8 +88,8 @@ namespace spl
 		}
 
 		glBindVertexArray(0);
-		Buffer::unbind(BufferBindingTarget::Array);
-		Buffer::unbind(BufferBindingTarget::ElementArray);
+		Buffer::unbind(BufferTarget::Array);
+		Buffer::unbind(BufferTarget::ElementArray);
 
 		_needsAttributesUpdate = false;
 	}

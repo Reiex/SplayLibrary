@@ -4,7 +4,7 @@
 
 namespace spl
 {
-	enum class BufferBindingTarget
+	enum class BufferTarget
 	{
 		Array,
 		AtomicCounter,
@@ -77,14 +77,17 @@ namespace spl
 			void update(const Buffer& data, uint32_t size, uint32_t dstOffset = 0, uint32_t srcOffset = 0);
 			void destroy();
 
+			
+			// TODO: mapping
+
 			uint32_t getHandle() const;
 			uint32_t getSize() const;
 			BufferUsage getUsage() const;
 			BufferStorageFlags::Flags getStorageFlags() const;
 			bool isValid() const;
 
-			static void bind(const Buffer& buffer, BufferBindingTarget target);
-			static void unbind(BufferBindingTarget target);
+			static void bind(const Buffer& buffer, BufferTarget target);
+			static void unbind(BufferTarget target);
 
 			~Buffer();
 

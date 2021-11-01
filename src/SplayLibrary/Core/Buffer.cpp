@@ -5,37 +5,37 @@ namespace spl
 {
 	namespace
 	{
-		GLenum bufferBindingTargetToGL(BufferBindingTarget target)
+		GLenum bufferTargetToGL(BufferTarget target)
 		{
 			switch (target)
 			{
-			case BufferBindingTarget::Array:
+			case BufferTarget::Array:
 				return GL_ARRAY_BUFFER;
-			case BufferBindingTarget::AtomicCounter:
+			case BufferTarget::AtomicCounter:
 				return GL_ATOMIC_COUNTER_BUFFER;
-			case BufferBindingTarget::CopyRead:
+			case BufferTarget::CopyRead:
 				return GL_COPY_READ_BUFFER;
-			case BufferBindingTarget::CopyWrite:
+			case BufferTarget::CopyWrite:
 				return GL_COPY_WRITE_BUFFER;
-			case BufferBindingTarget::DispatchIndirect:
+			case BufferTarget::DispatchIndirect:
 				return GL_DISPATCH_INDIRECT_BUFFER;
-			case BufferBindingTarget::ElementArray:
+			case BufferTarget::ElementArray:
 				return GL_ELEMENT_ARRAY_BUFFER;
-			case BufferBindingTarget::Parameter:
+			case BufferTarget::Parameter:
 				return GL_PARAMETER_BUFFER;
-			case BufferBindingTarget::PixelPack:
+			case BufferTarget::PixelPack:
 				return GL_PIXEL_PACK_BUFFER;
-			case BufferBindingTarget::PixelUnpack:
+			case BufferTarget::PixelUnpack:
 				return GL_PIXEL_UNPACK_BUFFER;
-			case BufferBindingTarget::Query:
+			case BufferTarget::Query:
 				return GL_QUERY_BUFFER;
-			case BufferBindingTarget::ShaderStorage:
+			case BufferTarget::ShaderStorage:
 				return GL_SHADER_STORAGE_BUFFER;
-			case BufferBindingTarget::Texture:
+			case BufferTarget::Texture:
 				return GL_TEXTURE_BUFFER;
-			case BufferBindingTarget::TransformFeedback:
+			case BufferTarget::TransformFeedback:
 				return GL_TRANSFORM_FEEDBACK_BUFFER;
-			case BufferBindingTarget::Uniform:
+			case BufferTarget::Uniform:
 				return GL_UNIFORM_BUFFER;
 			default:
 				assert(false);
@@ -275,19 +275,19 @@ namespace spl
 		return _buffer != 0;
 	}
 
-	void Buffer::bind(const Buffer& buffer, BufferBindingTarget target)
+	void Buffer::bind(const Buffer& buffer, BufferTarget target)
 	{
 		assert(buffer.isValid());
-		assert(bufferBindingTargetToGL(target) != 0);
+		assert(bufferTargetToGL(target) != 0);
 
-		glBindBuffer(bufferBindingTargetToGL(target), buffer._buffer);
+		glBindBuffer(bufferTargetToGL(target), buffer._buffer);
 	}
 
-	void Buffer::unbind(BufferBindingTarget target)
+	void Buffer::unbind(BufferTarget target)
 	{
-		assert(bufferBindingTargetToGL(target) != 0);
+		assert(bufferTargetToGL(target) != 0);
 
-		glBindBuffer(bufferBindingTargetToGL(target), 0);
+		glBindBuffer(bufferTargetToGL(target), 0);
 	}
 
 	Buffer::~Buffer()

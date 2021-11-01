@@ -51,10 +51,21 @@ namespace spl
 	typedef dmat3x3 dmat3;
 	typedef dmat4x4 dmat4;
 
-	enum class BufferBindingTarget;
+	enum class BufferTarget;
 	enum class BufferUsage;
 	namespace BufferStorageFlags { enum Flags; }
 	class Buffer;
+
+	//
+
+	enum class TextureTarget;
+	enum class TextureCubeMapTarget;
+	enum class TextureFormat;
+	enum class TextureDataType;
+	enum class TextureInternalFormat;
+	class RawTexture;
+
+	//
 
 	struct VertexAttribute;
 	enum class DrawableStorage;
