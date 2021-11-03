@@ -363,6 +363,12 @@ namespace spl
 		glUniformMatrix4fv(getUniformLocation(location), count, true, reinterpret_cast<const float*>(&value));
 	}
 
+	void Shader::setUniform(const std::string& location, const RawTexture& texture, uint32_t textureUnit)
+	{
+		RawTexture::bind(texture, texture.getTextureTarget(), textureUnit);
+		glUniform1i(getUniformLocation(location), textureUnit);
+	}
+
 	bool Shader::isValid() const
 	{
 		return _program != 0;

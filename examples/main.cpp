@@ -61,16 +61,12 @@ int main()
 	delete[] data;
 
 	spl::RawTexture::bind(texture, spl::TextureTarget::Texture2D, 0);
-
 	// glGenerateMipmap(GL_TEXTURE_2D);
-	// glGenerateTextureMipmap
-
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	// glTextureParameteri
-
+	spl::RawTexture::unbind(spl::TextureTarget::Texture2D);
 
 	float t = 0.0;
 	while (!window.shouldClose())
@@ -82,7 +78,7 @@ int main()
 
 		t += 1.f / 144;
 		shader.setUniform("t", t);
-		shader.setUniform("ourTexture", 0);
+		shader.setUniform("colorTexture", texture, 8);
 
 		vertices[0].pos = {cos(t), sin(t), 0.f};
 		vertices[1].pos = {-sin(t), cos(t), 0.f };

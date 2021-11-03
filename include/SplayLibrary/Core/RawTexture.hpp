@@ -224,17 +224,4 @@ namespace spl
 			uint32_t _texture;
 			TextureTarget _target;
 	};
-
-
-	/*
-	
-	Une enum pour chaque internalformat (Grosse enum: 8.11 + 8.12 + 8.13 (+ 8.14))
-	Une enum pour chaque format (combinaison type-format qui ont du sens) (8.2 x 8.3 - Inutiles)
-	Pour chaque enum, une fonction qui retourne un flag qui donne les composantes (R,G,B,A,D,S) -> On pourra vérifier les compatibilités comme ça
-	Une classe RawTexture de malade (mais qui prendra que des void*) avec toutes les fonctions possibles (de création, update, copie, récupération, etc..) et BEAUCOUP d'assert.
-
-	Une classe par texture target. Vraiment. Même les trucs communs (genre sampler) sont trop différents...
-	Et avec chaque classe, ses propres enums pour réduire la taille de ce bordel etc... (Donc BIEN nommer et scoper les enums)
-
-	*/
 }

@@ -66,6 +66,8 @@ namespace spl
 			void setUniform(const std::string& location, const mat4x3* value, uint32_t count);
 			void setUniform(const std::string& location, const mat4* value, uint32_t count);
 
+			void setUniform(const std::string& location, const RawTexture& texture, uint32_t textureUnit = 0);
+
 			bool isValid() const;
 			uint32_t getHandle() const;
 

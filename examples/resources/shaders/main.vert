@@ -10,7 +10,7 @@ out vec2 texCoords;
 
 void main()
 {
-    color = vec4((aPos + 1)/2, 1.0) * (sin(6.28*t) + 1)/2;
+    color = vec4((aPos + 1)/2, 1.0) * (sin(6.28*t)*0.25 + 0.75);
     texCoords = aTexCoords;
     gl_Position = vec4(aPos, 1.0);
 }
