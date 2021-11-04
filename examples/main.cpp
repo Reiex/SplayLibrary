@@ -72,7 +72,22 @@ int main()
 	while (!window.shouldClose())
 	{
 		spl::Event* event = nullptr;
-		while (window.pollEvent(event)) {}
+		while (window.pollEvent(event))
+		{
+			switch (event->type)
+			{
+				case spl::EventType::TextEvent:
+				{
+					spl::TextEvent textEvent = event->specialize<spl::EventType::TextEvent>();
+					// std::cout << (char)textEvent.unicode << std::endl;
+				}
+				case spl::EventType::MouseMoveEvent:
+				{
+					spl::MouseMoveEvent mouseMoveEvent = event->specialize<spl::EventType::MouseMoveEvent>();
+					// std::cout << mouseMoveEvent.pos.x << ", " << mouseMoveEvent.pos.y << std::endl;
+				}
+			}
+		}
 
 		window.clear({ 0.2f, 0.3f, 0.3f });
 

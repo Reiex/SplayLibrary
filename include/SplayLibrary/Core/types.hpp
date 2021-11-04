@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <fstream>
 #include <memory>
+#include <mutex>
 #include <queue>
 #include <string>
 #include <unordered_map>
@@ -71,7 +72,14 @@ namespace spl
 	enum class DrawableStorage;
 	class Drawable;
 
+	enum class EventType;
 	struct Event;
+	enum class KeyboardKey;
+	enum class KeyboardAction;
+	namespace KeyboardModifier { enum ModifierFlags; };
+	struct KeyboardEvent;
+	struct TextEvent;
+	struct MouseMoveEvent;
 	struct ResizeEvent;
 	
 	class RenderWindow;

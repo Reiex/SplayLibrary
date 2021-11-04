@@ -39,7 +39,8 @@ namespace spl
 			vec3 _clearColor;
 
 			std::queue<Event*> _events;
+			Event* _lastEventSent;
 
-		friend void stackEvent(RenderWindow* window, Event* event);
+		friend void stackEvent(void* window, Event* event);
 	};
 }
