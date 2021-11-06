@@ -94,6 +94,22 @@ int main()
 					std::cout << "Mouse position: " << mouseMoveEvent.pos.x << ", " << mouseMoveEvent.pos.y << std::endl;
 					break;
 				}
+				case spl::EventType::MouseEnterWindowEvent:
+				{
+					std::cout << "Mouse entered !" << std::endl;
+					break;
+				}
+				case spl::EventType::MouseLeaveWindowEvent:
+				{
+					std::cout << "Mouse left !" << std::endl;
+					break;
+				}
+				case spl::EventType::MouseButtonEvent:
+				{
+					spl::MouseButtonEvent mouseButtonEvent = event->specialize<spl::EventType::MouseButtonEvent>();
+					std::cout << "Mouse: " << (int)mouseButtonEvent.button << ", " << (int)mouseButtonEvent.action << ", " << mouseButtonEvent.modifiers << std::endl;
+					break;
+				}
 				case spl::EventType::ResizeEvent:
 				{
 					spl::ResizeEvent resizeEvent = event->specialize<spl::EventType::ResizeEvent>();

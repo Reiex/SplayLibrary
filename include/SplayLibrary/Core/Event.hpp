@@ -10,6 +10,9 @@ namespace spl
 		KeyboardEvent,
 		TextEvent,
 		MouseMoveEvent,
+		MouseEnterWindowEvent,
+		MouseLeaveWindowEvent,
+		MouseButtonEvent,
 		ResizeEvent
 	};
 
@@ -19,6 +22,9 @@ namespace spl
 		template<> struct EventTypeEncapsulator<EventType::KeyboardEvent> { typedef KeyboardEvent Type; };
 		template<> struct EventTypeEncapsulator<EventType::TextEvent> { typedef TextEvent Type; };
 		template<> struct EventTypeEncapsulator<EventType::MouseMoveEvent> { typedef MouseMoveEvent Type; };
+		template<> struct EventTypeEncapsulator<EventType::MouseEnterWindowEvent> { typedef MouseEnterWindowEvent Type; };
+		template<> struct EventTypeEncapsulator<EventType::MouseLeaveWindowEvent> { typedef MouseLeaveWindowEvent Type; };
+		template<> struct EventTypeEncapsulator<EventType::MouseButtonEvent> { typedef MouseButtonEvent Type; };
 		template<> struct EventTypeEncapsulator<EventType::ResizeEvent> { typedef ResizeEvent Type; };
 
 		template<EventType T> typename EventTypeEncapsulator<T>::Type specialize()
@@ -156,11 +162,12 @@ namespace spl
 		Menu
 	};
 
-	enum class KeyboardAction
+	enum class ButtonAction
 	{
-		KeyPressed,
-		KeyRepeated,
-		KeyReleased
+		Unknown,
+		Pressed,
+		Repeated,
+		Released
 	};
 
 	namespace KeyboardModifier
@@ -181,7 +188,7 @@ namespace spl
 	{
 		int scancode;
 		KeyboardKey key;
-		KeyboardAction action;
+		ButtonAction action;
 		KeyboardModifier::ModifierFlags modifiers;
 	};
 
@@ -195,6 +202,31 @@ namespace spl
 	struct MouseMoveEvent : public Event
 	{
 		dvec2 pos;
+	};
+
+
+	struct MouseEnterWindowEvent : public Event {};
+	struct MouseLeaveWindowEvent : public Event {};
+
+
+	enum class MouseButton
+	{
+		Unknown,
+		Left,
+		Right,
+		Middle,
+		Button4,
+		Button5,
+		Button6,
+		Button7,
+		Button8
+	};
+
+	struct MouseButtonEvent : public Event
+	{
+		MouseButton button;
+		ButtonAction action;
+		KeyboardModifier::ModifierFlags modifiers;
 	};
 
 

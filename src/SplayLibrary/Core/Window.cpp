@@ -527,19 +527,19 @@ namespace spl
 			}
 		}
 
-		KeyboardAction glfwActionToSplAction(int action)
+		ButtonAction glfwActionToButtonAction(int action)
 		{
 			switch (action)
 			{
 			case GLFW_PRESS:
-				return KeyboardAction::KeyPressed;
+				return ButtonAction::Pressed;
 			case GLFW_REPEAT:
-				return KeyboardAction::KeyRepeated;
+				return ButtonAction::Repeated;
 			case GLFW_RELEASE:
-				return KeyboardAction::KeyReleased;
+				return ButtonAction::Released;
 			default:
 				assert(false);
-				return KeyboardAction::KeyPressed;
+				return ButtonAction::Unknown;
 			}
 		}
 
@@ -574,6 +574,32 @@ namespace spl
 
 			return static_cast<KeyboardModifier::ModifierFlags>(flags);
 		}
+	
+		MouseButton glfwMouseButtonToSplMouseButton(int button)
+		{
+			switch (button)
+			{
+			case GLFW_MOUSE_BUTTON_LEFT:
+				return MouseButton::Left;
+			case GLFW_MOUSE_BUTTON_RIGHT:
+				return MouseButton::Right;
+			case GLFW_MOUSE_BUTTON_MIDDLE:
+				return MouseButton::Middle;
+			case GLFW_MOUSE_BUTTON_4:
+				return MouseButton::Button4;
+			case GLFW_MOUSE_BUTTON_5:
+				return MouseButton::Button5;
+			case GLFW_MOUSE_BUTTON_6:
+				return MouseButton::Button6;
+			case GLFW_MOUSE_BUTTON_7:
+				return MouseButton::Button7;
+			case GLFW_MOUSE_BUTTON_8:
+				return MouseButton::Button8;
+			default:
+				assert(false);
+				return MouseButton::Unknown;
+			}
+		}
 	}
 
 	namespace
@@ -603,7 +629,7 @@ namespace spl
 			event->type = EventType::KeyboardEvent;
 			event->scancode = scancode;
 			event->key = glfwKeyToSplKey(key);
-			event->action = glfwActionToSplAction(action);
+			event->action = glfwActionToButtonAction(action);
 			event->modifiers = glfwModifierToSplModifier(mods);
 
 			stackEvent(window, event);
@@ -627,6 +653,36 @@ namespace spl
 
 			stackEvent(window, event);
 		}
+
+		void glfwCursorEnterCallback(GLFWwindow* window, int entered)
+		{
+			if (entered)
+			{
+				MouseEnterWindowEvent* event = new MouseEnterWindowEvent();
+				event->type = EventType::MouseEnterWindowEvent;
+
+				stackEvent(window, event);
+			}
+			else
+			{
+				MouseLeaveWindowEvent* event = new MouseLeaveWindowEvent();
+				event->type = EventType::MouseLeaveWindowEvent;
+
+				stackEvent(window, event);
+			}
+		}
+
+		void glfwMouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+		{
+			MouseButtonEvent* event = new MouseButtonEvent();
+			event->type = EventType::MouseButtonEvent;
+			event->button = glfwMouseButtonToSplMouseButton(button);
+			event->action = glfwActionToButtonAction(action);
+			event->modifiers = glfwModifierToSplModifier(mods);
+
+			stackEvent(window, event);
+		}
+
 
 		void glfwFramebufferSizeCallback(GLFWwindow* window, int width, int height)
 		{
@@ -692,6 +748,9 @@ namespace spl
 		glfwSetKeyCallback(glfwWindow, glfwKeyCallback);
 		glfwSetCharCallback(glfwWindow, glfwCharacterCallback);
 		glfwSetCursorPosCallback(glfwWindow, glfwCursorPosCallback);
+		glfwSetCursorEnterCallback(glfwWindow, glfwCursorEnterCallback);
+		glfwSetMouseButtonCallback(glfwWindow, glfwMouseButtonCallback);
+		
 		glfwSetFramebufferSizeCallback(glfwWindow, glfwFramebufferSizeCallback);
 	}
 
@@ -747,6 +806,13 @@ namespace spl
 		dvec2 pos;
 		glfwGetCursorPos(static_cast<GLFWwindow*>(_window), &pos.x, &pos.y);
 		return pos;
+	}
+
+	bool Window::isCursorInWindow() const
+	{
+		assert(isValid());
+
+		return glfwGetWindowAttrib(static_cast<GLFWwindow*>(_window), GLFW_HOVERED);
 	}
 
 	bool Window::processEvent(Event*& event)

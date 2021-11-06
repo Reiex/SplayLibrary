@@ -57,16 +57,12 @@ namespace spl
 	namespace BufferStorageFlags { enum Flags; }
 	class Buffer;
 
-	//
-
 	enum class TextureTarget;
 	enum class TextureCubeMapTarget;
 	enum class TextureFormat;
 	enum class TextureDataType;
 	enum class TextureInternalFormat;
 	class RawTexture;
-
-	//
 
 	struct VertexAttribute;
 	enum class DrawableStorage;
@@ -75,11 +71,14 @@ namespace spl
 	enum class EventType;
 	struct Event;
 	enum class KeyboardKey;
-	enum class KeyboardAction;
+	enum class ButtonAction;
 	namespace KeyboardModifier { enum ModifierFlags; };
 	struct KeyboardEvent;
 	struct TextEvent;
 	struct MouseMoveEvent;
+	struct MouseEnterWindowEvent;
+	struct MouseLeaveWindowEvent;
+	struct MouseButtonEvent;
 	struct ResizeEvent;
 	
 	class Window;
