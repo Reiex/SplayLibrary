@@ -4,7 +4,7 @@
 
 namespace spl
 {
-	class RenderWindow
+	class RenderWindow : public Window
 	{
 		public:
 
@@ -14,33 +14,17 @@ namespace spl
 
 			const RenderWindow& operator=(const RenderWindow& window) = delete;
 			const RenderWindow& operator=(RenderWindow&& window) = delete;
-
-			bool pollEvent(Event*& event);
-			bool waitEvent(Event*& event, double timeout = 0.0);
 			
 			void clear(const vec3& color);
 			void draw(const Drawable& mesh);
 			void display();
 
-			bool shouldClose() const;
-			const void* getHandle() const;
-
 			~RenderWindow();
 
 		private:
 
-			RenderWindow();
-
-			bool processEvent(Event*& event);
-
-			void* _window;
-			uvec2 _size;
+			virtual bool processEvent(Event*& event);
 
 			vec3 _clearColor;
-
-			std::queue<Event*> _events;
-			Event* _lastEventSent;
-
-		friend void stackEvent(void* window, Event* event);
 	};
 }

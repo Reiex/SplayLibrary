@@ -82,6 +82,8 @@ namespace spl
 	struct MouseMoveEvent;
 	struct ResizeEvent;
 	
+	class Window;
+
 	class RenderWindow;
 
 	class Shader;

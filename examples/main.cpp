@@ -76,15 +76,29 @@ int main()
 		{
 			switch (event->type)
 			{
+				case spl::EventType::KeyboardEvent:
+				{
+					spl::KeyboardEvent keyboardEvent = event->specialize<spl::EventType::KeyboardEvent>();
+					std::cout << "Keyboard: " << (int)keyboardEvent.key << ", " << (int)keyboardEvent.action << ", " << keyboardEvent.modifiers << std::endl;
+					break;
+				}
 				case spl::EventType::TextEvent:
 				{
 					spl::TextEvent textEvent = event->specialize<spl::EventType::TextEvent>();
-					// std::cout << (char)textEvent.unicode << std::endl;
+					std::cout << "Text: " << (char)textEvent.unicode << std::endl;
+					break;
 				}
 				case spl::EventType::MouseMoveEvent:
 				{
 					spl::MouseMoveEvent mouseMoveEvent = event->specialize<spl::EventType::MouseMoveEvent>();
-					// std::cout << mouseMoveEvent.pos.x << ", " << mouseMoveEvent.pos.y << std::endl;
+					std::cout << "Mouse position: " << mouseMoveEvent.pos.x << ", " << mouseMoveEvent.pos.y << std::endl;
+					break;
+				}
+				case spl::EventType::ResizeEvent:
+				{
+					spl::ResizeEvent resizeEvent = event->specialize<spl::EventType::ResizeEvent>();
+					std::cout << "Resize: " << resizeEvent.size.x << ", " << resizeEvent.size.y << std::endl;
+					break;
 				}
 			}
 		}
