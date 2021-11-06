@@ -4,6 +4,13 @@
 
 namespace spl
 {
+	enum class CursorMode
+	{
+		Normal,
+		Hidden,
+		Disabled
+	};
+
 	class Window
 	{
 		public:
@@ -20,16 +27,18 @@ namespace spl
 			bool pollEvent(Event*& event);
 			bool waitEvent(Event*& event, double timeout = 0.0);
 
+			void setCursorMode(CursorMode mode);
+
 			bool shouldClose() const;
 			bool isKeyPressed(KeyboardKey key) const;
 			dvec2 getMousePosition() const;
-
-			static void setCurrentContext(const Window* window);
 
 			bool isValid() const;
 			void* getHandle();
 			const void* getHandle() const;
 			const uvec2& getSize() const;
+
+			static void setCurrentContext(const Window* window);
 
 			~Window();
 

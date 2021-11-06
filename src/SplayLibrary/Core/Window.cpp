@@ -574,7 +574,29 @@ namespace spl
 
 			return static_cast<KeyboardModifier::ModifierFlags>(flags);
 		}
+	}
 
+	namespace
+	{
+		int splCursorModeToGlfwCursorMode(CursorMode mode)
+		{
+			switch (mode)
+			{
+			case CursorMode::Normal:
+				return GLFW_CURSOR_NORMAL;
+			case CursorMode::Hidden:
+				return GLFW_CURSOR_HIDDEN;
+			case CursorMode::Disabled:
+				return GLFW_CURSOR_DISABLED;
+			default:
+				assert(false);
+				return GLFW_CURSOR_NORMAL;
+			}
+		}
+	}
+
+	namespace
+	{
 		void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 		{
 			KeyboardEvent* event = new KeyboardEvent();
@@ -661,6 +683,11 @@ namespace spl
 		GLFWwindow* glfwWindow = static_cast<GLFWwindow*>(_window);
 
 		glfwSetInputMode(glfwWindow, GLFW_LOCK_KEY_MODS, GLFW_TRUE);
+		glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		if (glfwRawMouseMotionSupported())
+		{
+			glfwSetInputMode(glfwWindow, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+		}
 
 		glfwSetKeyCallback(glfwWindow, glfwKeyCallback);
 		glfwSetCharCallback(glfwWindow, glfwCharacterCallback);
@@ -690,6 +717,13 @@ namespace spl
 		}
 
 		return processEvent(event);
+	}
+
+	void Window::setCursorMode(CursorMode mode)
+	{
+		assert(isValid());
+
+		glfwSetInputMode(static_cast<GLFWwindow*>(_window), GLFW_CURSOR, splCursorModeToGlfwCursorMode(mode));
 	}
 
 	bool Window::shouldClose() const
@@ -751,19 +785,6 @@ namespace spl
 		return true;
 	}
 
-	void Window::setCurrentContext(const Window* window)
-	{
-		if (window)
-		{
-			assert(window->isValid());
-			glfwMakeContextCurrent(static_cast<GLFWwindow*>(window->_window));
-		}
-		else
-		{
-			glfwMakeContextCurrent(nullptr);
-		}
-	}
-
 	bool Window::isValid() const
 	{
 		return _window != nullptr;
@@ -782,6 +803,19 @@ namespace spl
 	const uvec2& Window::getSize() const
 	{
 		return _size;
+	}
+
+	void Window::setCurrentContext(const Window* window)
+	{
+		if (window)
+		{
+			assert(window->isValid());
+			glfwMakeContextCurrent(static_cast<GLFWwindow*>(window->_window));
+		}
+		else
+		{
+			glfwMakeContextCurrent(nullptr);
+		}
 	}
 
 	Window::~Window()
