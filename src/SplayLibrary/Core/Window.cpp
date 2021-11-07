@@ -5,8 +5,7 @@ namespace spl
 {
 	namespace
 	{
-		std::mutex SPL_WINDOW_MUTEX;
-		std::vector<Window*> SPL_WINDOWS;
+		static std::vector<Window*> SPL_WINDOWS;
 	}
 
 	static void stackEvent(void* window, Event* event)
@@ -704,18 +703,20 @@ namespace spl
 
 	Window::Window(const uvec2& size, const std::string& title) : Window()
 	{
-		SPL_WINDOW_MUTEX.lock();
+		static std::mutex mutex;
 
-		if (SPL_WINDOWS.empty())
-		{
-			if (!glfwInit())
-			{
-				SPL_DEBUG("Could not initialize GLFW.");
-				SPL_WINDOW_MUTEX.unlock();
-				return;
-			}
-		}
+		mutex.lock();
 		SPL_WINDOWS.push_back(this);
+		mutex.unlock();
+
+		ContextManager* contextManager = ContextManager::get();
+		if (!contextManager)
+		{
+			SPL_DEBUG("Could not retrieve context manager.");
+			return;
+		}
+
+		mutex.lock();
 
 		// TODO: Gestion de contextes différents (versions d'OpenGL... Vulkan ? Autres ?)
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -726,11 +727,11 @@ namespace spl
 		// TODO: Gestion du choix du moniteur
 		_window = glfwCreateWindow(size.x, size.y, title.c_str(), nullptr, nullptr);
 
-		SPL_WINDOW_MUTEX.unlock();
+		mutex.unlock();
 
-		if (!_window)
+		if (!contextManager->setCurrentThreadContext(this))
 		{
-			SPL_DEBUG("Could not create GLFW window.");
+			SPL_DEBUG("Could not assign window context to current thread.");
 			return;
 		}
 
@@ -886,33 +887,27 @@ namespace spl
 
 	Window::~Window()
 	{
+		static std::mutex mutex;
+
+		mutex.lock();
+		SPL_WINDOWS.erase(std::find(SPL_WINDOWS.begin(), SPL_WINDOWS.end(), this));
+		mutex.unlock();
+
 		while (!_events.empty())
 		{
 			delete _events.front();
 			_events.pop();
 		}
 
+		ContextManager* contextManager = ContextManager::get();
+		if (contextManager && contextManager->getCurrentThreadContext())
+		{
+			contextManager->setCurrentThreadContext(nullptr);
+		}
+
 		if (_window)
 		{
 			glfwDestroyWindow(static_cast<GLFWwindow*>(_window));
 		}
-
-		SPL_WINDOW_MUTEX.lock();
-
-		for (uint32_t i = 0; i < SPL_WINDOWS.size(); ++i)
-		{
-			if (SPL_WINDOWS[i] == this)
-			{
-				SPL_WINDOWS.erase(SPL_WINDOWS.begin() + i);
-				break;
-			}
-		}
-
-		if (SPL_WINDOWS.empty())
-		{
-			glfwTerminate();
-		}
-
-		SPL_WINDOW_MUTEX.unlock();
 	}
 }

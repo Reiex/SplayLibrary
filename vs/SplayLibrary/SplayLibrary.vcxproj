@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\SplayLibrary\3D\Mesh.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Buffer.cpp" />
+    <ClCompile Include="..\..\src\SplayLibrary\Core\ContextManager.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Drawable.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Glsl.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\RenderWindow.cpp" />
@@ -34,6 +35,7 @@
     <ClInclude Include="..\..\include\SplayLibrary\3D\MeshT.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\3D\types.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Buffer.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\ContextManager.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Core.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Drawable.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Event.hpp" />

@@ -9,6 +9,7 @@
 #include <mutex>
 #include <queue>
 #include <string>
+#include <thread>
 #include <unordered_map>
 #include <vector>
 
@@ -68,6 +69,8 @@ namespace spl
 	enum class DrawableStorage;
 	class Drawable;
 
+	class ContextManager;
+
 	enum class EventType;
 	struct Event;
 	enum class KeyboardKey;
@@ -82,7 +85,6 @@ namespace spl
 	struct ResizeEvent;
 	
 	class Window;
-
 	class RenderWindow;
 
 	class Shader;

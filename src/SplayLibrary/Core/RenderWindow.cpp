@@ -8,28 +8,11 @@
 
 namespace spl
 {
-	namespace
-	{
-		thread_local RenderWindow* SPL_THREAD_RENDER_WINDOW = nullptr;
-	}
-
 	RenderWindow::RenderWindow(const uvec2& size, const std::string& title) : Window(size, title),
 		_clearColor(0.f, 0.f, 0.f)
 	{
 		if (!isValid())
 		{
-			return;
-		}
-
-		assert(SPL_THREAD_RENDER_WINDOW == nullptr);
-		SPL_THREAD_RENDER_WINDOW = this;
-
-		GLFWwindow* glfwWindow = static_cast<GLFWwindow*>(getHandle());
-		glfwMakeContextCurrent(glfwWindow);
-
-		if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
-		{
-			SPL_DEBUG("Could not load OpenGL functions.");
 			return;
 		}
 
@@ -84,17 +67,5 @@ namespace spl
 
 	RenderWindow::~RenderWindow()
 	{
-		assert(SPL_THREAD_RENDER_WINDOW == this);
-		if (SPL_THREAD_RENDER_WINDOW == this)
-		{
-			SPL_THREAD_RENDER_WINDOW = nullptr;
-		}
-
-		GLFWwindow* glfwWindow = static_cast<GLFWwindow*>(getHandle());
-		assert(glfwGetCurrentContext() == glfwWindow);
-		if (glfwGetCurrentContext() == glfwWindow)
-		{
-			glfwMakeContextCurrent(nullptr);
-		}
 	}
 }
