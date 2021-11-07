@@ -82,6 +82,7 @@ namespace spl
 	struct MouseEnterWindowEvent;
 	struct MouseLeaveWindowEvent;
 	struct MouseButtonEvent;
+	struct ScrollEvent;
 	struct ResizeEvent;
 	
 	class Window;

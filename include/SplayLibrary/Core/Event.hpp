@@ -13,6 +13,7 @@ namespace spl
 		MouseEnterWindowEvent,
 		MouseLeaveWindowEvent,
 		MouseButtonEvent,
+		ScrollEvent,
 		ResizeEvent
 	};
 
@@ -25,6 +26,7 @@ namespace spl
 		template<> struct EventTypeEncapsulator<EventType::MouseEnterWindowEvent> { typedef MouseEnterWindowEvent Type; };
 		template<> struct EventTypeEncapsulator<EventType::MouseLeaveWindowEvent> { typedef MouseLeaveWindowEvent Type; };
 		template<> struct EventTypeEncapsulator<EventType::MouseButtonEvent> { typedef MouseButtonEvent Type; };
+		template<> struct EventTypeEncapsulator<EventType::ScrollEvent> { typedef ScrollEvent Type; };
 		template<> struct EventTypeEncapsulator<EventType::ResizeEvent> { typedef ResizeEvent Type; };
 
 		template<EventType T> typename EventTypeEncapsulator<T>::Type specialize()
@@ -227,6 +229,12 @@ namespace spl
 		MouseButton button;
 		ButtonAction action;
 		KeyboardModifier::ModifierFlags modifiers;
+	};
+
+
+	struct ScrollEvent : public Event
+	{
+		dvec2 offset;
 	};
 
 

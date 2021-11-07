@@ -599,6 +599,33 @@ namespace spl
 				return MouseButton::Unknown;
 			}
 		}
+	
+		int splMouseButtonToGlfwMouseButton(MouseButton button)
+		{
+
+			switch (button)
+			{
+			case MouseButton::Left:
+				return GLFW_MOUSE_BUTTON_LEFT;
+			case MouseButton::Right:
+				return GLFW_MOUSE_BUTTON_RIGHT;
+			case MouseButton::Middle:
+				return GLFW_MOUSE_BUTTON_MIDDLE;
+			case MouseButton::Button4:
+				return GLFW_MOUSE_BUTTON_4;
+			case MouseButton::Button5:
+				return GLFW_MOUSE_BUTTON_5;
+			case MouseButton::Button6:
+				return GLFW_MOUSE_BUTTON_6;
+			case MouseButton::Button7:
+				return GLFW_MOUSE_BUTTON_7;
+			case MouseButton::Button8:
+				return GLFW_MOUSE_BUTTON_8;
+			default:
+				assert(false);
+				return GLFW_MOUSE_BUTTON_1;
+			}
+		}
 	}
 
 	namespace
@@ -682,6 +709,16 @@ namespace spl
 			stackEvent(window, event);
 		}
 
+		void glfwScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
+		{
+			ScrollEvent* event = new ScrollEvent();
+			event->type = EventType::MouseButtonEvent;
+			event->offset.x = xOffset;
+			event->offset.y = yOffset;
+
+			stackEvent(window, event);
+		}
+
 
 		void glfwFramebufferSizeCallback(GLFWwindow* window, int width, int height)
 		{
@@ -751,8 +788,11 @@ namespace spl
 		glfwSetCursorPosCallback(glfwWindow, glfwCursorPosCallback);
 		glfwSetCursorEnterCallback(glfwWindow, glfwCursorEnterCallback);
 		glfwSetMouseButtonCallback(glfwWindow, glfwMouseButtonCallback);
-		
+		glfwSetScrollCallback(glfwWindow, glfwScrollCallback);
+		// TODO: Joysticks and gamepads callbacks
+
 		glfwSetFramebufferSizeCallback(glfwWindow, glfwFramebufferSizeCallback);
+		// TODO: Window event callbacks
 	}
 
 	bool Window::pollEvent(Event*& event)
@@ -777,6 +817,42 @@ namespace spl
 		}
 
 		return processEvent(event);
+	}
+
+	bool Window::processEvent(Event*& event)
+	{
+		assert(isValid());
+
+		if (_events.size() > 0 && _events.front() == _lastEventSent)
+		{
+			delete _events.front();
+			_events.pop();
+			_lastEventSent = nullptr;
+		}
+
+		if (_events.size() == 0)
+		{
+			return false;
+		}
+
+		event = _events.front();
+		_lastEventSent = event;
+
+		switch (event->type)
+		{
+			case EventType::ResizeEvent:
+			{
+				ResizeEvent resizeEvent = event->specialize<EventType::ResizeEvent>();
+				_size = resizeEvent.size;
+				break;
+			}
+			default:
+			{
+				break;
+			}
+		}
+
+		return true;
 	}
 
 	void Window::setCursorMode(CursorMode mode)
@@ -816,40 +892,11 @@ namespace spl
 		return glfwGetWindowAttrib(static_cast<GLFWwindow*>(_window), GLFW_HOVERED);
 	}
 
-	bool Window::processEvent(Event*& event)
+	bool Window::isMouseButtonPressed(MouseButton button) const
 	{
 		assert(isValid());
 
-		if (_events.size() > 0 && _events.front() == _lastEventSent)
-		{
-			delete _events.front();
-			_events.pop();
-			_lastEventSent = nullptr;
-		}
-
-		if (_events.size() == 0)
-		{
-			return false;
-		}
-
-		event = _events.front();
-		_lastEventSent = event;
-
-		switch (event->type)
-		{
-			case EventType::ResizeEvent:
-			{
-				ResizeEvent resizeEvent = event->specialize<EventType::ResizeEvent>();
-				_size = resizeEvent.size;
-				break;
-			}
-			default:
-			{
-				break;
-			}
-		}
-
-		return true;
+		return glfwGetMouseButton(static_cast<GLFWwindow*>(_window), splMouseButtonToGlfwMouseButton(button)) == GLFW_PRESS;
 	}
 
 	bool Window::isValid() const

@@ -15,7 +15,7 @@ namespace spl
 	{
 		public:
 
-			// TODO: Context manager (offscreen textures, cursors, window, needs for something "universal"
+			// TODO: Before anything else for windows: TEST MULTI WINDOWS IN MULTIPLE THREADS !
 			// TODO: Cursor object
 
 			Window(const uvec2& size, const std::string& title);
@@ -34,6 +34,7 @@ namespace spl
 			bool isKeyPressed(KeyboardKey key) const;
 			dvec2 getMousePosition() const;
 			bool isCursorInWindow() const;
+			bool isMouseButtonPressed(MouseButton button) const;
 
 			bool isValid() const;
 			void* getHandle();

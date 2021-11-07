@@ -72,52 +72,7 @@ int main()
 	while (!window.shouldClose())
 	{
 		spl::Event* event = nullptr;
-		while (window.pollEvent(event))
-		{
-			switch (event->type)
-			{
-				case spl::EventType::KeyboardEvent:
-				{
-					spl::KeyboardEvent keyboardEvent = event->specialize<spl::EventType::KeyboardEvent>();
-					std::cout << "Keyboard: " << (int)keyboardEvent.key << ", " << (int)keyboardEvent.action << ", " << keyboardEvent.modifiers << std::endl;
-					break;
-				}
-				case spl::EventType::TextEvent:
-				{
-					spl::TextEvent textEvent = event->specialize<spl::EventType::TextEvent>();
-					std::cout << "Text: " << (char)textEvent.unicode << std::endl;
-					break;
-				}
-				case spl::EventType::MouseMoveEvent:
-				{
-					spl::MouseMoveEvent mouseMoveEvent = event->specialize<spl::EventType::MouseMoveEvent>();
-					std::cout << "Mouse position: " << mouseMoveEvent.pos.x << ", " << mouseMoveEvent.pos.y << std::endl;
-					break;
-				}
-				case spl::EventType::MouseEnterWindowEvent:
-				{
-					std::cout << "Mouse entered !" << std::endl;
-					break;
-				}
-				case spl::EventType::MouseLeaveWindowEvent:
-				{
-					std::cout << "Mouse left !" << std::endl;
-					break;
-				}
-				case spl::EventType::MouseButtonEvent:
-				{
-					spl::MouseButtonEvent mouseButtonEvent = event->specialize<spl::EventType::MouseButtonEvent>();
-					std::cout << "Mouse: " << (int)mouseButtonEvent.button << ", " << (int)mouseButtonEvent.action << ", " << mouseButtonEvent.modifiers << std::endl;
-					break;
-				}
-				case spl::EventType::ResizeEvent:
-				{
-					spl::ResizeEvent resizeEvent = event->specialize<spl::EventType::ResizeEvent>();
-					std::cout << "Resize: " << resizeEvent.size.x << ", " << resizeEvent.size.y << std::endl;
-					break;
-				}
-			}
-		}
+		while (window.pollEvent(event)) {}
 
 		window.clear({ 0.2f, 0.3f, 0.3f });
 
