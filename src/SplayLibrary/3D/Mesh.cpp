@@ -1,4 +1,4 @@
-#include <SplayLibrary/3D/3D.hpp>
+#include <SplayLibrary/SplayLibrary.hpp>
 #include <SplayLibrary/Core/Private.hpp>
 
 namespace spl

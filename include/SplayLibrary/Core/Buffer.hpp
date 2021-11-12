@@ -77,7 +77,6 @@ namespace spl
 			void update(const Buffer& data, uint32_t size, uint32_t dstOffset = 0, uint32_t srcOffset = 0);
 			void destroy();
 
-			
 			// TODO: mapping
 
 			uint32_t getHandle() const;
