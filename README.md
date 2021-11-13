@@ -1,3 +1,3 @@
-# SplayLibrary - An C++/OpenGL library for general purpose display
+# SplayLibrary - A C++/OpenGL library for general purpose display
 
 Description is comming...
