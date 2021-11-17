@@ -33,6 +33,7 @@ namespace spl
 	{
 		public:
 
+			Mesh(const std::filesystem::path& path, DrawableStorage verticesStorage = DrawableStorage::Static, DrawableStorage indicesStorage = DrawableStorage::Static);
 			Mesh(const std::vector<VertexType>& vertices, DrawableStorage verticesStorage = DrawableStorage::Static, DrawableStorage indicesStorage = DrawableStorage::Static);
 			Mesh(const std::vector<VertexType>& vertices, const std::vector<uint32_t> indices, DrawableStorage verticesStorage = DrawableStorage::Static, DrawableStorage indicesStorage = DrawableStorage::Static);
 			Mesh(const Mesh<VertexType>& mesh) = delete;
@@ -51,6 +52,8 @@ namespace spl
 			~Mesh() = default;
 
 		protected:
+
+			bool loadObj(const std::filesystem::path& path);
 
 			Mesh();
 

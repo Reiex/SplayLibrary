@@ -2,6 +2,10 @@
 
 #include <SplayLibrary/Core/Core.hpp>
 
+#include <filesystem>
+
+#include <Diskon/Diskon.hpp>
+
 namespace spl
 {
 	struct VertexBase;
