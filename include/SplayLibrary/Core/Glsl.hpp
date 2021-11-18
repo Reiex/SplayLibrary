@@ -47,13 +47,23 @@ vecName##4(eltType xValue, const vecName##3& v) : x(xValue), y(v.x), z(v.y), w(v
 
 // Vec internal operators
 
-#define SPLD_vec_INTERNAL_OP(vecName, vecSize, eltType) SPLD_VEC##vecSize##_INTERNAL_OP_ARITH(vecName, vecSize, eltType)
-#define SPLD_dvec_INTERNAL_OP(vecName, vecSize, eltType) SPLD_VEC##vecSize##_INTERNAL_OP_ARITH(vecName, vecSize, eltType)
-#define SPLD_ivec_INTERNAL_OP(vecName, vecSize, eltType) SPLD_VEC##vecSize##_INTERNAL_OP_ARITH(vecName, vecSize, eltType)
-#define SPLD_uvec_INTERNAL_OP(vecName, vecSize, eltType) SPLD_VEC##vecSize##_INTERNAL_OP_ARITH(vecName, vecSize, eltType)
+#define SPLD_vec_INTERNAL_OP(vecName, vecSize, eltType)																											\
+SPLD_VEC##vecSize##_INTERNAL_OP_ARITH(vecName, vecSize, eltType)
+
+#define SPLD_dvec_INTERNAL_OP(vecName, vecSize, eltType)																										\
+SPLD_VEC##vecSize##_INTERNAL_OP_ARITH(vecName, vecSize, eltType)
+
+#define SPLD_ivec_INTERNAL_OP(vecName, vecSize, eltType)																										\
+SPLD_VEC##vecSize##_INTERNAL_OP_ARITH(vecName, vecSize, eltType)																								\
+SPLD_VEC##vecSize##_INTERNAL_OP_BITWISE(vecName, vecSize, eltType)
+
+#define SPLD_uvec_INTERNAL_OP(vecName, vecSize, eltType)																										\
+SPLD_VEC##vecSize##_INTERNAL_OP_ARITH(vecName, vecSize, eltType)																								\
+SPLD_VEC##vecSize##_INTERNAL_OP_BITWISE(vecName, vecSize, eltType)
+
 #define SPLD_bvec_INTERNAL_OP(vecName, vecSize, eltType)
 
-\
+
 #define SPLD_VEC2_INTERNAL_OP_ARITH(vecName, vecSize, eltType)																									\
 vecName##2& operator+=(const vecName##2& v) { x += v.x; y += v.y; return *this; }																				\
 vecName##2& operator-=(const vecName##2& v) { x -= v.x; y -= v.y; return *this; }																				\
@@ -71,6 +81,22 @@ vecName##4& operator+=(const vecName##4& v) { x += v.x; y += v.y; z += v.z; w +=
 vecName##4& operator-=(const vecName##4& v) { x -= v.x; y -= v.y; z -= v.z; w -= v.w; return *this; }															\
 vecName##4& operator*=(const vecName##4& v) { x *= v.x; y *= v.y; z *= v.z; w *= v.w; return *this; }															\
 vecName##4& operator/=(const vecName##4& v) { x /= v.x; y /= v.y; z /= v.z; w /= v.w; return *this; }
+
+
+#define SPLD_VEC2_INTERNAL_OP_BITWISE(vecName, vecSize, eltType)																								\
+vecName##2& operator|=(const vecName##2& v) { x |= v.x; y |= v.y; return *this; }																				\
+vecName##2& operator&=(const vecName##2& v) { x &= v.x; y &= v.y; return *this; }																				\
+vecName##2& operator^=(const vecName##2& v) { x ^= v.x; y ^= v.y; return *this; }
+
+#define SPLD_VEC3_INTERNAL_OP_BITWISE(vecName, vecSize, eltType)																								\
+vecName##3& operator|=(const vecName##3& v) { x |= v.x; y |= v.y; z |= v.z; return *this; }																		\
+vecName##3& operator&=(const vecName##3& v) { x &= v.x; y &= v.y; z &= v.z; return *this; }																		\
+vecName##3& operator^=(const vecName##3& v) { x ^= v.x; y ^= v.y; z ^= v.z; return *this; }
+
+#define SPLD_VEC4_INTERNAL_OP_BITWISE(vecName, vecSize, eltType)																								\
+vecName##4& operator|=(const vecName##4& v) { x |= v.x; y |= v.y; z |= v.z; w |= v.w; return *this;}															\
+vecName##4& operator&=(const vecName##4& v) { x &= v.x; y &= v.y; z &= v.z; w &= v.w; return *this; }															\
+vecName##4& operator^=(const vecName##4& v) { x ^= v.x; y ^= v.y; z ^= v.z; w ^= v.w; return *this; }
 
 
 // Vec accessors
@@ -99,20 +125,24 @@ eltType x, y, z, w;
 #define SPLD_vec_EXTERNAL_OP(vecName, vecSize, eltType) 																										\
 SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																											\
 SPLD_VEC_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)																											\
+SPLD_VEC_EXTERNAL_OP_BITWISE(vecName, vecSize, eltType)																											\
 SPLD_VEC_EXTERNAL_OP_CMP(vecName, vecSize, eltType)
 
 #define SPLD_dvec_EXTERNAL_OP(vecName, vecSize, eltType) 																										\
 SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																											\
 SPLD_VEC_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)																											\
+SPLD_VEC_EXTERNAL_OP_BITWISE(vecName, vecSize, eltType)																											\
 SPLD_VEC_EXTERNAL_OP_CMP(vecName, vecSize, eltType)
 
 #define SPLD_ivec_EXTERNAL_OP(vecName, vecSize, eltType) 																										\
 SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																											\
 SPLD_VEC_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)																											\
+SPLD_VEC_EXTERNAL_OP_BITWISE(vecName, vecSize, eltType)																											\
 SPLD_VEC_EXTERNAL_OP_CMP(vecName, vecSize, eltType)
 
 #define SPLD_uvec_EXTERNAL_OP(vecName, vecSize, eltType) 																										\
 SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																											\
+SPLD_VEC_EXTERNAL_OP_BITWISE(vecName, vecSize, eltType)																											\
 SPLD_VEC_EXTERNAL_OP_CMP(vecName, vecSize, eltType)
 
 #define SPLD_bvec_EXTERNAL_OP(vecName, vecSize, eltType) 																										\
@@ -142,6 +172,12 @@ vecName##vecSize operator+(const vecName##vecSize##& u);																								
 vecName##vecSize operator-(const vecName##vecSize##& u);
 
 
+#define SPLD_VEC_EXTERNAL_OP_BITWISE(vecName, vecSize, eltType)																									\
+vecName##vecSize operator|(const vecName##vecSize##& u, const vecName##vecSize##& v);																			\
+vecName##vecSize operator&(const vecName##vecSize##& u, const vecName##vecSize##& v);																			\
+vecName##vecSize operator^(const vecName##vecSize##& u, const vecName##vecSize##& v);
+
+
 #define SPLD_VEC_EXTERNAL_OP_LOGIC(vecName, vecSize, eltType)																									\
 vecName##vecSize operator||(const vecName##vecSize##& u, const vecName##vecSize##& v);																			\
 vecName##vecSize operator&&(const vecName##vecSize##& u, const vecName##vecSize##& v);																			\
@@ -159,7 +195,8 @@ bool operator!=(const vecName##vecSize##& u, const vecName##vecSize##& v);
 
 // Vec special functions
 
-#define SPLD_VEC_SPECIAL_FUNC(vecName, vecSize, eltType) SPLD_##vecName##_SPECIAL_FUNC(vecName, vecSize, eltType)
+#define SPLD_VEC_SPECIAL_FUNC(vecName, vecSize, eltType)																										\
+SPLD_##vecName##_SPECIAL_FUNC(vecName, vecSize, eltType)
 
 #define SPLD_vec_SPECIAL_FUNC(vecName, vecSize, eltType)																										\
 SPLD_VEC_REAL_FUNC(vecName, vecSize, eltType)																													\
@@ -174,6 +211,36 @@ SPLD_VEC##vecSize##_REAL_FUNC(vecName, vecSize, eltType)
 #define SPLD_bvec_SPECIAL_FUNC(vecName, vecSize, eltType)
 
 #define SPLD_VEC_REAL_FUNC(vecName, vecSize, eltType)																											\
+vecName##vecSize radians(const vecName##vecSize& u);																											\
+vecName##vecSize degrees(const vecName##vecSize& u);																											\
+vecName##vecSize sin(const vecName##vecSize& u);																												\
+vecName##vecSize cos(const vecName##vecSize& u);																												\
+vecName##vecSize tan(const vecName##vecSize& u);																												\
+vecName##vecSize asin(const vecName##vecSize& u);																												\
+vecName##vecSize acos(const vecName##vecSize& u);																												\
+vecName##vecSize atan(const vecName##vecSize& y, const vecName##vecSize& x);																					\
+vecName##vecSize atan(const vecName##vecSize& u);																												\
+vecName##vecSize sinh(const vecName##vecSize& u);																												\
+vecName##vecSize cosh(const vecName##vecSize& u);																												\
+vecName##vecSize tanh(const vecName##vecSize& u);																												\
+vecName##vecSize asinh(const vecName##vecSize& u);																												\
+vecName##vecSize acosh(const vecName##vecSize& u);																												\
+vecName##vecSize atanh(const vecName##vecSize& u);																												\
+vecName##vecSize pow(const vecName##vecSize& u, const vecName##vecSize& p);																						\
+vecName##vecSize exp(const vecName##vecSize& u);																												\
+vecName##vecSize log(const vecName##vecSize& u);																												\
+vecName##vecSize exp2(const vecName##vecSize& u);																												\
+vecName##vecSize log2(const vecName##vecSize& u);																												\
+vecName##vecSize sqrt(const vecName##vecSize& u);																												\
+vecName##vecSize inversesqrt(const vecName##vecSize& u);																										\
+vecName##vecSize floor(const vecName##vecSize& u);																												\
+vecName##vecSize trunc(const vecName##vecSize& u);																												\
+vecName##vecSize round(const vecName##vecSize& u);																												\
+vecName##vecSize ceil(const vecName##vecSize& u);																												\
+vecName##vecSize fract(const vecName##vecSize& u);																												\
+vecName##vecSize mod(const vecName##vecSize& u, const vecName##vecSize& v);																						\
+vecName##vecSize mod(const vecName##vecSize& u, eltType x);																										\
+																																								\
 eltType dot(const vecName##vecSize##& u, const vecName##vecSize##& v);																							\
 eltType length(const vecName##vecSize##& v);																													\
 eltType distance(const vecName##vecSize##& u, const vecName##vecSize##& v);																						\
@@ -182,6 +249,10 @@ vecName##vecSize faceforward(const vecName##vecSize##& n, const vecName##vecSize
 vecName##vecSize reflect(const vecName##vecSize##& i, const vecName##vecSize##& n);																				\
 vecName##vecSize refract(const vecName##vecSize##& i, const vecName##vecSize##& n, eltType eta);
 
+/*
+abs, sign, roundEven, modf, min, max
+145
+*/
 
 #define SPLD_VEC2_REAL_FUNC(vecName, vecSize, eltType)
 
@@ -256,6 +327,9 @@ namespace spl
 #undef SPLD_VEC2_INTERNAL_OP_ARITH
 #undef SPLD_VEC3_INTERNAL_OP_ARITH
 #undef SPLD_VEC4_INTERNAL_OP_ARITH
+#undef SPLD_VEC2_INTERNAL_OP_BITWISE
+#undef SPLD_VEC3_INTERNAL_OP_BITWISE
+#undef SPLD_VEC4_INTERNAL_OP_BITWISE
 #undef SPLD_VEC2_ACCESSORS
 #undef SPLD_VEC3_ACCESSORS
 #undef SPLD_VEC4_ACCESSORS
@@ -267,6 +341,7 @@ namespace spl
 #undef SPLD_bvec_EXTERNAL_OP
 #undef SPLD_VEC_EXTERNAL_OP_U_ARITH
 #undef SPLD_VEC_EXTERNAL_OP_S_ARITH
+#undef SPLD_VEC_EXTERNAL_OP_BITWISE
 #undef SPLD_VEC_EXTERNAL_OP_LOGIC
 #undef SPLD_VEC_EXTERNAL_OP_CMP
 #undef SPLD_VEC_SPECIAL_FUNC
