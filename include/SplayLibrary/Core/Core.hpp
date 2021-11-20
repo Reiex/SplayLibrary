@@ -2,6 +2,8 @@
 
 #include <SplayLibrary/Core/Glsl.hpp>
 
+#include <SplayLibrary/Core/Transformable.hpp>
+
 #include <SplayLibrary/Core/Buffer.hpp>
 
 #include <SplayLibrary/Core/RawTexture.hpp>

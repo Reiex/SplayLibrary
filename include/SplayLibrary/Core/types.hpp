@@ -53,6 +53,8 @@ namespace spl
 	typedef dmat3x3 dmat3;
 	typedef dmat4x4 dmat4;
 
+	class Transformable;
+
 	enum class BufferTarget;
 	enum class BufferUsage;
 	namespace BufferStorageFlags { enum Flags; }

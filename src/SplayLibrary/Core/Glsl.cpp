@@ -8,7 +8,8 @@ SPLD_VEC_SPECIAL_FUNC(vecName, vecSize, eltType)
 
 // Vec external operators
 
-#define SPLD_VEC_EXTERNAL_OP(vecName, vecSize, eltType) SPLD_##vecName##_EXTERNAL_OP(vecName, vecSize, eltType)
+#define SPLD_VEC_EXTERNAL_OP(vecName, vecSize, eltType)																											\
+SPLD_##vecName##_EXTERNAL_OP(vecName, vecSize, eltType)
 
 
 #define SPLD_vec_EXTERNAL_OP(vecName, vecSize, eltType)																											\
@@ -141,18 +142,17 @@ vecName##vecSize degrees(const vecName##vecSize& u) { return u * 180.0 / scp::pi
 vecName##vecSize inversesqrt(const vecName##vecSize& u) { return 1.0 / sqrt(u); }																				\
 vecName##vecSize fract(const vecName##vecSize& u) { return u - floor(u); }																						\
 vecName##vecSize mod(const vecName##vecSize& u, const vecName##vecSize& v) { return u - v * floor(u / v); }														\
-vecName##vecSize mod(const vecName##vecSize& u, eltType x) { return u - v * floor(u / v); }																		\
-																																								\
-eltType length(const vecName##vecSize##& v) { return std::sqrt(dot(v, v)); }																					\
+vecName##vecSize mod(const vecName##vecSize& u, eltType x) { return u - x * floor(u / x); }																		\
+eltType length(const vecName##vecSize##& u) { return std::sqrt(dot(u, u)); }																					\
 eltType distance(const vecName##vecSize##& u, const vecName##vecSize##& v) { return length(v - u); }															\
-vecName##vecSize normalize(const vecName##vecSize##& v) { return v / length(v); }																				\
-vecName##vecSize faceforward(const vecName##vecSize##& n, const vecName##vecSize##& i, const vecName##vecSize##& nRef) { return dot(nref, i) < 0 ? n : -n; }	\
+vecName##vecSize normalize(const vecName##vecSize##& u) { return u / length(u); }																				\
+vecName##vecSize faceforward(const vecName##vecSize##& n, const vecName##vecSize##& i, const vecName##vecSize##& nRef) { return dot(nRef, i) < 0 ? n : -n; }	\
 vecName##vecSize reflect(const vecName##vecSize##& i, const vecName##vecSize##& n) { return i - 2 * dot(n, i) * n; }											\
 vecName##vecSize refract(const vecName##vecSize##& i, const vecName##vecSize##& n, eltType eta)																	\
 {																																								\
 	const eltType d = dot(n, i);																																\
 	const eltType k = 1 - eta * eta * (1 - d * d);																												\
-	return k < 0 ? 0 : eta * I - (eta * d + sqrt(k)) * N;																										\
+	return k < 0 ? 0 : eta * i - (eta * d + std::sqrt(k)) * n;																									\
 }
 
 #define SPLD_VEC2_REAL_FUNC(vecName, vecSize, eltType)																											\
@@ -179,7 +179,6 @@ vecName##2 floor(const vecName##2& u) { return { std::floor(u.x), std::floor(u.y
 vecName##2 trunc(const vecName##2& u) { return { std::trunc(u.x), std::trunc(u.y) }; }																			\
 vecName##2 round(const vecName##2& u) { return { std::round(u.x), std::round(u.y) }; }																			\
 vecName##2 ceil(const vecName##2& u) { return { std::ceil(u.x), std::ceil(u.y) }; }																				\
-																																								\
 eltType dot(const vecName##2& u, const vecName##2& v) { return u.x * v.x + u.y * v.y; }
 
 #define SPLD_VEC3_REAL_FUNC(vecName, vecSize, eltType)																											\
@@ -206,7 +205,6 @@ vecName##3 floor(const vecName##3& u) { return { std::floor(u.x), std::floor(u.y
 vecName##3 trunc(const vecName##3& u) { return { std::trunc(u.x), std::trunc(u.y), std::trunc(u.z) }; }															\
 vecName##3 round(const vecName##3& u) { return { std::round(u.x), std::round(u.y), std::round(u.z) }; }															\
 vecName##3 ceil(const vecName##3& u) { return { std::ceil(u.x), std::ceil(u.y), std::ceil(u.z) }; }																\
-																																								\
 eltType dot(const vecName##3& u, const vecName##3& v) { return u.x * v.x + u.y * v.y + u.z * v.z; }																\
 vecName##3 cross(const vecName##3& u, const vecName##3& v) { return { u[1]*v[2] - u[2]*v[1], u[2] * v[0] - u[2] * v[2], u[0] * v[1] - u[1] * v[0] }; }
 
@@ -234,28 +232,27 @@ vecName##4 floor(const vecName##4& u) { return { std::floor(u.x), std::floor(u.y
 vecName##4 trunc(const vecName##4& u) { return { std::trunc(u.x), std::trunc(u.y), std::trunc(u.z), std::trunc(u.w) }; }										\
 vecName##4 round(const vecName##4& u) { return { std::round(u.x), std::round(u.y), std::round(u.z), std::round(u.w) }; }										\
 vecName##4 ceil(const vecName##4& u) { return { std::ceil(u.x), std::ceil(u.y), std::ceil(u.z), std::ceil(u.w)}; }												\
-																																								\
 eltType dot(const vecName##4& u, const vecName##4& v) { return u.x * v.x + u.y * v.y + u.z * v.z + u.w * v.w; }
 
 namespace spl
 {
-	SPLD_VEC_EXTERNAL_OP(vec, 2, float);
-	SPLD_VEC_EXTERNAL_OP(vec, 3, float);
-	SPLD_VEC_EXTERNAL_OP(vec, 4, float);
+	SPLD_VEC(vec, 2, float);
+	SPLD_VEC(vec, 3, float);
+	SPLD_VEC(vec, 4, float);
 
-	SPLD_VEC_EXTERNAL_OP(dvec, 2, double);
-	SPLD_VEC_EXTERNAL_OP(dvec, 3, double);
-	SPLD_VEC_EXTERNAL_OP(dvec, 4, double);
+	SPLD_VEC(dvec, 2, double);
+	SPLD_VEC(dvec, 3, double);
+	SPLD_VEC(dvec, 4, double);
 
-	SPLD_VEC_EXTERNAL_OP(ivec, 2, int32_t);
-	SPLD_VEC_EXTERNAL_OP(ivec, 3, int32_t);
-	SPLD_VEC_EXTERNAL_OP(ivec, 4, int32_t);
+	SPLD_VEC(ivec, 2, int32_t);
+	SPLD_VEC(ivec, 3, int32_t);
+	SPLD_VEC(ivec, 4, int32_t);
 
-	SPLD_VEC_EXTERNAL_OP(uvec, 2, uint32_t);
-	SPLD_VEC_EXTERNAL_OP(uvec, 3, uint32_t);
-	SPLD_VEC_EXTERNAL_OP(uvec, 4, uint32_t);
+	SPLD_VEC(uvec, 2, uint32_t);
+	SPLD_VEC(uvec, 3, uint32_t);
+	SPLD_VEC(uvec, 4, uint32_t);
 
-	SPLD_VEC_EXTERNAL_OP(bvec, 2, uint32_t);
-	SPLD_VEC_EXTERNAL_OP(bvec, 3, uint32_t);
-	SPLD_VEC_EXTERNAL_OP(bvec, 4, uint32_t);
+	SPLD_VEC(bvec, 2, uint32_t);
+	SPLD_VEC(bvec, 3, uint32_t);
+	SPLD_VEC(bvec, 4, uint32_t);
 }

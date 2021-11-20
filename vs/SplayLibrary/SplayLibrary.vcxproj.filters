@@ -54,6 +54,9 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\ContextManager.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\SplayLibrary\Core\Transformable.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Drawable.hpp">
@@ -108,6 +111,9 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\ContextManager.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Transformable.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>

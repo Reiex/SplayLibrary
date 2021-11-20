@@ -136,7 +136,6 @@ namespace spl
 				if (objVertex.position)
 				{
 					vertex.pos = { (float)objVertex.position->x, (float)objVertex.position->y, (float)objVertex.position->z };
-					vertex.pos /= 100; // TODO: Enlever ça dès que possible !
 				}
 
 				if (objVertex.normal)

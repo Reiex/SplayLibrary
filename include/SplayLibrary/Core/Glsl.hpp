@@ -240,19 +240,15 @@ vecName##vecSize ceil(const vecName##vecSize& u);																												\
 vecName##vecSize fract(const vecName##vecSize& u);																												\
 vecName##vecSize mod(const vecName##vecSize& u, const vecName##vecSize& v);																						\
 vecName##vecSize mod(const vecName##vecSize& u, eltType x);																										\
-																																								\
-eltType dot(const vecName##vecSize##& u, const vecName##vecSize##& v);																							\
 eltType length(const vecName##vecSize##& v);																													\
 eltType distance(const vecName##vecSize##& u, const vecName##vecSize##& v);																						\
+eltType dot(const vecName##vecSize##& u, const vecName##vecSize##& v);																							\
 vecName##vecSize normalize(const vecName##vecSize##& v);																										\
 vecName##vecSize faceforward(const vecName##vecSize##& n, const vecName##vecSize##& i, const vecName##vecSize##& nRef);											\
 vecName##vecSize reflect(const vecName##vecSize##& i, const vecName##vecSize##& n);																				\
 vecName##vecSize refract(const vecName##vecSize##& i, const vecName##vecSize##& n, eltType eta);
 
-/*
-abs, sign, roundEven, modf, min, max
-145
-*/
+/* abs, sign, roundEven, modf, min, max, 145+ */
 
 #define SPLD_VEC2_REAL_FUNC(vecName, vecSize, eltType)
 

@@ -3,14 +3,12 @@ layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
 
-// uniform float t;
+uniform mat4 model;
 
-// out vec4 color;
-// out vec2 texCoords;
+out vec4 color;
 
 void main()
 {
-    // color = vec4((aPos + 1)/2, 1.0) * (sin(6.28*t)*0.25 + 0.75);
-    // texCoords = aTexCoords;
-    gl_Position = vec4(aPos, 1.0);
+    color = vec4((aPos/100 + 1)/2, 1.0);
+    gl_Position = model * vec4(aPos, 1.0);
 }

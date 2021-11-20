@@ -19,15 +19,15 @@ namespace spl
 
 	struct Event
 	{
-		template<EventType T> struct EventTypeEncapsulator { typedef Event Type; };
-		template<> struct EventTypeEncapsulator<EventType::KeyboardEvent> { typedef KeyboardEvent Type; };
-		template<> struct EventTypeEncapsulator<EventType::TextEvent> { typedef TextEvent Type; };
-		template<> struct EventTypeEncapsulator<EventType::MouseMoveEvent> { typedef MouseMoveEvent Type; };
-		template<> struct EventTypeEncapsulator<EventType::MouseEnterWindowEvent> { typedef MouseEnterWindowEvent Type; };
-		template<> struct EventTypeEncapsulator<EventType::MouseLeaveWindowEvent> { typedef MouseLeaveWindowEvent Type; };
-		template<> struct EventTypeEncapsulator<EventType::MouseButtonEvent> { typedef MouseButtonEvent Type; };
-		template<> struct EventTypeEncapsulator<EventType::ScrollEvent> { typedef ScrollEvent Type; };
-		template<> struct EventTypeEncapsulator<EventType::ResizeEvent> { typedef ResizeEvent Type; };
+		template<EventType T> struct EventTypeEncapsulator { using Type = Event; };
+		template<> struct EventTypeEncapsulator<EventType::KeyboardEvent> { using Type = KeyboardEvent; };
+		template<> struct EventTypeEncapsulator<EventType::TextEvent> { using Type = TextEvent; };
+		template<> struct EventTypeEncapsulator<EventType::MouseMoveEvent> { using Type = MouseMoveEvent; };
+		template<> struct EventTypeEncapsulator<EventType::MouseEnterWindowEvent> { using Type = MouseEnterWindowEvent; };
+		template<> struct EventTypeEncapsulator<EventType::MouseLeaveWindowEvent> { using Type = MouseLeaveWindowEvent; };
+		template<> struct EventTypeEncapsulator<EventType::MouseButtonEvent> { using Type = MouseButtonEvent; };
+		template<> struct EventTypeEncapsulator<EventType::ScrollEvent> { using Type = ScrollEvent; };
+		template<> struct EventTypeEncapsulator<EventType::ResizeEvent> { using Type = ResizeEvent; };
 
 		template<EventType T> typename EventTypeEncapsulator<T>::Type specialize()
 		{

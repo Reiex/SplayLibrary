@@ -27,6 +27,7 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\RenderWindow.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Shader.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\RawTexture.cpp" />
+    <ClCompile Include="..\..\src\SplayLibrary\Core\Transformable.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -45,6 +46,7 @@
     <ClInclude Include="..\..\include\SplayLibrary\Core\RenderWindow.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Shader.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\RawTexture.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Transformable.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\types.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Window.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\SplayLibrary.hpp" />

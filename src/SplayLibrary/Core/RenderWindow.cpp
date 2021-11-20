@@ -18,6 +18,7 @@ namespace spl
 
 		glViewport(0, 0, size.x, size.y);
 		glClearColor(_clearColor.x, _clearColor.y, _clearColor.z, 1.0f);
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	void RenderWindow::clear(const vec3& color)
@@ -28,7 +29,7 @@ namespace spl
 			glClearColor(_clearColor.x, _clearColor.y, _clearColor.z, 1.0f);
 		}
 
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	void RenderWindow::draw(const Drawable& mesh)

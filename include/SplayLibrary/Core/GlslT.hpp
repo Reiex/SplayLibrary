@@ -21,7 +21,7 @@ namespace spl
 	_Mat<EltType, Col, Row, ColType>::_Mat(std::initializer_list<EltType> tab)
 	{
 		constexpr uint8_t size = Col * Row;
-		static_assert(size == tab.size());
+		assert(size == tab.size());
 
 		std::memcpy(val, tab.begin(), static_cast<size_t>(size) * sizeof(EltType));
 	}
