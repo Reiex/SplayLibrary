@@ -12,7 +12,11 @@ int main()
 	spl::Shader shader("examples/resources/shaders/main.vert", "examples/resources/shaders/main.frag");
 	shader.use();
 
+	spl::PerspectiveCamera camera(1000.f / 600.f, 0.1f, 100.f, 1.f);
+	camera.setPosition({ 0.f, 0.f, -1.5f });
+
 	spl::Mesh<> mesh("examples/resources/meshes/teapot.obj");
+	mesh.scale(0.01f);
 
 	djv::RGBAImg img("examples/resources/images/texture.jpg", true, true, false);
 	float* data = new float[3 * img.width() * img.height()];
@@ -56,20 +60,32 @@ int main()
 	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	spl::RawTexture::unbind(spl::TextureTarget::Texture2D);
 
-	spl::Transformable transform;
-	transform.scale(0.01f);
 	while (!window.shouldClose())
 	{
-		spl::Event* event = nullptr;
-		while (window.pollEvent(event)) {}
+		spl::Event* rawEvent = nullptr;
+		while (window.pollEvent(rawEvent))
+		{
+			switch (rawEvent->type)
+			{
+				case spl::EventType::ResizeEvent:
+				{
+					spl::ResizeEvent event = rawEvent->specialize<spl::EventType::ResizeEvent>();
+					camera.setAspect(event.size);
+					break;
+				}
+			}
+		}
 
-		window.clear({ 0.2f, 0.3f, 0.3f });
+		mesh.rotate({ 0.3f, 1.f, -0.5f }, scp::pi / 144.f);
 
-		transform.rotate({ 0.3f, 1.f, -0.5f }, scp::pi / 144.f);
-		shader.setUniform("model", transform.getMatrix());
+		shader.setUniform("projection", camera.getProjectionMatrix());
+		shader.setUniform("view", camera.getViewMatrix());
+		shader.setUniform("model", mesh.getTransformMatrix());
+
 		window.draw(mesh);
 
 		window.display();
+		window.clear({ 0.2f, 0.3f, 0.3f });
 	}
 
 	return 0;

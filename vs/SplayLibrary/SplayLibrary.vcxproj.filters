@@ -54,8 +54,11 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\ContextManager.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\SplayLibrary\Core\Transformable.cpp">
-      <Filter>Source Files\Core</Filter>
+    <ClCompile Include="..\..\src\SplayLibrary\3D\PerspectiveCamera.cpp">
+      <Filter>Source Files\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\SplayLibrary\3D\Transformable3D.cpp">
+      <Filter>Source Files\3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -113,8 +116,11 @@
     <ClInclude Include="..\..\include\SplayLibrary\Core\ContextManager.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Core\Transformable.hpp">
-      <Filter>Header Files\Core</Filter>
+    <ClInclude Include="..\..\include\SplayLibrary\3D\PerspectiveCamera.hpp">
+      <Filter>Header Files\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\3D\Transformable3D.hpp">
+      <Filter>Header Files\3D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

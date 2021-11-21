@@ -29,7 +29,7 @@ namespace spl
 	};
 
 	template<typename VertexType = DefaultVertex>
-	class Mesh : public Drawable
+	class Mesh : public Drawable, public Transformable3D
 	{
 		public:
 

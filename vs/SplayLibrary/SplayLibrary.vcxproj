@@ -20,6 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\SplayLibrary\3D\Mesh.cpp" />
+    <ClCompile Include="..\..\src\SplayLibrary\3D\PerspectiveCamera.cpp" />
+    <ClCompile Include="..\..\src\SplayLibrary\3D\Transformable3D.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Buffer.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\ContextManager.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Drawable.cpp" />
@@ -27,13 +29,14 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\RenderWindow.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Shader.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\RawTexture.cpp" />
-    <ClCompile Include="..\..\src\SplayLibrary\Core\Transformable.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\SplayLibrary\3D\3D.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\3D\Mesh.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\3D\MeshT.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\3D\PerspectiveCamera.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\3D\Transformable3D.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\3D\types.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Buffer.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\ContextManager.hpp" />
@@ -46,7 +49,6 @@
     <ClInclude Include="..\..\include\SplayLibrary\Core\RenderWindow.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Shader.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\RawTexture.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\Core\Transformable.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\types.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Window.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\SplayLibrary.hpp" />

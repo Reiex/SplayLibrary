@@ -8,6 +8,10 @@
 
 namespace spl
 {
+	class Transformable3D;
+
+	class PerspectiveCamera;
+
 	struct VertexBase;
 	struct DefaultVertex;
 	template<typename VertexType> class Mesh;
