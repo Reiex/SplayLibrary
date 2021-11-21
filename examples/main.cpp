@@ -16,7 +16,8 @@ int main()
 	camera.setPosition({ 0.f, 0.f, -1.5f });
 
 	spl::Mesh<> mesh("examples/resources/meshes/teapot.obj");
-	mesh.scale(0.01f);
+	spl::Transformable3D meshTransform;
+	meshTransform.scale(0.01f);
 
 	djv::RGBAImg img("examples/resources/images/texture.jpg", true, true, false);
 	float* data = new float[3 * img.width() * img.height()];
@@ -76,11 +77,11 @@ int main()
 			}
 		}
 
-		mesh.rotate({ 0.3f, 1.f, -0.5f }, scp::pi / 144.f);
+		meshTransform.rotate({ 0.3f, 1.f, -0.5f }, scp::pi / 144.f);
 
 		shader.setUniform("projection", camera.getProjectionMatrix());
 		shader.setUniform("view", camera.getViewMatrix());
-		shader.setUniform("model", mesh.getTransformMatrix());
+		shader.setUniform("model", meshTransform.getTransformMatrix());
 
 		window.draw(mesh);
 
