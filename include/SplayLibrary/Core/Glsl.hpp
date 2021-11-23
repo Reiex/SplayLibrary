@@ -119,8 +119,9 @@ eltType x, y, z, w;
 
 // Vec external operators
 
-#define SPLD_VEC_EXTERNAL_OP(vecName, vecSize, eltType) SPLD_##vecName##_EXTERNAL_OP(vecName, vecSize, eltType)
-
+#define SPLD_VEC_EXTERNAL_OP(vecName, vecSize, eltType)																											\
+SPLD_##vecName##_EXTERNAL_OP(vecName, vecSize, eltType)																											\
+SPLD_VEC_EXTERNAL_OP_STREAM(vecName, vecSize, eltType)
 
 #define SPLD_vec_EXTERNAL_OP(vecName, vecSize, eltType) 																										\
 SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																											\
@@ -192,6 +193,9 @@ vecName##vecSize operator&&(eltType x, const vecName##vecSize##& u);
 bool operator==(const vecName##vecSize##& u, const vecName##vecSize##& v);																						\
 bool operator!=(const vecName##vecSize##& u, const vecName##vecSize##& v);
 
+
+#define SPLD_VEC_EXTERNAL_OP_STREAM(vecName, vecSize, eltType)																									\
+std::ostream& operator<<(std::ostream& stream, const vecName##vecSize##& u);
 
 // Vec special functions
 

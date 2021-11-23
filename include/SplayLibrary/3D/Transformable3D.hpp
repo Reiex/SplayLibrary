@@ -30,13 +30,23 @@ namespace spl
 			Transformable3D& scale(const vec3& scale);
 			Transformable3D& scale(float scale);
 
+			vec3 applyTranslationTo(const vec3& vector) const;
+			vec3 applyRotationTo(const vec3& vector) const;
+			vec3 applyScaleTo(const vec3& vector) const;
+			vec3 applyTransformTo(const vec3& vector) const;
+
 			const vec3& getPosition() const;
 			const scp::Quat<float> getRotation() const;
 			const vec3& getScale() const;
+
 			const mat4& getTransformMatrix() const;
 			const mat4& getInverseTransformMatrix() const;
 
 			~Transformable3D() = default;
+
+		protected:
+
+			static scp::Quat<float> quaternionFromAxisAngle(const vec3& axis, float angle);
 
 		private:
 

@@ -14,19 +14,23 @@ namespace spl
 			PerspectiveCamera(float aspect, float near, float far, float fov);
 			PerspectiveCamera(const uvec2& resolution, float near, float far, float fov);
 
-			// TODO: Up, Front, Left (Transformable or just camera ?)
-			// TODO: LookAt(vec3)
-
 			void setAspect(float aspect);
 			void setAspect(const uvec2& resolution);
 			void setFOV(float fov);
 			void setNearDistance(float near);
 			void setFarDistance(float far);
 
+			void lookAt(const vec3& position, float dutchAngle = 0.f);
+
 			float getAspect() const;
 			const vec2& getFOV() const;
 			float getNearDistance() const;
 			float getFarDistance() const;
+
+			vec3 getUpVector() const;
+			vec3 getFrontVector() const;
+			vec3 getLeftVector() const;
+
 			const mat4& getViewMatrix() const;
 			const mat4& getProjectionMatrix() const;
 

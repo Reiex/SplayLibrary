@@ -12,8 +12,8 @@ int main()
 	spl::Shader shader("examples/resources/shaders/main.vert", "examples/resources/shaders/main.frag");
 	shader.use();
 
-	spl::PerspectiveCamera camera(1000.f / 600.f, 0.1f, 100.f, 1.f);
-	camera.setPosition({ 0.f, 0.f, -1.5f });
+	spl::PerspectiveCamera camera({ 1000, 600 }, 0.1f, 100.f, 1.f);
+	camera.setPosition({ 0.f, 0.f, 2.f });
 
 	spl::Mesh<> mesh("examples/resources/meshes/teapot.obj");
 	spl::Transformable3D meshTransform;
@@ -77,7 +77,14 @@ int main()
 			}
 		}
 
-		meshTransform.rotate({ 0.3f, 1.f, -0.5f }, scp::pi / 144.f);
+		if (window.isKeyPressed(spl::KeyboardKey::W)) camera.move(camera.getUpVector() * 0.01f);
+		if (window.isKeyPressed(spl::KeyboardKey::S)) camera.move(camera.getUpVector() * -0.01f);
+		if (window.isKeyPressed(spl::KeyboardKey::A)) camera.move(camera.getLeftVector() * 0.01f);
+		if (window.isKeyPressed(spl::KeyboardKey::D)) camera.move(camera.getLeftVector() * -0.01f);
+		if (window.isKeyPressed(spl::KeyboardKey::Space)) camera.move(camera.getFrontVector() * 0.01f);
+		if (window.isKeyPressed(spl::KeyboardKey::LeftShift)) camera.move(camera.getFrontVector() * -0.01f);
+
+		camera.lookAt({ 0.f, 0.f, 0.f });
 
 		shader.setUniform("projection", camera.getProjectionMatrix());
 		shader.setUniform("view", camera.getViewMatrix());

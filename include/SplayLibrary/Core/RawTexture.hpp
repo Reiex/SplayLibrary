@@ -206,6 +206,8 @@ namespace spl
 			RawTexture& operator=(const RawTexture& texture) = delete;
 			RawTexture& operator=(RawTexture&& texture) = delete;
 
+			// TODO: copy and move
+
 			void createNew(const CreationParams& params);
 			void update(const UpdateParams& params);
 			void destroy();

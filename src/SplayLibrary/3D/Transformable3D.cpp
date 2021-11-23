@@ -3,23 +3,6 @@
 
 namespace spl
 {
-	namespace
-	{
-		scp::Quat<float> quatFromAxisAngle(const vec3& axis, float angle)
-		{
-			const vec3 axisNorm = normalize(axis);
-			const float halfAngle = angle / 2.f;
-			const float sinHalfAngle = std::sin(halfAngle);
-
-			return {
-				std::cos(angle / 2.f),
-				axisNorm.x * sinHalfAngle,
-				axisNorm.y * sinHalfAngle,
-				axisNorm.z * sinHalfAngle
-			};
-		}
-	}
-
 	Transformable3D::Transformable3D() :
 		_position(0.f, 0.f, 0.f),
 		_rotation(1.f, 0.f, 0.f, 0.f),
@@ -72,7 +55,7 @@ namespace spl
 
 	Transformable3D& Transformable3D::setRotation(const vec3& axis, float angle)
 	{
-		return setRotation(quatFromAxisAngle(axis, angle));
+		return setRotation(quaternionFromAxisAngle(axis, angle));
 	}
 
 	Transformable3D& Transformable3D::rotate(const scp::Quat<float>& rotation)
@@ -84,7 +67,7 @@ namespace spl
 
 	Transformable3D& Transformable3D::rotate(const vec3& axis, float angle)
 	{
-		return setRotation(quatFromAxisAngle(axis, angle) * _rotation);
+		return setRotation(quaternionFromAxisAngle(axis, angle) * _rotation);
 	}
 
 	Transformable3D& Transformable3D::setScale(const vec3& scale)
@@ -109,6 +92,29 @@ namespace spl
 	Transformable3D& Transformable3D::scale(float scale)
 	{
 		return setScale(vec3{scale, scale, scale} * _scale);
+	}
+
+	vec3 Transformable3D::applyTranslationTo(const vec3& vector) const
+	{
+		return vector + _position;
+	}
+
+	vec3 Transformable3D::applyRotationTo(const vec3& vector) const
+	{
+		scp::Quat<float> v{ 0.f, vector.x, vector.y, vector.z };
+		v = _rotation * v * _rotation.inverse();
+
+		return normalize(vec3{ v.b, v.c, v.d });
+	}
+
+	vec3 Transformable3D::applyScaleTo(const vec3& vector) const
+	{
+		return vector / _scale;
+	}
+
+	vec3 Transformable3D::applyTransformTo(const vec3& vector) const
+	{
+		return applyTransformTo(applyRotationTo(applyScaleTo(vector)));
 	}
 
 	const vec3& Transformable3D::getPosition() const
@@ -136,6 +142,25 @@ namespace spl
 	{
 		computeInverseTransformMatrix();
 		return _inverseTransformMatrix;
+	}
+
+	scp::Quat<float> Transformable3D::quaternionFromAxisAngle(const vec3& axis, float angle)
+	{
+		if (length(axis) == 0.f)
+		{
+			return { 1.f, 0.f, 0.f, 0.f };
+		}
+
+		const vec3 axisNorm = normalize(axis);
+		const float halfAngle = angle / 2.f;
+		const float sinHalfAngle = std::sin(halfAngle);
+
+		return {
+			std::cos(halfAngle),
+			axisNorm.x * sinHalfAngle,
+			axisNorm.y * sinHalfAngle,
+			axisNorm.z * sinHalfAngle
+		};
 	}
 
 	void Transformable3D::computeTransformMatrix() const
@@ -175,9 +200,9 @@ namespace spl
 			const float& sz = _scale.z;
 
 			_transformMatrix = {
-				r11 * sx, r12 * sx, r13 * sx, tx,
-				r21 * sy, r22 * sy, r23 * sy, ty,
-				r31 * sz, r32 * sz, r33 * sz, tz,
+				r11 * sx, r12 * sy, r13 * sz, tx,
+				r21 * sx, r22 * sy, r23 * sz, ty,
+				r31 * sx, r32 * sy, r33 * sz, tz,
 				0.f     , 0.f     , 0.f     , 1.f
 			};
 
@@ -189,9 +214,9 @@ namespace spl
 	{
 		if (_updateInverseTransformMatrix)
 		{
-			const float tx = -_position.x;
-			const float ty = -_position.y;
-			const float tz = -_position.z;
+			const float sx = 1.f / _scale.x;
+			const float sy = 1.f / _scale.y;
+			const float sz = 1.f / _scale.z;
 
 			scp::Quat<float> rot = _rotation.inverse();
 
@@ -219,14 +244,14 @@ namespace spl
 			const float r32 = ab2 + cd2;
 			const float r33 = aa - bb - cc + dd;
 
-			const float sx = 1.f / _scale.x;
-			const float sy = 1.f / _scale.y;
-			const float sz = 1.f / _scale.z;
+			const float tx = -_position.x;
+			const float ty = -_position.y;
+			const float tz = -_position.z;
 
 			_inverseTransformMatrix = {
-				r11 * sx, r12 * sx, r13 * sx, tx,
-				r21 * sy, r22 * sy, r23 * sy, ty,
-				r31 * sz, r32 * sz, r33 * sz, tz,
+				r11 * sx, r12 * sx, r13 * sx, sx*(r11*tx + r12*ty + r13*tz),
+				r21 * sy, r22 * sy, r23 * sy, sy*(r21*tx + r22*ty + r23*tz),
+				r31 * sz, r32 * sz, r33 * sz, sz*(r31*tx + r32*ty + r33*tz),
 				0.f     , 0.f     , 0.f     , 1.f
 			};
 

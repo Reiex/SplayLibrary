@@ -4,7 +4,9 @@
 #include <cassert>
 #include <cmath>
 #include <cstdint>
+#include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <memory>
 #include <mutex>
 #include <queue>

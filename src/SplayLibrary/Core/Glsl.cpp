@@ -9,33 +9,30 @@ SPLD_VEC_SPECIAL_FUNC(vecName, vecSize, eltType)
 // Vec external operators
 
 #define SPLD_VEC_EXTERNAL_OP(vecName, vecSize, eltType)																											\
-SPLD_##vecName##_EXTERNAL_OP(vecName, vecSize, eltType)
+SPLD_##vecName##_EXTERNAL_OP(vecName, vecSize, eltType)																											\
+SPLD_VEC##vecSize##_EXTERNAL_OP_CMP(vecName, vecSize, eltType)																									\
+SPLD_VEC##vecSize##_EXTERNAL_OP_STREAM(vecName, vecSize, eltType)
 
 
 #define SPLD_vec_EXTERNAL_OP(vecName, vecSize, eltType)																											\
 SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																											\
-SPLD_VEC##vecSize##_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)																								\
-SPLD_VEC##vecSize##_EXTERNAL_OP_CMP(vecName, vecSize, eltType)
+SPLD_VEC##vecSize##_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)
 
 #define SPLD_dvec_EXTERNAL_OP(vecName, vecSize, eltType)																										\
 SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																											\
-SPLD_VEC##vecSize##_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)																								\
-SPLD_VEC##vecSize##_EXTERNAL_OP_CMP(vecName, vecSize, eltType)
+SPLD_VEC##vecSize##_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)
 
 #define SPLD_ivec_EXTERNAL_OP(vecName, vecSize, eltType)																										\
 SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																											\
 SPLD_VEC_EXTERNAL_OP_BITWISE(vecName, vecSize, eltType)																											\
-SPLD_VEC##vecSize##_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)																								\
-SPLD_VEC##vecSize##_EXTERNAL_OP_CMP(vecName, vecSize, eltType)
+SPLD_VEC##vecSize##_EXTERNAL_OP_S_ARITH(vecName, vecSize, eltType)
 
 #define SPLD_uvec_EXTERNAL_OP(vecName, vecSize, eltType) 																										\
 SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																											\
-SPLD_VEC_EXTERNAL_OP_BITWISE(vecName, vecSize, eltType)																											\
-SPLD_VEC##vecSize##_EXTERNAL_OP_CMP(vecName, vecSize, eltType)
+SPLD_VEC_EXTERNAL_OP_BITWISE(vecName, vecSize, eltType)
 
 #define SPLD_bvec_EXTERNAL_OP(vecName, vecSize, eltType) 																										\
-SPLD_VEC##vecSize##_EXTERNAL_OP_LOGIC(vecName, vecSize, eltType)																								\
-SPLD_VEC##vecSize##_EXTERNAL_OP_CMP(vecName, vecSize, eltType)
+SPLD_VEC##vecSize##_EXTERNAL_OP_LOGIC(vecName, vecSize, eltType)
 
 
 #define SPLD_VEC_EXTERNAL_OP_U_ARITH(vecName, vecSize, eltType)																									\
@@ -116,6 +113,20 @@ bool operator!=(const vecName##3& u, const vecName##3& v) { return u.x != v.x ||
 #define SPLD_VEC4_EXTERNAL_OP_CMP(vecName, vecSize, eltType)																									\
 bool operator==(const vecName##4& u, const vecName##4& v) { return u.x == v.x && u.y == v.y && u.z == v.z && u.w == v.w; }										\
 bool operator!=(const vecName##4& u, const vecName##4& v) { return u.x != v.x || u.y != v.y || u.z != v.z || u.w != v.w; }
+
+
+#define SPLD_VEC2_EXTERNAL_OP_STREAM(vecName, vecSize, eltType)																									\
+std::ostream& operator<<(std::ostream& stream, const vecName##vecSize##& u) { stream << "vec2(" << u.x << ", " << u.y << ")"; return stream; }
+
+#define SPLD_VEC3_EXTERNAL_OP_STREAM(vecName, vecSize, eltType)																									\
+std::ostream& operator<<(std::ostream& stream, const vecName##vecSize##& u) { stream << "vec3(" << u.x << ", " << u.y << ", " << u.z << ")"; return stream; }
+
+#define SPLD_VEC4_EXTERNAL_OP_STREAM(vecName, vecSize, eltType)																									\
+std::ostream& operator<<(std::ostream& stream, const vecName##vecSize##& u)																						\
+{																																								\
+	stream << "vec4(" << u.x << ", " << u.y << ", " << u.z << ", " << u.w << ")";																				\
+	return stream;																																				\
+}
 
 
 // Vec special functions
@@ -206,7 +217,7 @@ vecName##3 trunc(const vecName##3& u) { return { std::trunc(u.x), std::trunc(u.y
 vecName##3 round(const vecName##3& u) { return { std::round(u.x), std::round(u.y), std::round(u.z) }; }															\
 vecName##3 ceil(const vecName##3& u) { return { std::ceil(u.x), std::ceil(u.y), std::ceil(u.z) }; }																\
 eltType dot(const vecName##3& u, const vecName##3& v) { return u.x * v.x + u.y * v.y + u.z * v.z; }																\
-vecName##3 cross(const vecName##3& u, const vecName##3& v) { return { u[1]*v[2] - u[2]*v[1], u[2] * v[0] - u[2] * v[2], u[0] * v[1] - u[1] * v[0] }; }
+vecName##3 cross(const vecName##3& u, const vecName##3& v) { return { u[1]*v[2] - u[2]*v[1], u[2]*v[0] - u[0]*v[2], u[0]*v[1] - u[1]*v[0] }; }
 
 #define SPLD_VEC4_REAL_FUNC(vecName, vecSize, eltType)																											\
 vecName##4 sin(const vecName##4& u) { return { std::sin(u.x), std::sin(u.y), std::sin(u.z), std::sin(u.w) }; }													\
