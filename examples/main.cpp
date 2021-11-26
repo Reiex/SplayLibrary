@@ -86,6 +86,7 @@ int main()
 
 		camera.lookAt({ 0.f, 0.f, 0.f });
 
+		shader.setUniform("cameraPos", camera.getPosition());
 		shader.setUniform("projection", camera.getProjectionMatrix());
 		shader.setUniform("view", camera.getViewMatrix());
 		shader.setUniform("model", meshTransform.getTransformMatrix());

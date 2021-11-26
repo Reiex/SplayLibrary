@@ -7,10 +7,16 @@ uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
 
-out vec4 color;
+out vec3 pos;
+out vec3 normal;
+out vec2 texCoords;
 
 void main()
 {
-    color = vec4((aPos/100 + 1)/2, 1.0);
+    normal = normalize(model * vec4(aNormal, 0.0)).xyz;
+    texCoords = aTexCoords;
+
     gl_Position = projection * view * model * vec4(aPos, 1.0);
+
+    pos = gl_Position.xyz / gl_Position.w;
 }
