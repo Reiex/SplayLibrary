@@ -44,8 +44,6 @@ int basicPhongMain()
 		shader.setUniform("cameraPos", camera.getTranslation());
 		shader.setUniform("lightDir", lightDir);
 
-		shader.setUniform("rotMatrix", meshTransform.getRotationMatrix());
-
 		shader.setUniform("projection", camera.getProjectionMatrix());
 		shader.setUniform("view", camera.getViewMatrix());
 		shader.setUniform("model", meshTransform.getTransformMatrix());
