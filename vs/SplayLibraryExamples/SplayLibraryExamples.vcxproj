@@ -159,12 +159,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\examples\basicPhong\basicPhong.cpp" />
     <ClCompile Include="..\..\examples\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SplayLibrary\SplayLibrary.vcxproj">
       <Project>{4d4673cc-2749-42cc-8eeb-d6c04a35f837}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\examples\main.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
