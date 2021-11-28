@@ -58,7 +58,7 @@ namespace spl
 
 	void PerspectiveCamera::lookAt(const vec3& position, float dutchAngle)
 	{
-		if (distance(position, getPosition()) == 0.f)
+		if (distance(position, getTranslation()) == 0.f)
 		{
 			return;
 		}
@@ -66,7 +66,7 @@ namespace spl
 		scp::Quat<float> rot = { 1.f, 0.f, 0.f, 0.f };
 		setRotation(rot);
 
-		vec3 dir = normalize(position - getPosition());
+		vec3 dir = normalize(position - getTranslation());
 
 		vec3 dirPlane = { dir.x, 0.f, dir.z };
 		if (length(dirPlane) != 0.f)
@@ -95,11 +95,6 @@ namespace spl
 		return _aspect;
 	}
 
-	const vec2& PerspectiveCamera::getFOV() const
-	{
-		return _fov;
-	}
-
 	float PerspectiveCamera::getNearDistance() const
 	{
 		return _near;
@@ -125,7 +120,7 @@ namespace spl
 		return applyRotationTo({ -1.f, 0.f, 0.f });
 	}
 
-	const mat4& PerspectiveCamera::getViewMatrix() const
+	mat4 PerspectiveCamera::getViewMatrix() const
 	{
 		return getInverseTransformMatrix();
 	}

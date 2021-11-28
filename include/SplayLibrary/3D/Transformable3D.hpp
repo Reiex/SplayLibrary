@@ -17,7 +17,7 @@ namespace spl
 			Transformable3D& operator=(const Transformable3D& transformable) = default;
 			Transformable3D& operator=(Transformable3D&& transformable) = default;
 
-			Transformable3D& setPosition(const vec3& position);
+			Transformable3D& setTranslation(const vec3& translation);
 			Transformable3D& move(const vec3& offset);
 
 			Transformable3D& setRotation(const scp::Quat<float>& rotation);
@@ -30,17 +30,27 @@ namespace spl
 			Transformable3D& scale(const vec3& scale);
 			Transformable3D& scale(float scale);
 
+
 			vec3 applyTranslationTo(const vec3& vector) const;
 			vec3 applyRotationTo(const vec3& vector) const;
 			vec3 applyScaleTo(const vec3& vector) const;
 			vec3 applyTransformTo(const vec3& vector) const;
 
-			const vec3& getPosition() const;
+			vec3 applyInverseTranslationTo(const vec3& vector) const;
+			vec3 applyInverseRotationTo(const vec3& vector) const;
+			vec3 applyInverseScaleTo(const vec3& vector) const;
+			vec3 applyInverseTransformTo(const vec3& vector) const;
+
+			mat3 getRotationMatrix() const;
+			mat4 getTransformMatrix() const;
+
+			mat3 getInverseRotationMatrix() const;
+			mat4 getInverseTransformMatrix() const;
+
+
+			const vec3& getTranslation() const;
 			const scp::Quat<float> getRotation() const;
 			const vec3& getScale() const;
-
-			const mat4& getTransformMatrix() const;
-			const mat4& getInverseTransformMatrix() const;
 
 			~Transformable3D() = default;
 
@@ -50,16 +60,8 @@ namespace spl
 
 		private:
 
-			void computeTransformMatrix() const;
-			void computeInverseTransformMatrix() const;
-
-			vec3 _position;
+			vec3 _translation;
 			scp::Quat<float> _rotation;
 			vec3 _scale;
-
-			mutable bool _updateTransformMatrix;
-			mutable mat4 _transformMatrix;
-			mutable bool _updateInverseTransformMatrix;
-			mutable mat4 _inverseTransformMatrix;
 	};
 }

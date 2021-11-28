@@ -13,7 +13,7 @@ int main()
 	shader.use();
 
 	spl::PerspectiveCamera camera({ 1000, 600 }, 0.1f, 100.f, 1.f);
-	camera.setPosition({ 0.f, 0.f, 2.f });
+	camera.setTranslation({ 0.f, 0.f, 2.f });
 
 	spl::Mesh<> mesh("examples/resources/meshes/teapot.obj");
 	spl::Transformable3D meshTransform;
@@ -86,7 +86,7 @@ int main()
 
 		camera.lookAt({ 0.f, 0.f, 0.f });
 
-		shader.setUniform("cameraPos", camera.getPosition());
+		shader.setUniform("cameraPos", camera.getTranslation());
 		shader.setUniform("projection", camera.getProjectionMatrix());
 		shader.setUniform("view", camera.getViewMatrix());
 		shader.setUniform("model", meshTransform.getTransformMatrix());

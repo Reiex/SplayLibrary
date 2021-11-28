@@ -23,7 +23,6 @@ namespace spl
 			void lookAt(const vec3& position, float dutchAngle = 0.f);
 
 			float getAspect() const;
-			const vec2& getFOV() const;
 			float getNearDistance() const;
 			float getFarDistance() const;
 
@@ -31,7 +30,7 @@ namespace spl
 			vec3 getFrontVector() const;
 			vec3 getLeftVector() const;
 
-			const mat4& getViewMatrix() const;
+			mat4 getViewMatrix() const;
 			const mat4& getProjectionMatrix() const;
 
 		private:
