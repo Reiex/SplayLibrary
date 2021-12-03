@@ -26,6 +26,7 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\ContextManager.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Drawable.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Glsl.cpp" />
+    <ClCompile Include="..\..\src\SplayLibrary\Core\RawTexture2D.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\RenderWindow.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Shader.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\RawTexture.cpp" />
@@ -46,6 +47,7 @@
     <ClInclude Include="..\..\include\SplayLibrary\Core\Glsl.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\GlslT.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Private.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\RawTexture2D.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\RenderWindow.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Shader.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\RawTexture.hpp" />

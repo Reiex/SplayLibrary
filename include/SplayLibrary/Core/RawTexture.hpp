@@ -206,14 +206,12 @@ namespace spl
 			RawTexture& operator=(const RawTexture& texture) = delete;
 			RawTexture& operator=(RawTexture&& texture) = delete;
 
-			// TODO: copy and move
-
 			void createNew(const CreationParams& params);
 			void update(const UpdateParams& params);
 			void destroy();
 
 			uint32_t getHandle() const;
-			TextureTarget getTextureTarget() const;
+			const CreationParams& getCreationParams() const;
 			bool isValid() const;
 
 			static void bind(const RawTexture& texture, TextureTarget target, uint32_t textureUnit = 0);
@@ -221,9 +219,13 @@ namespace spl
 
 			~RawTexture();
 
+		protected:
+
+			static uint8_t internalFormatComponents(TextureInternalFormat internalFormat); // 0 < R, G, B, A, D, S < 63
+
 		private:
 
 			uint32_t _texture;
-			TextureTarget _target;
+			CreationParams _creationParams;
 	};
 }

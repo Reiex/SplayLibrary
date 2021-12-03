@@ -177,6 +177,18 @@ namespace spl
 	{
 		assert(buffer.isValid());
 
+		if (isValid() && _size != buffer._size)
+		{
+			if (_usage != BufferUsage::Undefined)
+			{
+				createNew(buffer._size, _usage);
+			}
+			else
+			{
+				createNew(buffer._size, _flags);
+			}
+		}
+
 		if (!isValid())
 		{
 			if (buffer._usage != BufferUsage::Undefined)
@@ -189,8 +201,7 @@ namespace spl
 			}
 		}
 
-		const uint32_t size = std::min(_size, buffer._size);
-		glCopyNamedBufferSubData(buffer._buffer, _buffer, 0, 0, size);
+		update(buffer, buffer._size);
 	}
 
 	void Buffer::moveFrom(Buffer&& buffer)

@@ -302,7 +302,7 @@ namespace spl
 
 	RawTexture::RawTexture() :
 		_texture(0),
-		_target(TextureTarget::Undefined)
+		_creationParams()
 	{
 	}
 
@@ -313,22 +313,19 @@ namespace spl
 
 		destroy();
 
-		_target = params.target;
-
-		const uint32_t targetGL = textureTargetToGL(params.target);
 		const uint32_t internalFormatGL = textureInternalFormatToGL(params.internalFormat);
 
-		glGenTextures(1, &_texture);
-		glBindTexture(targetGL, _texture);
+		_creationParams = params;
+		glCreateTextures(textureTargetToGL(params.target), 1, &_texture);
 
-		switch (_target)
+		switch (params.target)
 		{
 			case TextureTarget::Texture1D:
 			{
 				assert(params.levels > 0);
 				assert(params.width > 0);
 
-				glTexStorage1D(targetGL, params.levels, internalFormatGL, params.width);
+				glTextureStorage1D(_texture, params.levels, internalFormatGL, params.width);
 
 				break;
 			}
@@ -338,7 +335,7 @@ namespace spl
 				assert(params.width > 0);
 				assert(params.height > 0);
 
-				glTexStorage2D(targetGL, params.levels, internalFormatGL, params.width, params.height);
+				glTextureStorage2D(_texture, params.levels, internalFormatGL, params.width, params.height);
 
 				break;
 			}
@@ -349,7 +346,7 @@ namespace spl
 				assert(params.height > 0);
 				assert(params.depth > 0);
 
-				glTexStorage3D(targetGL, params.levels, internalFormatGL, params.width, params.height, params.depth);
+				glTextureStorage3D(_texture, params.levels, internalFormatGL, params.width, params.height, params.depth);
 
 				break;
 			}
@@ -359,7 +356,7 @@ namespace spl
 				assert(params.width > 0);
 				assert(params.layers > 0);
 
-				glTexStorage2D(targetGL, params.levels, internalFormatGL, params.width, params.layers);
+				glTextureStorage2D(_texture, params.levels, internalFormatGL, params.width, params.layers);
 
 				break;
 			}
@@ -370,7 +367,7 @@ namespace spl
 				assert(params.height > 0);
 				assert(params.layers > 0);
 
-				glTexStorage3D(targetGL, params.levels, internalFormatGL, params.width, params.height, params.layers);
+				glTextureStorage3D(_texture, params.levels, internalFormatGL, params.width, params.height, params.layers);
 
 				break;
 			}
@@ -379,7 +376,7 @@ namespace spl
 				assert(params.width > 0);
 				assert(params.height > 0);
 
-				glTexStorage2D(targetGL, 1, internalFormatGL, params.width, params.height);
+				glTextureStorage2D(_texture, 1, internalFormatGL, params.width, params.height);
 
 				break;
 			}
@@ -389,7 +386,7 @@ namespace spl
 				assert(params.bufferSize > 0);
 
 				Buffer::bind(*params.buffer, BufferTarget::Texture);
-				glTexBufferRange(targetGL, internalFormatGL, params.buffer->getHandle(), params.bufferOffset, params.bufferSize);
+				glTextureBufferRange(_texture, internalFormatGL, params.buffer->getHandle(), params.bufferOffset, params.bufferSize);
 				Buffer::unbind(BufferTarget::Texture);
 
 				break;
@@ -400,7 +397,7 @@ namespace spl
 				assert(params.width > 0);
 				assert(params.height > 0);
 
-				glTexStorage2D(targetGL, params.levels, internalFormatGL, params.width, params.height);
+				glTextureStorage2D(_texture, params.levels, internalFormatGL, params.width, params.height);
 
 				break;
 			}
@@ -411,7 +408,7 @@ namespace spl
 				assert(params.height > 0);
 				assert(params.layers > 0 && params.layers % 6 == 0);
 
-				glTexStorage3D(targetGL, params.levels, internalFormatGL, params.width, params.height, params.layers);
+				glTextureStorage3D(_texture, params.levels, internalFormatGL, params.width, params.height, params.layers);
 
 				break;
 			}
@@ -421,7 +418,9 @@ namespace spl
 				assert(params.width > 0);
 				assert(params.height > 0);
 
-				glTexImage2DMultisample(targetGL, params.samples, internalFormatGL, params.width, params.height, params.fixedSampleLocations);
+				glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, _texture);
+				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, params.samples, internalFormatGL, params.width, params.height, params.fixedSampleLocations);
+				glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 
 				break;
 			}
@@ -432,7 +431,9 @@ namespace spl
 				assert(params.height > 0);
 				assert(params.depth > 0);
 
-				glTexImage3DMultisample(targetGL, params.samples, internalFormatGL, params.width, params.height, params.depth, params.fixedSampleLocations);
+				glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, _texture);
+				glTexImage3DMultisample(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, params.samples, internalFormatGL, params.width, params.height, params.depth, params.fixedSampleLocations);
+				glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, 0);
 
 				break;
 			}
@@ -443,18 +444,15 @@ namespace spl
 				break;
 			}
 		}
-
-		glBindTexture(targetGL, 0);
 	}
 
 	void RawTexture::update(const UpdateParams& params)
 	{
 		assert(isValid());
+		assert((params.data == nullptr) != (params.buffer == nullptr));
 		assert(textureFormatToGL(params.dataFormat) != 0);
 		assert(textureDataTypeToGL(params.dataType) != 0);
-		assert((params.data == nullptr) != (params.buffer == nullptr));
 
-		const uint32_t targetGL = textureTargetToGL(_target);
 		const uint32_t formatGL = textureFormatToGL(params.dataFormat);
 		const uint32_t dataTypeGL = textureDataTypeToGL(params.dataType);
 
@@ -469,73 +467,73 @@ namespace spl
 			Buffer::unbind(BufferTarget::PixelUnpack);
 		}
 
-		glBindTexture(targetGL, _texture);
-
-		switch (_target)
+		switch (_creationParams.target)
 		{
 			case TextureTarget::Texture1D:
 			{
-				assert(params.width > 0);
+				assert(params.width > 0 && params.offsetX + params.width < _creationParams.width);
 
-				glTexSubImage1D(targetGL, params.level, params.offsetX, params.width, formatGL, dataTypeGL, data);
+				glTextureSubImage1D(_texture, params.level, params.offsetX, params.width, formatGL, dataTypeGL, data);
 
 				break;
 			}
 			case TextureTarget::Texture2D:
 			{
-				assert(params.width > 0);
-				assert(params.height > 0);
+				assert(params.width > 0 && params.offsetX + params.width < _creationParams.width);
+				assert(params.height > 0 && params.offsetY + params.height < _creationParams.height);
 
-				glTexSubImage2D(targetGL, params.level, params.offsetX, params.offsetY, params.width, params.height, formatGL, dataTypeGL, data);
+				glTextureSubImage2D(_texture, params.level, params.offsetX, params.offsetY, params.width, params.height, formatGL, dataTypeGL, data);
 
 				break;
 			}
 			case TextureTarget::Texture3D:
 			{
-				assert(params.width > 0);
-				assert(params.height > 0);
-				assert(params.depth > 0);
+				assert(params.width > 0 && params.offsetX + params.width < _creationParams.width);
+				assert(params.height > 0 && params.offsetY + params.height < _creationParams.height);
+				assert(params.depth > 0 && params.offsetZ + params.depth < _creationParams.depth);
 
-				glTexSubImage3D(targetGL, params.level, params.offsetX, params.offsetY, params.offsetZ, params.width, params.height, params.depth, formatGL, dataTypeGL, data);
+				glTextureSubImage3D(_texture, params.level, params.offsetX, params.offsetY, params.offsetZ, params.width, params.height, params.depth, formatGL, dataTypeGL, data);
 
 				break;
 			}
 			case TextureTarget::Array1D:
 			{
-				assert(params.width > 0);
+				assert(params.width > 0 && params.offsetX + params.width < _creationParams.width);
 
-				glTexSubImage2D(targetGL, params.level, params.offsetX, params.layer, params.width, 1, formatGL, dataTypeGL, data);
+				glTextureSubImage2D(_texture, params.level, params.offsetX, params.layer, params.width, 1, formatGL, dataTypeGL, data);
+
+				break;
 			}
 			case TextureTarget::Array2D:
 			{
-				assert(params.width > 0);
-				assert(params.height > 0);
+				assert(params.width > 0 && params.offsetX + params.width < _creationParams.width);
+				assert(params.height > 0 && params.offsetY + params.height < _creationParams.height);
 
-				glTexSubImage3D(targetGL, params.level, params.offsetX, params.offsetY, params.layer, params.width, params.height, 1, formatGL, dataTypeGL, data);
+				glTextureSubImage3D(_texture, params.level, params.offsetX, params.offsetY, params.layer, params.width, params.height, 1, formatGL, dataTypeGL, data);
 
 				break;
 			}
 			case TextureTarget::Rectangle:
 			{
-				assert(params.width > 0);
-				assert(params.height > 0);
+				assert(params.width > 0 && params.offsetX + params.width < _creationParams.width);
+				assert(params.height > 0 && params.offsetY + params.height < _creationParams.height);
 
-				glTexSubImage2D(targetGL, 0, params.offsetX, params.offsetY, params.width, params.height, formatGL, dataTypeGL, data);
+				glTextureSubImage2D(_texture, 0, params.offsetX, params.offsetY, params.width, params.height, formatGL, dataTypeGL, data);
 
 				break;
 			}
 			case TextureTarget::Buffer:
 			{
-				assert(false);
+				assert(false);	// Buffer texture cannot be re-assigned, update buffer instead.
 				break;
 			}
 			case TextureTarget::CubeMap:
 			{
 				assert(textureCubeMapTargetToGL(params.cubeMapTarget) != 0);
-				assert(params.width > 0);
-				assert(params.height > 0);
+				assert(params.width > 0 && params.offsetX + params.width < _creationParams.width);
+				assert(params.height > 0 && params.offsetY + params.height < _creationParams.height);
 
-				glTexSubImage2D(textureCubeMapTargetToGL(params.cubeMapTarget), 0, params.offsetX, params.offsetY, params.width, params.height, formatGL, dataTypeGL, data);
+				glTextureSubImage2D(textureCubeMapTargetToGL(params.cubeMapTarget), 0, params.offsetX, params.offsetY, params.width, params.height, formatGL, dataTypeGL, data);
 
 				break;
 			}
@@ -546,12 +544,12 @@ namespace spl
 			}
 			case TextureTarget::Multisample2D:
 			{
-				assert(false);
+				assert(false);	// Multisample texture cannot be filled.
 				break;
 			}
 			case TextureTarget::Multisample2DArray:
 			{
-				assert(false);
+				assert(false);	// Multisample texture cannot be filled.
 				break;
 			}
 			default:
@@ -565,8 +563,6 @@ namespace spl
 		{
 			Buffer::unbind(BufferTarget::PixelUnpack);
 		}
-
-		glBindTexture(targetGL, 0);
 	}
 
 	void RawTexture::destroy()
@@ -575,7 +571,7 @@ namespace spl
 		{
 			glDeleteTextures(1, &_texture);
 			_texture = 0;
-			_target = TextureTarget::Undefined;
+			_creationParams = CreationParams();
 		}
 	}
 
@@ -584,9 +580,9 @@ namespace spl
 		return _texture;
 	}
 
-	TextureTarget RawTexture::getTextureTarget() const
+	const RawTexture::CreationParams& RawTexture::getCreationParams() const
 	{
-		return _target;
+		return _creationParams;
 	}
 
 	bool RawTexture::isValid() const
@@ -597,7 +593,7 @@ namespace spl
 	void RawTexture::bind(const RawTexture& texture, TextureTarget target, uint32_t textureUnit)
 	{
 		assert(texture.isValid());
-		assert(texture._target == target);
+		assert(texture._creationParams.target == target);
 		// TODO: Verifier textureUnit valide
 
 		glActiveTexture(GL_TEXTURE0 + textureUnit);
@@ -616,5 +612,85 @@ namespace spl
 	RawTexture::~RawTexture()
 	{
 		destroy();
+	}
+
+	uint8_t RawTexture::internalFormatComponents(TextureInternalFormat internalFormat)
+	{
+		// 0 < R, G, B, A, D, S < 63
+		switch (internalFormat)
+		{
+			case TextureInternalFormat::R8:
+			case TextureInternalFormat::R8_SNORM:
+			case TextureInternalFormat::R16:
+			case TextureInternalFormat::R16_SNORM:
+			case TextureInternalFormat::R16F:
+			case TextureInternalFormat::R32F:
+			case TextureInternalFormat::R8I:
+			case TextureInternalFormat::R8UI:
+			case TextureInternalFormat::R16I:
+			case TextureInternalFormat::R16UI:
+			case TextureInternalFormat::R32I:
+			case TextureInternalFormat::R32UI:
+				return 1;
+			case TextureInternalFormat::RG8:
+			case TextureInternalFormat::RG8_SNORM:
+			case TextureInternalFormat::RG16F:
+			case TextureInternalFormat::RG32F:
+			case TextureInternalFormat::RG8I:
+			case TextureInternalFormat::RG8UI:
+			case TextureInternalFormat::RG16I:
+			case TextureInternalFormat::RG16UI:
+			case TextureInternalFormat::RG32I:
+			case TextureInternalFormat::RG32UI:
+				return 3;
+			case TextureInternalFormat::R3_G3_B2:
+			case TextureInternalFormat::RGB4:
+			case TextureInternalFormat::RGB5:
+			case TextureInternalFormat::RGB565:
+			case TextureInternalFormat::RGB8:
+			case TextureInternalFormat::RGB8_SNORM:
+			case TextureInternalFormat::RGB10:
+			case TextureInternalFormat::RGB12:
+			case TextureInternalFormat::RGB16:
+			case TextureInternalFormat::RGB16_SNORM:
+			case TextureInternalFormat::SRGB8:
+			case TextureInternalFormat::RGB16F:
+			case TextureInternalFormat::RGB32F:
+			case TextureInternalFormat::R11F_G11F_B10F:
+			case TextureInternalFormat::RGB9_E5:
+			case TextureInternalFormat::RGB8I:
+			case TextureInternalFormat::RGB8UI:
+			case TextureInternalFormat::RGB16I:
+			case TextureInternalFormat::RGB16UI:
+			case TextureInternalFormat::RGB32I:
+			case TextureInternalFormat::RGB32UI:
+				return 7;
+			case TextureInternalFormat::SRGB8_ALPHA8:
+			case TextureInternalFormat::RGBA16F:
+			case TextureInternalFormat::RGBA32F:
+			case TextureInternalFormat::RGBA8I:
+			case TextureInternalFormat::RGBA8UI:
+			case TextureInternalFormat::RGBA16I:
+			case TextureInternalFormat::RGBA16UI:
+			case TextureInternalFormat::RGBA32I:
+			case TextureInternalFormat::RGBA32UI:
+				return 15;
+			case TextureInternalFormat::DEPTH_COMPONENT16:
+			case TextureInternalFormat::DEPTH_COMPONENT24:
+			case TextureInternalFormat::DEPTH_COMPONENT32:
+			case TextureInternalFormat::DEPTH_COMPONENT32F:
+				return 16;
+			case TextureInternalFormat::STENCIL_INDEX1:
+			case TextureInternalFormat::STENCIL_INDEX4:
+			case TextureInternalFormat::STENCIL_INDEX8:
+			case TextureInternalFormat::STENCIL_INDEX16:
+				return 32;
+			case TextureInternalFormat::DEPTH24_STENCIL8:
+			case TextureInternalFormat::DEPTH32F_STENCIL8:
+				return 48;
+			default:
+				assert(false);
+				return 0;
+		}
 	}
 }

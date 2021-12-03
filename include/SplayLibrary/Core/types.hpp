@@ -67,6 +67,8 @@ namespace spl
 	enum class TextureInternalFormat;
 	class RawTexture;
 
+	class RawTexture2D;
+
 	struct VertexAttribute;
 	enum class DrawableStorage;
 	class Drawable;

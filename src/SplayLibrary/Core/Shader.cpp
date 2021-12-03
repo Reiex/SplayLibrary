@@ -365,7 +365,7 @@ namespace spl
 
 	void Shader::setUniform(const std::string& location, const RawTexture& texture, uint32_t textureUnit)
 	{
-		RawTexture::bind(texture, texture.getTextureTarget(), textureUnit);
+		RawTexture::bind(texture, texture.getCreationParams().target, textureUnit);
 		glUniform1i(getUniformLocation(location), textureUnit);
 	}
 

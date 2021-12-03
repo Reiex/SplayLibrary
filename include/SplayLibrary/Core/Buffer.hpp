@@ -53,8 +53,9 @@ namespace spl
 
 	/*
 	The buffer is ONLY an encapsulation of an OpenGL buffer - No restriction nor additional operations.
-	The size, usage & storage flags are only modified when explicitely told, during move operations, or during copies if the buffer was invalid.
-	All the operations remains possible (might be at high cost).
+	The size is only modified at creation, destruction, copies and moves.
+	The usage & storage flags are only modified at creation, destruction, copies iff the buffer was invalid and moves.
+	All operations remain possible (except mapping under certains constraints) but might be at high cost.
 	*/
 	class Buffer
 	{
