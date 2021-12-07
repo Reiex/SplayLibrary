@@ -33,14 +33,7 @@ int main()
 	glGenFramebuffers(1, &fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-	spl::RawTexture::CreationParams params;
-	params.target = spl::TextureTarget::Texture2D;
-	params.internalFormat = spl::TextureInternalFormat::RGB8;
-	params.width = 1000;
-	params.height = 600;
-
-	spl::RawTexture texture;
-	texture.createNew(params);
+	spl::Texture2D texture(spl::uvec2{ 1000, 600 });
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.getHandle(), 0);
 
@@ -83,12 +76,12 @@ int main()
 		{
 			switch (rawEvent->type)
 			{
-			case spl::EventType::ResizeEvent:
-			{
-				spl::ResizeEvent event = rawEvent->specialize<spl::EventType::ResizeEvent>();
-				camera.setAspect(event.size);
-				break;
-			}
+				case spl::EventType::ResizeEvent:
+				{
+					spl::ResizeEvent event = rawEvent->specialize<spl::EventType::ResizeEvent>();
+					camera.setAspect(event.size);
+					break;
+				}
 			}
 		}
 

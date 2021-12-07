@@ -456,7 +456,7 @@ namespace spl
 		const uint32_t formatGL = textureFormatToGL(params.dataFormat);
 		const uint32_t dataTypeGL = textureDataTypeToGL(params.dataType);
 
-		void* data = params.data;
+		const void* data = params.data;
 		if (params.buffer)
 		{
 			Buffer::bind(*params.buffer, BufferTarget::PixelUnpack);
@@ -471,7 +471,7 @@ namespace spl
 		{
 			case TextureTarget::Texture1D:
 			{
-				assert(params.width > 0 && params.offsetX + params.width < _creationParams.width);
+				assert(params.width > 0 && params.offsetX + params.width <= _creationParams.width);
 
 				glTextureSubImage1D(_texture, params.level, params.offsetX, params.width, formatGL, dataTypeGL, data);
 
@@ -479,8 +479,8 @@ namespace spl
 			}
 			case TextureTarget::Texture2D:
 			{
-				assert(params.width > 0 && params.offsetX + params.width < _creationParams.width);
-				assert(params.height > 0 && params.offsetY + params.height < _creationParams.height);
+				assert(params.width > 0 && params.offsetX + params.width <= _creationParams.width);
+				assert(params.height > 0 && params.offsetY + params.height <= _creationParams.height);
 
 				glTextureSubImage2D(_texture, params.level, params.offsetX, params.offsetY, params.width, params.height, formatGL, dataTypeGL, data);
 
@@ -488,9 +488,9 @@ namespace spl
 			}
 			case TextureTarget::Texture3D:
 			{
-				assert(params.width > 0 && params.offsetX + params.width < _creationParams.width);
-				assert(params.height > 0 && params.offsetY + params.height < _creationParams.height);
-				assert(params.depth > 0 && params.offsetZ + params.depth < _creationParams.depth);
+				assert(params.width > 0 && params.offsetX + params.width <= _creationParams.width);
+				assert(params.height > 0 && params.offsetY + params.height <= _creationParams.height);
+				assert(params.depth > 0 && params.offsetZ + params.depth <= _creationParams.depth);
 
 				glTextureSubImage3D(_texture, params.level, params.offsetX, params.offsetY, params.offsetZ, params.width, params.height, params.depth, formatGL, dataTypeGL, data);
 
@@ -498,7 +498,7 @@ namespace spl
 			}
 			case TextureTarget::Array1D:
 			{
-				assert(params.width > 0 && params.offsetX + params.width < _creationParams.width);
+				assert(params.width > 0 && params.offsetX + params.width <= _creationParams.width);
 
 				glTextureSubImage2D(_texture, params.level, params.offsetX, params.layer, params.width, 1, formatGL, dataTypeGL, data);
 
@@ -506,8 +506,8 @@ namespace spl
 			}
 			case TextureTarget::Array2D:
 			{
-				assert(params.width > 0 && params.offsetX + params.width < _creationParams.width);
-				assert(params.height > 0 && params.offsetY + params.height < _creationParams.height);
+				assert(params.width > 0 && params.offsetX + params.width <= _creationParams.width);
+				assert(params.height > 0 && params.offsetY + params.height <= _creationParams.height);
 
 				glTextureSubImage3D(_texture, params.level, params.offsetX, params.offsetY, params.layer, params.width, params.height, 1, formatGL, dataTypeGL, data);
 
@@ -515,8 +515,8 @@ namespace spl
 			}
 			case TextureTarget::Rectangle:
 			{
-				assert(params.width > 0 && params.offsetX + params.width < _creationParams.width);
-				assert(params.height > 0 && params.offsetY + params.height < _creationParams.height);
+				assert(params.width > 0 && params.offsetX + params.width <= _creationParams.width);
+				assert(params.height > 0 && params.offsetY + params.height <= _creationParams.height);
 
 				glTextureSubImage2D(_texture, 0, params.offsetX, params.offsetY, params.width, params.height, formatGL, dataTypeGL, data);
 
@@ -530,8 +530,8 @@ namespace spl
 			case TextureTarget::CubeMap:
 			{
 				assert(textureCubeMapTargetToGL(params.cubeMapTarget) != 0);
-				assert(params.width > 0 && params.offsetX + params.width < _creationParams.width);
-				assert(params.height > 0 && params.offsetY + params.height < _creationParams.height);
+				assert(params.width > 0 && params.offsetX + params.width <= _creationParams.width);
+				assert(params.height > 0 && params.offsetY + params.height <= _creationParams.height);
 
 				glTextureSubImage2D(textureCubeMapTargetToGL(params.cubeMapTarget), 0, params.offsetX, params.offsetY, params.width, params.height, formatGL, dataTypeGL, data);
 
@@ -691,6 +691,34 @@ namespace spl
 			default:
 				assert(false);
 				return 0;
+		}
+	}
+
+	TextureFormat RawTexture::componentsToFormat(uint8_t components)
+	{
+		switch (components)
+		{
+			case 1:
+				return TextureFormat::R;
+			case 2:
+				return TextureFormat::G;
+			case 3:
+				return TextureFormat::RG;
+			case 4:
+				return TextureFormat::B;
+			case 7:
+				return TextureFormat::RGB;
+			case 15:
+				return TextureFormat::RGBA;
+			case 16:
+				return TextureFormat::DepthComponent;
+			case 32:
+				return TextureFormat::StencilIndex;
+			case 48:
+				return TextureFormat::DepthStencil;
+			default:
+				assert(false);
+				return TextureFormat::Undefined;
 		}
 	}
 }

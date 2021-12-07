@@ -182,7 +182,7 @@ namespace spl
 				const Buffer* buffer = nullptr;
 				uint32_t bufferOffset = 0;
 
-				void* data = nullptr;
+				const void* data = nullptr;
 
 				TextureFormat dataFormat = TextureFormat::Undefined;
 				TextureDataType dataType = TextureDataType::Undefined;
@@ -210,6 +210,8 @@ namespace spl
 			void update(const UpdateParams& params);
 			void destroy();
 
+			// TODO: Update from framebuffer
+
 			uint32_t getHandle() const;
 			const CreationParams& getCreationParams() const;
 			bool isValid() const;
@@ -222,6 +224,7 @@ namespace spl
 		protected:
 
 			static uint8_t internalFormatComponents(TextureInternalFormat internalFormat); // 0 < R, G, B, A, D, S < 63
+			static TextureFormat componentsToFormat(uint8_t components);
 
 		private:
 

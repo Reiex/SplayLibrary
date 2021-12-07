@@ -60,7 +60,7 @@
     <ClCompile Include="..\..\src\SplayLibrary\3D\Transformable3D.cpp">
       <Filter>Source Files\3D</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\SplayLibrary\Core\RawTexture2D.cpp">
+    <ClCompile Include="..\..\src\SplayLibrary\Core\Texture2D.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>
@@ -125,7 +125,10 @@
     <ClInclude Include="..\..\include\SplayLibrary\3D\Transformable3D.hpp">
       <Filter>Header Files\3D</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Core\RawTexture2D.hpp">
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Texture2D.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Texture2DT.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <atomic>
+#include <bitset>
 #include <cassert>
 #include <cmath>
 #include <cstdint>
@@ -67,7 +68,7 @@ namespace spl
 	enum class TextureInternalFormat;
 	class RawTexture;
 
-	class RawTexture2D;
+	class Texture2D;
 
 	struct VertexAttribute;
 	enum class DrawableStorage;
