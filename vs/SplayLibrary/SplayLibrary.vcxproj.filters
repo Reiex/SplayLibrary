@@ -63,6 +63,9 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\Texture2D.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\SplayLibrary\Core\TextureBase.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Drawable.hpp">
@@ -129,6 +132,12 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Texture2DT.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\TextureBase.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\TextureBaseT.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>

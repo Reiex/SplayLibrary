@@ -35,7 +35,7 @@ int main()
 
 	spl::Texture2D texture(spl::uvec2{ 1000, 600 });
 
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.getHandle(), 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.getRawTexture().getHandle(), 0);
 
 	unsigned int rbo;
 	glGenRenderbuffers(1, &rbo);

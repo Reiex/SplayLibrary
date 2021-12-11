@@ -22,7 +22,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\examples\basicPhong\basicPhong.cpp">
-      <Filter>Source Files\basicPhong</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

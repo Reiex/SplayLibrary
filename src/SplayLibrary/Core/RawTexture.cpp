@@ -169,130 +169,168 @@ namespace spl
 		{
 			switch (internalFormat)
 			{
+			case TextureInternalFormat::R:
+				return GL_RED;
+			case TextureInternalFormat::RG:
+				return GL_RG;
+			case TextureInternalFormat::RGB:
+				return GL_RGB;
+			case TextureInternalFormat::RGBA:
+				return GL_RGBA;
+			case TextureInternalFormat::DepthComponent:
+				return GL_DEPTH_COMPONENT;
+			case TextureInternalFormat::StencilIndex:
+				return GL_STENCIL_INDEX;
+			case TextureInternalFormat::DepthStencil:
+				return GL_DEPTH_STENCIL;
 			case TextureInternalFormat::R8:
 				return GL_R8;
 			case TextureInternalFormat::R8_SNORM:
 				return GL_R8_SNORM;
+			case TextureInternalFormat::R8I:
+				return GL_R8I;
+			case TextureInternalFormat::R8UI:
+				return GL_R8UI;
 			case TextureInternalFormat::R16:
 				return GL_R16;
 			case TextureInternalFormat::R16_SNORM:
 				return GL_R16_SNORM;
+			case TextureInternalFormat::R16I:
+				return GL_R16I;
+			case TextureInternalFormat::R16UI:
+				return GL_R16UI;
+			case TextureInternalFormat::R16F:
+				return GL_R16F;
+			case TextureInternalFormat::R32I:
+				return GL_R32I;
+			case TextureInternalFormat::R32UI:
+				return GL_R32UI;
+			case TextureInternalFormat::R32F:
+				return GL_R32F;
 			case TextureInternalFormat::RG8:
 				return GL_RG8;
 			case TextureInternalFormat::RG8_SNORM:
 				return GL_RG8_SNORM;
+			case TextureInternalFormat::RG8I:
+				return GL_RG8I;
+			case TextureInternalFormat::RG8UI:
+				return GL_RG8UI;
+			case TextureInternalFormat::RG16:
+				return GL_RG16;
+			case TextureInternalFormat::RG16_SNORM:
+				return GL_RG16_SNORM;
+			case TextureInternalFormat::RG16I:
+				return GL_RG16I;
+			case TextureInternalFormat::RG16UI:
+				return GL_RG16UI;
+			case TextureInternalFormat::RG16F:
+				return GL_RG16F;
+			case TextureInternalFormat::RG32I:
+				return GL_RG32I;
+			case TextureInternalFormat::RG32UI:
+				return GL_RG32UI;
+			case TextureInternalFormat::RG32F:
+				return GL_RG32F;
 			case TextureInternalFormat::R3_G3_B2:
 				return GL_R3_G3_B2;
 			case TextureInternalFormat::RGB4:
 				return GL_RGB4;
 			case TextureInternalFormat::RGB5:
 				return GL_RGB5;
-			case TextureInternalFormat::RGB565:
+			case TextureInternalFormat::R5_G6_B5:
 				return GL_RGB565;
 			case TextureInternalFormat::RGB8:
 				return GL_RGB8;
 			case TextureInternalFormat::RGB8_SNORM:
 				return GL_RGB8_SNORM;
+			case TextureInternalFormat::RGB8I:
+				return GL_RGB8I;
+			case TextureInternalFormat::RGB8UI:
+				return GL_RGB8UI;
+			case TextureInternalFormat::RGB9_E5:
+				return GL_RGB9_E5;
 			case TextureInternalFormat::RGB10:
 				return GL_RGB10;
+			case TextureInternalFormat::R11F_G11F_B10F:
+				return GL_R11F_G11F_B10F;
 			case TextureInternalFormat::RGB12:
 				return GL_RGB12;
 			case TextureInternalFormat::RGB16:
 				return GL_RGB16;
 			case TextureInternalFormat::RGB16_SNORM:
 				return GL_RGB16_SNORM;
-			case TextureInternalFormat::SRGB8:
-				return GL_SRGB8;
-			case TextureInternalFormat::SRGB8_ALPHA8:
-				return GL_SRGB8_ALPHA8;
-			case TextureInternalFormat::R16F:
-				return GL_R16F;
-			case TextureInternalFormat::RG16F:
-				return GL_RG16F;
-			case TextureInternalFormat::RGB16F:
-				return GL_RGB16F;
-			case TextureInternalFormat::RGBA16F:
-				return GL_RGBA16F;
-			case TextureInternalFormat::R32F:
-				return GL_R32F;
-			case TextureInternalFormat::RG32F:
-				return GL_RG32F;
-			case TextureInternalFormat::RGB32F:
-				return GL_RGB32F;
-			case TextureInternalFormat::RGBA32F:
-				return GL_RGBA32F;
-			case TextureInternalFormat::R11F_G11F_B10F:
-				return GL_R11F_G11F_B10F;
-			case TextureInternalFormat::RGB9_E5:
-				return GL_RGB9_E5;
-			case TextureInternalFormat::R8I:
-				return GL_R8I;
-			case TextureInternalFormat::R8UI:
-				return GL_R8UI;
-			case TextureInternalFormat::R16I:
-				return GL_R16I;
-			case TextureInternalFormat::R16UI:
-				return GL_R16UI;
-			case TextureInternalFormat::R32I:
-				return GL_R32I;
-			case TextureInternalFormat::R32UI:
-				return GL_R32UI;
-			case TextureInternalFormat::RG8I:
-				return GL_RG8I;
-			case TextureInternalFormat::RG8UI:
-				return GL_RG8UI;
-			case TextureInternalFormat::RG16I:
-				return GL_RG16I;
-			case TextureInternalFormat::RG16UI:
-				return GL_RG16UI;
-			case TextureInternalFormat::RG32I:
-				return GL_RG32I;
-			case TextureInternalFormat::RG32UI:
-				return GL_RG32UI;
-			case TextureInternalFormat::RGB8I:
-				return GL_RGB8I;
-			case TextureInternalFormat::RGB8UI:
-				return GL_RGB8UI;
 			case TextureInternalFormat::RGB16I:
 				return GL_RGB16I;
 			case TextureInternalFormat::RGB16UI:
 				return GL_RGB16UI;
+			case TextureInternalFormat::RGB16F:
+				return GL_RGB16F;
 			case TextureInternalFormat::RGB32I:
 				return GL_RGB32I;
 			case TextureInternalFormat::RGB32UI:
 				return GL_RGB32UI;
+			case TextureInternalFormat::RGB32F:
+				return GL_RGB32F;
+			case TextureInternalFormat::RGBA2:
+				return GL_RGBA2;
+			case TextureInternalFormat::RGBA4:
+				return GL_RGBA4;
+			case TextureInternalFormat::RGB5_A1:
+				return GL_RGB5_A1;
+			case TextureInternalFormat::RGBA8:
+				return GL_RGBA8;
+			case TextureInternalFormat::RGBA8_SNORM:
+				return GL_RGBA8_SNORM;
 			case TextureInternalFormat::RGBA8I:
 				return GL_RGBA8I;
 			case TextureInternalFormat::RGBA8UI:
 				return GL_RGBA8UI;
+			case TextureInternalFormat::RGB10_A2:
+				return GL_RGB10_A2;
+			case TextureInternalFormat::RGB10UI_A2UI:
+				return GL_RGB10_A2UI;
+			case TextureInternalFormat::RGBA12:
+				return GL_RGBA12;
+			case TextureInternalFormat::RGBA16:
+				return GL_RGBA16;
+			case TextureInternalFormat::RGBA16_SNORM:
+				return GL_RGBA16_SNORM;
 			case TextureInternalFormat::RGBA16I:
 				return GL_RGBA16I;
 			case TextureInternalFormat::RGBA16UI:
 				return GL_RGBA16UI;
+			case TextureInternalFormat::RGBA16F:
+				return GL_RGBA16F;
 			case TextureInternalFormat::RGBA32I:
 				return GL_RGBA32I;
 			case TextureInternalFormat::RGBA32UI:
 				return GL_RGBA32UI;
-			case TextureInternalFormat::DEPTH_COMPONENT16:
+			case TextureInternalFormat::RGBA32F:
+				return GL_RGBA32F;
+			case TextureInternalFormat::SRGB8:
+				return GL_SRGB8;
+			case TextureInternalFormat::SRGBA8:
+				return GL_SRGB8_ALPHA8;
+			case TextureInternalFormat::DepthComponent16:
 				return GL_DEPTH_COMPONENT16;
-			case TextureInternalFormat::DEPTH_COMPONENT24:
+			case TextureInternalFormat::DepthComponent24:
 				return GL_DEPTH_COMPONENT24;
-			case TextureInternalFormat::DEPTH_COMPONENT32:
+			case TextureInternalFormat::DepthComponent32:
 				return GL_DEPTH_COMPONENT32;
-			case TextureInternalFormat::DEPTH_COMPONENT32F:
+			case TextureInternalFormat::DepthComponent32F:
 				return GL_DEPTH_COMPONENT32F;
-			case TextureInternalFormat::DEPTH24_STENCIL8:
-				return GL_DEPTH24_STENCIL8;
-			case TextureInternalFormat::DEPTH32F_STENCIL8:
-				return GL_DEPTH32F_STENCIL8;
-			case TextureInternalFormat::STENCIL_INDEX1:
+			case TextureInternalFormat::StencilIndex1:
 				return GL_STENCIL_INDEX1;
-			case TextureInternalFormat::STENCIL_INDEX4:
+			case TextureInternalFormat::StencilIndex4:
 				return GL_STENCIL_INDEX4;
-			case TextureInternalFormat::STENCIL_INDEX8:
+			case TextureInternalFormat::StencilIndex8:
 				return GL_STENCIL_INDEX8;
-			case TextureInternalFormat::STENCIL_INDEX16:
+			case TextureInternalFormat::StencilIndex16:
 				return GL_STENCIL_INDEX16;
+			case TextureInternalFormat::Depth24_Stencil8:
+				return GL_DEPTH24_STENCIL8;
+			case TextureInternalFormat::Depth32F_Stencil8:
+				return GL_DEPTH32F_STENCIL8;
 			default:
 				assert(false);
 				return 0;
@@ -612,113 +650,5 @@ namespace spl
 	RawTexture::~RawTexture()
 	{
 		destroy();
-	}
-
-	uint8_t RawTexture::internalFormatComponents(TextureInternalFormat internalFormat)
-	{
-		// 0 < R, G, B, A, D, S < 63
-		switch (internalFormat)
-		{
-			case TextureInternalFormat::R8:
-			case TextureInternalFormat::R8_SNORM:
-			case TextureInternalFormat::R16:
-			case TextureInternalFormat::R16_SNORM:
-			case TextureInternalFormat::R16F:
-			case TextureInternalFormat::R32F:
-			case TextureInternalFormat::R8I:
-			case TextureInternalFormat::R8UI:
-			case TextureInternalFormat::R16I:
-			case TextureInternalFormat::R16UI:
-			case TextureInternalFormat::R32I:
-			case TextureInternalFormat::R32UI:
-				return 1;
-			case TextureInternalFormat::RG8:
-			case TextureInternalFormat::RG8_SNORM:
-			case TextureInternalFormat::RG16F:
-			case TextureInternalFormat::RG32F:
-			case TextureInternalFormat::RG8I:
-			case TextureInternalFormat::RG8UI:
-			case TextureInternalFormat::RG16I:
-			case TextureInternalFormat::RG16UI:
-			case TextureInternalFormat::RG32I:
-			case TextureInternalFormat::RG32UI:
-				return 3;
-			case TextureInternalFormat::R3_G3_B2:
-			case TextureInternalFormat::RGB4:
-			case TextureInternalFormat::RGB5:
-			case TextureInternalFormat::RGB565:
-			case TextureInternalFormat::RGB8:
-			case TextureInternalFormat::RGB8_SNORM:
-			case TextureInternalFormat::RGB10:
-			case TextureInternalFormat::RGB12:
-			case TextureInternalFormat::RGB16:
-			case TextureInternalFormat::RGB16_SNORM:
-			case TextureInternalFormat::SRGB8:
-			case TextureInternalFormat::RGB16F:
-			case TextureInternalFormat::RGB32F:
-			case TextureInternalFormat::R11F_G11F_B10F:
-			case TextureInternalFormat::RGB9_E5:
-			case TextureInternalFormat::RGB8I:
-			case TextureInternalFormat::RGB8UI:
-			case TextureInternalFormat::RGB16I:
-			case TextureInternalFormat::RGB16UI:
-			case TextureInternalFormat::RGB32I:
-			case TextureInternalFormat::RGB32UI:
-				return 7;
-			case TextureInternalFormat::SRGB8_ALPHA8:
-			case TextureInternalFormat::RGBA16F:
-			case TextureInternalFormat::RGBA32F:
-			case TextureInternalFormat::RGBA8I:
-			case TextureInternalFormat::RGBA8UI:
-			case TextureInternalFormat::RGBA16I:
-			case TextureInternalFormat::RGBA16UI:
-			case TextureInternalFormat::RGBA32I:
-			case TextureInternalFormat::RGBA32UI:
-				return 15;
-			case TextureInternalFormat::DEPTH_COMPONENT16:
-			case TextureInternalFormat::DEPTH_COMPONENT24:
-			case TextureInternalFormat::DEPTH_COMPONENT32:
-			case TextureInternalFormat::DEPTH_COMPONENT32F:
-				return 16;
-			case TextureInternalFormat::STENCIL_INDEX1:
-			case TextureInternalFormat::STENCIL_INDEX4:
-			case TextureInternalFormat::STENCIL_INDEX8:
-			case TextureInternalFormat::STENCIL_INDEX16:
-				return 32;
-			case TextureInternalFormat::DEPTH24_STENCIL8:
-			case TextureInternalFormat::DEPTH32F_STENCIL8:
-				return 48;
-			default:
-				assert(false);
-				return 0;
-		}
-	}
-
-	TextureFormat RawTexture::componentsToFormat(uint8_t components)
-	{
-		switch (components)
-		{
-			case 1:
-				return TextureFormat::R;
-			case 2:
-				return TextureFormat::G;
-			case 3:
-				return TextureFormat::RG;
-			case 4:
-				return TextureFormat::B;
-			case 7:
-				return TextureFormat::RGB;
-			case 15:
-				return TextureFormat::RGBA;
-			case 16:
-				return TextureFormat::DepthComponent;
-			case 32:
-				return TextureFormat::StencilIndex;
-			case 48:
-				return TextureFormat::DepthStencil;
-			default:
-				assert(false);
-				return TextureFormat::Undefined;
-		}
 	}
 }

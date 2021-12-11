@@ -3,7 +3,7 @@
 
 namespace spl
 {
-	Texture2D::Texture2D() : RawTexture(),
+	Texture2D::Texture2D() : TextureBase(),
 		_size(0, 0)
 	{
 	}
@@ -28,6 +28,11 @@ namespace spl
 		createNew(size, data, internalFormat);
 	}
 
+	Texture2D::Texture2D(const uvec2& size, const float* data, TextureInternalFormat internalFormat) : Texture2D()
+	{
+		createNew(size, data, internalFormat);
+	}
+
 	Texture2D::Texture2D(const std::filesystem::path& path, TextureInternalFormat internalFormat) : Texture2D()
 	{
 		createNew(path, internalFormat);
@@ -41,7 +46,7 @@ namespace spl
 		params.width = size.x;
 		params.height = size.y;
 
-		RawTexture::createNew(params);
+		_texture.createNew(params);
 
 		_size = size;
 	}
@@ -64,6 +69,12 @@ namespace spl
 		update(size, data, uvec2(0, 0));
 	}
 
+	void Texture2D::createNew(const uvec2& size, const float* data, TextureInternalFormat internalFormat)
+	{
+		createNew(size, internalFormat);
+		update(size, data, uvec2(0, 0));
+	}
+
 	void Texture2D::createNew(const std::filesystem::path& path, TextureInternalFormat internalFormat)
 	{
 		// TODO: Load only necessary components
@@ -75,42 +86,56 @@ namespace spl
 	{
 		RawTexture::UpdateParams params;
 		params.data = data;
-		params.dataFormat = RawTexture::componentsToFormat(RawTexture::internalFormatComponents(getCreationParams().internalFormat));
+		params.dataFormat = TextureBase::getUsualTextureFormatOf(_texture.getCreationParams().internalFormat);
 		params.dataType = TextureDataType::UnsignedByte;
 		params.width = size.x;
 		params.height = size.y;
 		params.offsetX = offset.x;
 		params.offsetY = offset.y;
 
-		RawTexture::update(params);
+		_texture.update(params);
 	}
 
 	void Texture2D::update(const uvec2& size, const uint16_t* data, const uvec2& offset)
 	{
 		RawTexture::UpdateParams params;
 		params.data = data;
-		params.dataFormat = RawTexture::componentsToFormat(RawTexture::internalFormatComponents(getCreationParams().internalFormat));
+		params.dataFormat = TextureBase::getUsualTextureFormatOf(_texture.getCreationParams().internalFormat);
 		params.dataType = TextureDataType::UnsignedShort;
 		params.width = size.x;
 		params.height = size.y;
 		params.offsetX = offset.x;
 		params.offsetY = offset.y;
 
-		RawTexture::update(params);
+		_texture.update(params);
 	}
 
 	void Texture2D::update(const uvec2& size, const uint32_t* data, const uvec2& offset)
 	{
 		RawTexture::UpdateParams params;
 		params.data = data;
-		params.dataFormat = RawTexture::componentsToFormat(RawTexture::internalFormatComponents(getCreationParams().internalFormat));
+		params.dataFormat = TextureBase::getUsualTextureFormatOf(_texture.getCreationParams().internalFormat);
 		params.dataType = TextureDataType::UnsignedInt;
 		params.width = size.x;
 		params.height = size.y;
 		params.offsetX = offset.x;
 		params.offsetY = offset.y;
 
-		RawTexture::update(params);
+		_texture.update(params);
+	}
+
+	void Texture2D::update(const uvec2& size, const float* data, const uvec2& offset)
+	{
+		RawTexture::UpdateParams params;
+		params.data = data;
+		params.dataFormat = TextureBase::getUsualTextureFormatOf(_texture.getCreationParams().internalFormat);
+		params.dataType = TextureDataType::Float;
+		params.width = size.x;
+		params.height = size.y;
+		params.offsetX = offset.x;
+		params.offsetY = offset.y;
+
+		_texture.update(params);
 	}
 
 	void Texture2D::update(const std::filesystem::path& path, const uvec2& offset)
@@ -122,7 +147,7 @@ namespace spl
 
 	void Texture2D::destroy()
 	{
-		RawTexture::destroy();
+		_texture.destroy();
 		_size = { 0, 0 };
 	}
 

@@ -369,6 +369,11 @@ namespace spl
 		glUniform1i(getUniformLocation(location), textureUnit);
 	}
 
+	void Shader::setUniform(const std::string& location, const TextureBase& texture, uint32_t textureUnit)
+	{
+		setUniform(location, texture.getRawTexture(), textureUnit);
+	}
+
 	bool Shader::isValid() const
 	{
 		return _program != 0;
