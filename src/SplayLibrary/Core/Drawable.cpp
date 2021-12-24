@@ -206,6 +206,7 @@ namespace spl
 
 			newEbo.copyFrom(_ebo);
 			_ebo = std::move(newEbo);
+			_indicesCount = newSize / sizeof(uint32_t);
 			_needsAttributesUpdate = true;
 		}
 
@@ -215,22 +216,17 @@ namespace spl
 		}
 	}
 
-	void Drawable::setIndicesCount(uint32_t count)
-	{
-		assert(!_ebo.isValid() || count * sizeof(uint32_t) < _ebo.getSize());
-
-		_indicesCount = count;
-	}
-
 	void Drawable::destroyIndices()
 	{
 		_ebo.destroy();
 	}
 
-	void Drawable::draw() const
+	void Drawable::draw(uint32_t indicesCount) const
 	{
+		assert((0 < indicesCount && indicesCount <= _indicesCount) || indicesCount == -1);
+
 		glBindVertexArray(_vao);
-		glDrawElements(GL_TRIANGLES, _indicesCount, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, std::min(indicesCount, _indicesCount), GL_UNSIGNED_INT, nullptr);
 		glBindVertexArray(0);
 	}
 
@@ -251,7 +247,7 @@ namespace spl
 
 	bool Drawable::isValid() const
 	{
-		return _vao != 0 && _vbo.isValid() && _ebo.isValid();
+		return _vao != 0 && _vbo.isValid() && _ebo.isValid() && !_needsAttributesUpdate;
 	}
 
 	Drawable::~Drawable()

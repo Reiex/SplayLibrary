@@ -5,7 +5,7 @@ namespace spl
 {
 	namespace
 	{
-		static ContextManager* SPL_CONTEXT_MANAGER = nullptr;
+		ContextManager* SPL_CONTEXT_MANAGER = nullptr;
 	}
 
 	ContextManager::ContextManager() :
