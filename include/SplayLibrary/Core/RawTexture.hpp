@@ -1,12 +1,25 @@
 #pragma once
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \file
+/// \brief Functions and classes for OpenGL texture manipulations.
+/// \author Reiex
+/// 
+/// For a more detailed description, see class RawTexture.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include <SplayLibrary/Core/types.hpp>
 
 namespace spl
 {
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// \relates RawTexture
+	/// \enum TextureTarget
+	/// \brief Encapsulation of OpenGL texture targets. Specifies the purpose of a texture.
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	enum class TextureTarget
 	{
-		Undefined,
+		Undefined,	///< TODO
 		Texture1D,
 		Texture2D,
 		Texture3D,
@@ -20,9 +33,14 @@ namespace spl
 		Multisample2DArray
 	};
 
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// \relates RawTexture
+	/// \enum TextureCubeMapTarget
+	/// \brief Encapsulation of OpenGL cube map texture targets. Specifies a face of a cube map texture.
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	enum class TextureCubeMapTarget
 	{
-		Undefined,
+		Undefined,	///< TODO
 		PositiveX,
 		NegativeX,
 		PositiveY,
@@ -31,9 +49,16 @@ namespace spl
 		NegativeZ
 	};
 
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// \relates RawTexture
+	/// \enum TextureFormat
+	/// \brief Encapsulation of OpenGL texture format.
+	/// 
+	/// Specifies the format of the texture on application side and how it must be interpreted.
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	enum class TextureFormat
 	{
-		Undefined,
+		Undefined,	///< TODO
 		StencilIndex,
 		DepthComponent,
 		DepthStencil,
@@ -55,9 +80,16 @@ namespace spl
 		iBGRA
 	};
 
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// \relates RawTexture
+	/// \enum TextureDataType
+	/// \brief Encapsulation of OpenGL texture data type.
+	/// 
+	/// Specifies data type used on application side when filling/updating a texture.
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	enum class TextureDataType
 	{
-		Undefined,
+		Undefined,	///< TODO
 		UnsignedByte,
 		Byte,
 		UnsignedShort,
@@ -84,6 +116,13 @@ namespace spl
 		Float32_UnsignedInt_24_8_Rev
 	};
 
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// \relates RawTexture
+	/// \enum TextureInternalFormat
+	/// \brief Encapsulation of OpenGL texture internal format.
+	/// 
+	/// Specifies the data type and format of a texture on GPU's side.
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	enum class TextureInternalFormat
 	{
 		Undefined,
@@ -179,6 +218,21 @@ namespace spl
 		Depth32F_Stencil8,
 	};
 
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// \ingroup Core
+	/// \class RawTexture
+	/// \brief Class for manipulating OpenGL texture almost directly.
+	/// 
+	/// An instance of `RawTexture` is an encapsulation of an OpenGL texture object. It only implements usual OpenGL
+	/// operations on textures - creation, destruction, copy, update, etc. - nothing more or less.
+	/// 
+	/// The goal is to give a unique API for every type of OpenGL textures and to make each operation available to the
+	/// most texture types.
+	/// Even though it is still to the user to know if an operation is possible with some type of texture before
+	/// calling methods of RawTexture, the class provides basic checks in debug mode - check for the data given in
+	/// argument, the type of operation, the type of texture, etc.
+	/// However the checks are totally disabled in release mode for maximum performances.
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	class RawTexture
 	{
 		public:

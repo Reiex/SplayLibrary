@@ -19,20 +19,20 @@ namespace spl
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	enum class BufferTarget
 	{
-		Array,				///< TODO
-		AtomicCounter,		///< TODO
-		CopyRead,			///< TODO
-		CopyWrite,			///< TODO
-		DispatchIndirect,	///< TODO
-		DrawIndirect,		///< TODO
-		ElementArray,		///< TODO
-		Parameter,			///< TODO
-		PixelPack,			///< TODO
-		PixelUnpack,		///< TODO
-		Query,				///< TODO
-		ShaderStorage,		///< TODO
-		Texture,			///< TODO
-		TransformFeedback,	///< TODO
+		Array,	///< TODO
+		AtomicCounter,
+		CopyRead,
+		CopyWrite,
+		DispatchIndirect,
+		DrawIndirect,
+		ElementArray,
+		Parameter,
+		PixelPack,
+		PixelUnpack,
+		Query,
+		ShaderStorage,
+		Texture,
+		TransformFeedback,
 		Uniform
 	};
 
@@ -75,13 +75,13 @@ namespace spl
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		enum Flags
 		{
-			None = 0,					///< TODO
-			DynamicStorage = 1 << 0,	///< TODO
-			MapRead = 1 << 1,			///< TODO
-			MapWrite = 1 << 2,			///< TODO
-			MapPersistent = 1 << 3,		///< TODO
-			MapCoherent = 1 << 4,		///< TODO
-			ClientStorage = 1 << 5		///< TODO
+			None = 0,	///< TODO
+			DynamicStorage = 1 << 0,
+			MapRead = 1 << 1,
+			MapWrite = 1 << 2,
+			MapPersistent = 1 << 3,
+			MapCoherent = 1 << 4,
+			ClientStorage = 1 << 5
 		};
 	}
 
@@ -90,8 +90,8 @@ namespace spl
 	/// \class Buffer
 	/// \brief Class for manipulating OpenGL buffer almost directly.
 	/// 
-	/// A buffer is an encapsulation of an OpenGL buffer object. It only implements usual OpenGL operations on buffers
-	/// (creation, destruction, copy, update and mapping) nothing more or less.
+	/// An instance of `Buffer` is an encapsulation of an OpenGL buffer object. It only implements usual OpenGL
+	/// operations on buffers (creation, destruction, copy, update and mapping) nothing more or less.
 	/// For instance this class does not modify storage flags/usage or resize buffers if not explicitely told to.
 	/// 
 	/// However, the goal is to make all the operations available for any type of buffer (except for mapping if bad
