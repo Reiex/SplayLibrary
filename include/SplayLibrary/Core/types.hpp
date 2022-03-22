@@ -92,6 +92,8 @@ namespace spl
 	struct ScrollEvent;
 	struct ResizeEvent;
 	
+	class Framebuffer;
+
 	class Window;
 	class RenderWindow;
 

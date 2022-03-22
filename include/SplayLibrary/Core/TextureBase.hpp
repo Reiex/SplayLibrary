@@ -39,4 +39,4 @@ namespace spl
 	};
 }
 
-#include <SplayLibrary/Core/TextureBaseT.hpp>
+#include <SplayLibrary/Core/template/TextureBase.hpp>

@@ -1,11 +1,6 @@
 #include <SplayLibrary/SplayLibrary.hpp>
 #include <SplayLibrary/Core/Private.hpp>
 
-
-#define _SILENCE_ALL_CXX17_CODECVT_DEPRECATION_WARNINGS
-#include <codecvt>
-#include <locale>
-
 namespace spl
 {
 	RenderWindow::RenderWindow(const uvec2& size, const std::string& title) : Window(size, title),

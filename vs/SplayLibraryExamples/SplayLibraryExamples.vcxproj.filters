@@ -14,7 +14,10 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Source Files\basicPhong">
-      <UniqueIdentifier>{35074e73-a954-4f3d-bf3b-f6c8093f1e62}</UniqueIdentifier>
+      <UniqueIdentifier>{d3e8ee3a-42fa-482b-b03f-a0b62888bcbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\advancedLighting">
+      <UniqueIdentifier>{7b8e14cf-5c6f-4f06-a706-28c365411d82}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -22,7 +25,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\examples\basicPhong\basicPhong.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\basicPhong</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\examples\advancedLighting\advancedLighting.cpp">
+      <Filter>Source Files\advancedLighting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

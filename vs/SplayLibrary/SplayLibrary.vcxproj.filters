@@ -25,6 +25,12 @@
     <Filter Include="Source Files\3D">
       <UniqueIdentifier>{5c78c3eb-27ce-47cf-a4e9-f3ed836c1027}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\3D\template">
+      <UniqueIdentifier>{cbd3b2b9-df02-4cc3-8a02-f44631bd5117}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core\template">
+      <UniqueIdentifier>{27d7d1ac-8e3e-4d28-9229-7582446a6519}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\SplayLibrary\Core\Drawable.cpp">
@@ -66,6 +72,9 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\TextureBase.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\SplayLibrary\Core\Framebuffer.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Drawable.hpp">
@@ -75,9 +84,6 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Glsl.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Core\GlslT.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Private.hpp">
@@ -104,9 +110,6 @@
     <ClInclude Include="..\..\include\SplayLibrary\3D\Mesh.hpp">
       <Filter>Header Files\3D</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\3D\MeshT.hpp">
-      <Filter>Header Files\3D</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\3D\types.hpp">
       <Filter>Header Files\3D</Filter>
     </ClInclude>
@@ -131,14 +134,23 @@
     <ClInclude Include="..\..\include\SplayLibrary\Core\Texture2D.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Core\Texture2DT.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\TextureBase.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Core\TextureBaseT.hpp">
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Framebuffer.hpp">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\template\Glsl.hpp">
+      <Filter>Header Files\Core\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\template\Texture2D.hpp">
+      <Filter>Header Files\Core\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\template\TextureBase.hpp">
+      <Filter>Header Files\Core\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\3D\template\Mesh.hpp">
+      <Filter>Header Files\3D\template</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

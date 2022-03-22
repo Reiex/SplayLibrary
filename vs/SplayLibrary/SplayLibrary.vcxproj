@@ -25,6 +25,7 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\Buffer.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\ContextManager.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Drawable.cpp" />
+    <ClCompile Include="..\..\src\SplayLibrary\Core\Framebuffer.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Glsl.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Texture2D.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\RenderWindow.cpp" />
@@ -36,8 +37,8 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\SplayLibrary\3D\3D.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\3D\Mesh.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\3D\MeshT.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\3D\PerspectiveCamera.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\3D\template\Mesh.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\3D\Transformable3D.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\3D\types.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Buffer.hpp" />
@@ -45,16 +46,17 @@
     <ClInclude Include="..\..\include\SplayLibrary\Core\Core.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Drawable.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Event.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Framebuffer.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Glsl.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\Core\GlslT.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Private.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\template\Glsl.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\template\Texture2D.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\template\TextureBase.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Texture2D.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\Core\Texture2DT.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\RenderWindow.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Shader.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\RawTexture.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\TextureBase.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\Core\TextureBaseT.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\types.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Window.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\SplayLibrary.hpp" />

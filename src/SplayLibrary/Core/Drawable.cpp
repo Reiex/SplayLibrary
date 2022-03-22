@@ -48,7 +48,7 @@ namespace spl
 		_indicesCount(0),
 		_needsAttributesUpdate(false)
 	{
-		glGenVertexArrays(1, &_vao);
+		glCreateVertexArrays(1, &_vao);
 	}
 
 	void Drawable::setVertexAttributes(const std::vector<VertexAttribute>& attributes)

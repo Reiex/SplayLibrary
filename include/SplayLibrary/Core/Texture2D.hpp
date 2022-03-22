@@ -50,4 +50,4 @@ namespace spl
 	};
 }
 
-#include <SplayLibrary/Core/Texture2DT.hpp>
+#include <SplayLibrary/Core/template/Texture2D.hpp>

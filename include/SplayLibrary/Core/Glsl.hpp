@@ -355,4 +355,4 @@ namespace spl
 #undef SPLD_VEC3_REAL_FUNC
 #undef SPLD_VEC4_REAL_FUNC
 
-#include <SplayLibrary/Core/GlslT.hpp>
+#include <SplayLibrary/Core/template/Glsl.hpp>

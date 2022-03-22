@@ -20,7 +20,7 @@ namespace spl
 	{
 		uint32_t compileShader(const std::string& filename, uint32_t shaderType)
 		{
-			if (filename == "")
+			if (filename.empty())
 			{
 				return 0;
 			}

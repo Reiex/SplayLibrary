@@ -62,4 +62,4 @@ namespace spl
 	};
 }
 
-#include <SplayLibrary/3D/MeshT.hpp>
+#include <SplayLibrary/3D/template/Mesh.hpp>
