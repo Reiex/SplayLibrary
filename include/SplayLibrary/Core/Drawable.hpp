@@ -91,6 +91,15 @@ namespace spl
 			Drawable& operator=(const Drawable& mesh) = delete;
 			Drawable& operator=(Drawable&& mesh) = delete;
 
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////
+			/// \brief Draws the drawable on the current framebuffer.
+			///
+			/// \param indicesCount	It is possible to draw only a part of the indices without having to modify the
+			///						index buffer. This param specifies how many indices the draw command must read. If
+			///						-1, all the indices are read.
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////
+			virtual void draw(uint32_t indicesCount = -1) const;
+
 			~Drawable();
 
 		protected:
@@ -184,15 +193,6 @@ namespace spl
 			/// Makes the drawable invalid until new indices are set using `createNewIndices`.
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
 			void destroyIndices();
-
-			///////////////////////////////////////////////////////////////////////////////////////////////////////////
-			/// \brief Draws the drawable on the current framebuffer.
-			///
-			/// \param indicesCount	It is possible to draw only a part of the indices without having to modify the
-			///						index buffer. This param specifies how many indices the draw command must read. If
-			///						-1, all the indices are read.
-			///////////////////////////////////////////////////////////////////////////////////////////////////////////
-			virtual void draw(uint32_t indicesCount = -1) const;
 
 			DrawableStorage getVerticesStorage() const;	///< Returns the type of storage used for vertex buffer.
 			DrawableStorage getIndicesStorage() const;	///< Returns the type of storage used for index buffer.

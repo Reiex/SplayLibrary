@@ -48,10 +48,11 @@ int basicPhongMain()
 		shader.setUniform("view", camera.getViewMatrix());
 		shader.setUniform("model", meshTransform.getTransformMatrix());
 
-		window.draw(mesh);
+		mesh.draw();
 
 		window.display();
-		window.clear({ 0.2f, 0.3f, 0.3f });
+		spl::Framebuffer::clearColor({ 0.2f, 0.3f, 0.3f, 1.f });
+		spl::Framebuffer::clearDepth(1.f);
 	}
 
 	return 0;

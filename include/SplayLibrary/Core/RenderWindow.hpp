@@ -15,9 +15,9 @@ namespace spl
 			const RenderWindow& operator=(const RenderWindow& window) = delete;
 			const RenderWindow& operator=(RenderWindow&& window) = delete;
 			
-			void clear(const vec3& color);
-			void draw(const Drawable& mesh);
 			void display();
+
+			const Framebuffer& getFramebuffer() const;
 
 			~RenderWindow();
 
@@ -26,5 +26,6 @@ namespace spl
 			virtual bool processEvent(Event*& event);
 
 			vec3 _clearColor;
+			Framebuffer _framebuffer;
 	};
 }

@@ -4,7 +4,7 @@
 namespace spl
 {
 	RenderWindow::RenderWindow(const uvec2& size, const std::string& title) : Window(size, title),
-		_clearColor(0.f, 0.f, 0.f)
+		_framebuffer(this)
 	{
 		if (!isValid())
 		{
@@ -12,29 +12,17 @@ namespace spl
 		}
 
 		glViewport(0, 0, size.x, size.y);
-		glClearColor(_clearColor.x, _clearColor.y, _clearColor.z, 1.0f);
 		glEnable(GL_DEPTH_TEST);
-	}
-
-	void RenderWindow::clear(const vec3& color)
-	{
-		if (color != _clearColor)
-		{
-			_clearColor = color;
-			glClearColor(_clearColor.x, _clearColor.y, _clearColor.z, 1.0f);
-		}
-
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	}
-
-	void RenderWindow::draw(const Drawable& mesh)
-	{
-		mesh.draw();
 	}
 
 	void RenderWindow::display()
 	{
 		glfwSwapBuffers(static_cast<GLFWwindow*>(getHandle()));
+	}
+
+	const Framebuffer& RenderWindow::getFramebuffer() const
+	{
+		return _framebuffer;
 	}
 
 	bool RenderWindow::processEvent(Event*& event)

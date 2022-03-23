@@ -308,4 +308,29 @@ namespace spl
 			uint32_t _texture;
 			CreationParams _creationParams;
 	};
+
+	class RenderBuffer
+	{
+		public:
+
+			RenderBuffer() = delete;
+			RenderBuffer(TextureInternalFormat internalFormat, const uvec2& size, uint32_t samples = 0);
+			RenderBuffer(const RenderBuffer& renderBuffer) = delete;
+			RenderBuffer(RenderBuffer&& renderBuffer) = delete;
+
+			RenderBuffer& operator=(const RenderBuffer& renderBuffer) = delete;
+			RenderBuffer& operator=(RenderBuffer&& renderBuffer) = delete;
+
+			uint32_t getHandle() const;
+			TextureInternalFormat getInternalFormat() const;
+			const uvec2& getSize() const;
+
+			~RenderBuffer();
+
+		private:
+
+			uint32_t _renderBuffer;
+			TextureInternalFormat _internalFormat;
+			uvec2 _size;
+	};
 }

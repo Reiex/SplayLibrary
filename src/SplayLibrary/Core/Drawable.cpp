@@ -51,6 +51,15 @@ namespace spl
 		glCreateVertexArrays(1, &_vao);
 	}
 
+	void Drawable::draw(uint32_t indicesCount) const
+	{
+		assert((0 < indicesCount && indicesCount <= _indicesCount) || indicesCount == -1);
+
+		glBindVertexArray(_vao);
+		glDrawElements(GL_TRIANGLES, std::min(indicesCount, _indicesCount), GL_UNSIGNED_INT, nullptr);
+		glBindVertexArray(0);
+	}
+
 	void Drawable::setVertexAttributes(const std::vector<VertexAttribute>& attributes)
 	{
 		assert(_vbo.isValid());
@@ -219,15 +228,6 @@ namespace spl
 	void Drawable::destroyIndices()
 	{
 		_ebo.destroy();
-	}
-
-	void Drawable::draw(uint32_t indicesCount) const
-	{
-		assert((0 < indicesCount && indicesCount <= _indicesCount) || indicesCount == -1);
-
-		glBindVertexArray(_vao);
-		glDrawElements(GL_TRIANGLES, std::min(indicesCount, _indicesCount), GL_UNSIGNED_INT, nullptr);
-		glBindVertexArray(0);
 	}
 
 	DrawableStorage Drawable::getVerticesStorage() const

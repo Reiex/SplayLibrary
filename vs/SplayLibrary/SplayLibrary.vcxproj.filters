@@ -152,5 +152,8 @@
     <ClInclude Include="..\..\include\SplayLibrary\3D\template\Mesh.hpp">
       <Filter>Header Files\3D\template</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\template\Framebuffer.hpp">
+      <Filter>Header Files\Core\template</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

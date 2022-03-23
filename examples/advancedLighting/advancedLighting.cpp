@@ -20,28 +20,10 @@ int advancedLightingMain()
 
 	spl::vec3 lightDir = -spl::normalize(spl::vec3{ 1.0, 0.0, 1.0 });
 
-	unsigned int fbo;
-	glCreateFramebuffers(1, &fbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	spl::Framebuffer framebuffer;
 
-	spl::Texture2D texture(spl::uvec2{ 1000, 600 });
-
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.getRawTexture().getHandle(), 0);
-
-	unsigned int rbo;
-	glGenRenderbuffers(1, &rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 1000, 600);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-	{
-		std::cout << "Nope" << std::endl;
-	}
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	framebuffer.createNewTextureAttachment<spl::Texture2D>(spl::FramebufferAttachment::ColorAttachment0, spl::uvec2{ 1000, 600 });
+	framebuffer.createNewRenderBufferAttachment(spl::FramebufferAttachment::DepthAttachment, spl::TextureInternalFormat::Depth24_Stencil8, spl::uvec2{ 1000, 600 });
 
 	spl::Mesh<> screen(
 		{
@@ -57,9 +39,6 @@ int advancedLightingMain()
 
 	spl::Shader shader2("examples/advancedLighting/resources/shaders/secondPass.vert", "examples/advancedLighting/resources/shaders/secondPass.frag");
 
-
-
-
 	while (!window.shouldClose())
 	{
 		spl::Event* rawEvent = nullptr;
@@ -67,30 +46,22 @@ int advancedLightingMain()
 		{
 			switch (rawEvent->type)
 			{
-			case spl::EventType::ResizeEvent:
-			{
-				spl::ResizeEvent event = rawEvent->specialize<spl::EventType::ResizeEvent>();
-				camera.setAspect(event.size);
+				case spl::EventType::ResizeEvent:
+				{
+					spl::ResizeEvent event = rawEvent->specialize<spl::EventType::ResizeEvent>();
+					camera.setAspect(event.size);
 
-				glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+					framebuffer.createNewTextureAttachment<spl::Texture2D>(spl::FramebufferAttachment::ColorAttachment0, event.size);
+					framebuffer.createNewRenderBufferAttachment(spl::FramebufferAttachment::DepthAttachment, spl::TextureInternalFormat::Depth24_Stencil8, event.size);
 
-				texture.createNew(event.size);
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.getRawTexture().getHandle(), 0);
-
-				glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-				glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, event.size.x, event.size.y);
-				glBindRenderbuffer(GL_RENDERBUFFER, 0);
-				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-				break;
-			}
+					break;
+				}
 			}
 		}
 
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		window.clear({ 0.2f, 0.3f, 0.3f });
+		spl::Framebuffer::bind(framebuffer, spl::FramebufferTarget::DrawFramebuffer);
+		spl::Framebuffer::clearColor({ 0.2f, 0.3f, 0.3f, 1.f });
+		spl::Framebuffer::clearDepth(1.f);
 
 		meshTransform.rotate({ -0.5f, 1.f, 0.3f }, 0.01f);
 
@@ -102,22 +73,19 @@ int advancedLightingMain()
 		shader.setUniform("view", camera.getViewMatrix());
 		shader.setUniform("model", meshTransform.getTransformMatrix());
 
-		window.draw(mesh);
+		mesh.draw();
 
-		// window.display();
-
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		window.clear({ 0.f, 0.f, 0.f });
+		spl::Framebuffer::bind(window.getFramebuffer(), spl::FramebufferTarget::DrawFramebuffer);
+		spl::Framebuffer::clearColor({ 0.f, 0.f, 0.f, 1.f });
+		spl::Framebuffer::clearDepth(1.f);
 
 		shader2.use();
-		shader2.setUniform("scene", texture);
+		shader2.setUniform("scene", *framebuffer.getTextureAttachment(spl::FramebufferAttachment::ColorAttachment0));
 
-		window.draw(screen);
+		screen.draw();
 
 		window.display();
 	}
-
-	glDeleteFramebuffers(1, &fbo);
 
 	return 0;
 }

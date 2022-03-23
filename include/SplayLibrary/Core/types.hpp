@@ -5,6 +5,7 @@
 #include <bitset>
 #include <cassert>
 #include <cmath>
+#include <cstdarg>
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
@@ -68,6 +69,7 @@ namespace spl
 	enum class TextureDataType;
 	enum class TextureInternalFormat;
 	class RawTexture;
+	class RenderBuffer;
 
 	class TextureBase;
 	class Texture2D;
