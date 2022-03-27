@@ -2,10 +2,10 @@
 
 int main()
 {
-	// std::thread basicPhongThread(&basicPhongMain);
+	std::thread basicPhongThread(&basicPhongMain);
 	std::thread advancedLightingThread(&advancedLightingMain);
 
-	// basicPhongThread.join();
+	basicPhongThread.join();
 	advancedLightingThread.join();
 
 	return 0;

@@ -741,17 +741,14 @@ namespace spl
 
 	Window::Window(const uvec2& size, const std::string& title) : Window()
 	{
-		ContextManager* contextManager = ContextManager::getContextManager();
-		if (!contextManager)
+		// Create window and OpenGL context
+
+		if (!ContextManager::createContext(*this))
 		{
-			SPL_DEBUG("Could not retrieve context manager.");
-			assert(false);
 			return;
 		}
 
-		// Create window and OpenGL context
-
-		// TODO: Gestion de contextes différents (versions d'OpenGL... Vulkan ? Autres ?)
+		// TODO: Different contexts ? Different OpenGL version, dirvers, etc...
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -762,11 +759,8 @@ namespace spl
 		_size = size;
 		_window = glfwCreateWindow(_size.x, _size.y, title.c_str(), nullptr, nullptr);
 
-		ContextManager::Context* context = contextManager->createContext(this);
-		if (!context)
+		if (!_window)
 		{
-			SPL_DEBUG("Could not create context in ContextManager.");
-			assert(false);
 			return;
 		}
 
@@ -945,34 +939,12 @@ namespace spl
 			_events.pop();
 		}
 
-		ContextManager* contextManager = ContextManager::getContextManager();
-		if (contextManager)
+		ContextManager::Context* context = ContextManager::getContext(*this);
+		if (context == ContextManager::getCurrentContext())
 		{
-			ContextManager::Context* context = contextManager->getContext(this);
-			if (context)
-			{
-				if (context->window == this)
-				{
-					contextManager->setCurrentContext(nullptr);
-				}
-
-				if (!contextManager->destroyContext(context))
-				{
-					SPL_DEBUG("Could not destroy context in ContextManager.");
-					assert(false);
-				}
-			}
-			else
-			{
-				SPL_DEBUG("Could not retrieve context from window in ContextManager.");
-				assert(false);
-			}
+			ContextManager::setCurrentContext(nullptr);
 		}
-		else
-		{
-			SPL_DEBUG("Could not retrieve context manager.");
-			assert(false);
-		}
+		ContextManager::destroyContext(context);
 
 		if (_window)
 		{

@@ -3,7 +3,7 @@
 int advancedLightingMain()
 {
 	spl::Window window({ 1000, 600 }, "SPL Example");
-	spl::ContextManager::getContextManager()->setCurrentContext(&window);
+	spl::ContextManager::setCurrentContext(window);
 
 	glViewport(0, 0, 1000, 600);
 	glEnable(GL_DEPTH_TEST);
