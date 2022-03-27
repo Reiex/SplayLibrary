@@ -16,6 +16,7 @@
 #include <string>
 #include <thread>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 #include <SciPP/SciPP.hpp>
@@ -97,7 +98,6 @@ namespace spl
 	class Framebuffer;
 
 	class Window;
-	class RenderWindow;
 
 	class Shader;
 }

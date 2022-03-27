@@ -5,66 +5,92 @@ namespace spl
 {
 	namespace
 	{
-		ContextManager* SPL_CONTEXT_MANAGER = nullptr;
+		ContextManager* s_contextManager = nullptr;
+		std::mutex s_contextManagerMutex;
 	}
 
 	ContextManager::ContextManager() :
+		_contexts(),
 		_currentContexts()
 	{
 	}
 
-	ContextManager* ContextManager::get()
+	ContextManager* ContextManager::getContextManager()
 	{
-		static std::mutex mutex;
+		s_contextManagerMutex.lock();
 
-		mutex.lock();
-		if (!SPL_CONTEXT_MANAGER)
+		if (!s_contextManager)
 		{
 			if (glfwInit())
 			{
-				SPL_CONTEXT_MANAGER = new ContextManager();
+				s_contextManager = new ContextManager();
 			}
 			else
 			{
 				SPL_DEBUG("Could not load GLFW.");
 			}
 		}
-		mutex.unlock();
 
-		return SPL_CONTEXT_MANAGER;
+		s_contextManagerMutex.unlock();
+
+		return s_contextManager;
+	}
+	
+	ContextManager::Context* ContextManager::createContext(Window* window)
+	{
+		Context* context = new Context;
+		context->window = window;
+		context->currentFramebuffer = nullptr;
+		context->currentShader = nullptr;
+
+		s_contextManagerMutex.lock();
+		_contexts.insert(context);
+		s_contextManagerMutex.unlock();
+
+		return context;
 	}
 
-	bool ContextManager::setCurrentThreadContext(Window* window)
+	bool ContextManager::setCurrentContext(nullptr_t ptr)
 	{
-		static std::mutex mutex;
+		return setCurrentContext(static_cast<Context*>(nullptr));
+	}
 
-		mutex.lock();
+	bool ContextManager::setCurrentContext(Context* context)
+	{
+		s_contextManagerMutex.lock();
+
+		if (_contexts.find(context) == _contexts.end())
+		{
+			assert(false);
+			s_contextManagerMutex.unlock();	// Unregistered context !
+			return false;
+		}
 
 		std::thread::id currentThreadId = std::this_thread::get_id();
-		for (const std::pair<const std::thread::id, Window*>& x : _currentContexts)
+		for (const std::pair<const std::thread::id, Context*>& x : _currentContexts)
 		{
-			if (x.first == currentThreadId && x.second == window)
+			if (x.first == currentThreadId && x.second == context)
 			{
-				mutex.unlock();	// The context is already assigned to the current thread
+				s_contextManagerMutex.unlock();	// The context is already assigned to the current thread !
 				return true;
 			}
-			else if (x.first == currentThreadId && x.second != window && window != nullptr)
+			else if (x.first == currentThreadId && x.second != context && context != nullptr)
 			{
-				assert(false);	// Attempting to assign two contexts to a single thread !
-				mutex.unlock();
+				assert(false);
+				s_contextManagerMutex.unlock();	// Attempting to assign two contexts to a single thread !
 				return false;
 			}
-			else if (x.first != currentThreadId && x.second == window)
+			else if (x.first != currentThreadId && x.second == context)
 			{
-				assert(false);	// Attempting to assign a context to two different threads !
-				mutex.unlock();
+				assert(false);
+				s_contextManagerMutex.unlock();	// Attempting to assign a context to two different threads !
 				return false;
 			}
 		}
 
-		if (window)
+		if (context)
 		{
-			GLFWwindow* glfwWindow = static_cast<GLFWwindow*>(window->getHandle());
+			GLFWwindow* glfwWindow = static_cast<GLFWwindow*>(context->window->getHandle());
 			glfwMakeContextCurrent(glfwWindow);
 
 			if (_currentContexts.empty())
@@ -72,13 +98,12 @@ namespace spl
 				if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 				{
 					SPL_DEBUG("Could not load OpenGL functions.");
-					glfwMakeContextCurrent(nullptr);
-					mutex.unlock();
+					s_contextManagerMutex.unlock();
 					return false;
 				}
 			}
 
-			_currentContexts[currentThreadId] = window;
+			_currentContexts[currentThreadId] = context;
 		}
 		else
 		{
@@ -86,23 +111,87 @@ namespace spl
 			_currentContexts.erase(currentThreadId);
 		}
 
-		mutex.unlock();
+		s_contextManagerMutex.unlock();
 
 		return true;
 	}
 
-	const Window* ContextManager::getCurrentThreadContext() const
+	bool ContextManager::setCurrentContext(const Window* window)
 	{
+		return setCurrentContext(getContext(window));
+	}
+
+	ContextManager::Context* ContextManager::getContext(const Window* window)
+	{
+		s_contextManagerMutex.lock();
+
+		for (Context* context : _contexts)
+		{
+			if (context->window == window)
+			{
+				s_contextManagerMutex.unlock();
+				return context;
+			}
+		}
+
+		assert(false);	// Context related to window not found !
+		s_contextManagerMutex.unlock();
+
+		return nullptr;
+	}
+
+	ContextManager::Context* ContextManager::getCurrentContext()
+	{
+		s_contextManagerMutex.lock();
+
 		std::thread::id currentThreadId = std::this_thread::get_id();
 		const auto& it = _currentContexts.find(currentThreadId);
+
 		if (it != _currentContexts.end())
 		{
+			s_contextManagerMutex.unlock();
 			return it->second;
 		}
 		else
 		{
+			s_contextManagerMutex.unlock();
 			return nullptr;
 		}
+	}
+
+	bool ContextManager::destroyContext(Context* context)
+	{
+		s_contextManagerMutex.lock();
+
+		auto it = _contexts.find(context);
+		if (it == _contexts.end())
+		{
+			assert(false);
+			s_contextManagerMutex.unlock();	// Context does not exist !
+			return false;
+		}
+
+		for (const std::pair<const std::thread::id, Context*>& x : _currentContexts)
+		{
+			if (x.second == context)
+			{
+				assert(false);
+				s_contextManagerMutex.unlock();	// Context is currently used !
+				return false;
+			}
+		}
+
+		delete context;
+		_contexts.erase(it);
+
+		if (_contexts.empty())
+		{
+			delete this;
+		}
+
+		s_contextManagerMutex.unlock();
+
+		return true;
 	}
 
 	ContextManager::~ContextManager()

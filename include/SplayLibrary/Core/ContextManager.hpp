@@ -2,7 +2,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// \file
-/// \brief Functions and classes for multithreaded OpenGL manipulations.
+/// \brief Functions and classes for OpenGL context management, single or multi threaded.
 /// \author Reiex
 /// 
 /// For a more detailed description, see class ContextManager.
@@ -17,10 +17,11 @@ namespace spl
 	/// \class ContextManager
 	/// \brief Class for OpenGL context manipulations. Allow for multithreading using SplayLibrary.
 	/// 
-	/// This class is a singleton. Only one instance of ContextManager shall exists and it is automatically created by
-	/// SplayLibrary at the first use of `ContextManager::get`.
+	/// This class is a singleton. Only one instance of ContextManager shall exists and it is automatically created and
+	/// destroyed by the library.
 	/// 
-	/// Any context created using SplayLibrary is registered in the ContextManager by the library.
+	/// Any context created using SplayLibrary (when opening a window for instance) is registered in the ContextManager
+	/// by the library.
 	/// 
 	/// All methods of ContextManager are thread safe.
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,16 +29,34 @@ namespace spl
 	{
 		public:
 
-			static ContextManager* get();	///< Returns the context manager (create it if it was never required before).
+			struct Context
+			{
+				Window* window;
 
-			bool setCurrentThreadContext(Window* window);	///< Makes `window` the current thread's OpenGL context.
-			const Window* getCurrentThreadContext() const;	///< Returns the current thread's current OpenGL context (by its window).
+				Framebuffer* currentFramebuffer;
+				Shader* currentShader;
+			};
+
+			static ContextManager* getContextManager();
+
+			bool setCurrentContext(nullptr_t ptr);
+			bool setCurrentContext(Context* context);
+			bool setCurrentContext(const Window* window);
+			Context* getContext(const Window* window);
+			Context* getCurrentContext();
 
 		private:
 
 			ContextManager();
+
+			Context* createContext(Window* window);
+			bool destroyContext(Context* context);
+
 			~ContextManager();
 
-			std::unordered_map<std::thread::id, Window*> _currentContexts;	///< List of contexts of each threads that have an OpenGL context.
+			std::unordered_set<Context*> _contexts;
+			std::unordered_map<std::thread::id, Context*> _currentContexts;
+
+		friend class Window;
 	};
 }

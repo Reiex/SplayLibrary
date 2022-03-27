@@ -2,7 +2,11 @@
 
 int basicPhongMain()
 {
-	spl::RenderWindow window({ 1000, 600 }, "SPL Example");
+	spl::Window window({ 1000, 600 }, "SPL Example");
+	spl::ContextManager::getContextManager()->setCurrentContext(&window);
+
+	glViewport(0, 0, 1000, 600);
+	glEnable(GL_DEPTH_TEST);
 
 	spl::Shader shader("examples/basicPhong/resources/shaders/main.vert", "examples/basicPhong/resources/shaders/main.frag");
 	shader.use();

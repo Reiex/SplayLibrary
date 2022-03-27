@@ -119,6 +119,7 @@ namespace spl
 	{
 		assert(framebufferAttachmentToGL(attachment) != 0);
 		// TODO: Choose level / layer (glNamedFramebufferTextureLayer ?)
+		// TODO: Check that the texture type and format correspond to the attachment
 		glNamedFramebufferTexture(_framebuffer, framebufferAttachmentToGL(attachment), _textureAttachments[attachment]->getRawTexture().getHandle(), 0);
 	}
 	
@@ -155,6 +156,7 @@ namespace spl
 			delete renderBufferIt->second;
 		}
 
+		// TODO: Check that the render buffer type and format correspond to the attachment
 		_renderBufferAttachments[attachment] = new RenderBuffer(internalFormat, size, samples);
 		glNamedFramebufferRenderbuffer(_framebuffer, framebufferAttachmentToGL(attachment), GL_RENDERBUFFER, _renderBufferAttachments[attachment]->getHandle());
 	}

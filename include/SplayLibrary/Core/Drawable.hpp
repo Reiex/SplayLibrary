@@ -209,7 +209,5 @@ namespace spl
 			uint32_t _indicesCount;			///< Number of indices in the EBO. Always equal to `_ebo.getSize() / sizeof(uint32_t)`
 
 			bool _needsAttributesUpdate;	///< If a new vertex buffer has been created and the VAO has not been updated.
-
-		friend RenderWindow;
 	};
 }

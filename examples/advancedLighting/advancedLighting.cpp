@@ -2,7 +2,11 @@
 
 int advancedLightingMain()
 {
-	spl::RenderWindow window({ 1000, 600 }, "SPL Example");
+	spl::Window window({ 1000, 600 }, "SPL Example");
+	spl::ContextManager::getContextManager()->setCurrentContext(&window);
+
+	glViewport(0, 0, 1000, 600);
+	glEnable(GL_DEPTH_TEST);
 
 	spl::Framebuffer framebuffer;
 	framebuffer.createNewTextureAttachment<spl::Texture2D>(spl::FramebufferAttachment::ColorAttachment0, spl::uvec2{ 1000, 600 });

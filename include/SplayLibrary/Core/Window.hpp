@@ -15,8 +15,8 @@ namespace spl
 	{
 		public:
 
-			// TODO: Before anything else for windows: TEST MULTI WINDOWS IN MULTIPLE THREADS !
 			// TODO: Cursor object
+			// TODO: Shared context (here and in ContextManager)
 
 			Window(const uvec2& size, const std::string& title);
 			Window(const Window& window) = delete;
@@ -27,6 +27,8 @@ namespace spl
 
 			bool pollEvent(Event*& event);
 			bool waitEvent(Event*& event, double timeout = 0.0);
+
+			void display();
 
 			void setCursorMode(CursorMode mode);
 
@@ -40,24 +42,23 @@ namespace spl
 			void* getHandle();
 			const void* getHandle() const;
 			const uvec2& getSize() const;
-
-			static void setCurrentContext(const Window* window);
+			const Framebuffer& getFramebuffer() const;
 
 			~Window();
-
-		protected:
-
-			virtual bool processEvent(Event*& event);
 
 		private:
 
 			Window();
+
+			bool processEvent(Event*& event);
 
 			void* _window;
 			uvec2 _size;
 
 			std::queue<Event*> _events;
 			Event* _lastEventSent;
+
+			Framebuffer _framebuffer;
 
 		friend void stackEvent(void* window, Event* event);
 	};

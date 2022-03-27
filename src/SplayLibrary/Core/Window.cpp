@@ -5,17 +5,17 @@ namespace spl
 {
 	namespace
 	{
-		static std::vector<Window*> SPL_WINDOWS;
+		std::unordered_set<Window*> s_windows;
+		std::mutex s_windowsMutex;
 	}
 
 	static void stackEvent(void* window, Event* event)
 	{
-		for (uint32_t i = 0; i < SPL_WINDOWS.size(); ++i)
+		for (Window* window : s_windows)
 		{
-			if (SPL_WINDOWS[i]->getHandle() == window)
+			if (window->getHandle() == window)
 			{
-				SPL_WINDOWS[i]->_events.push(event);
-				return;
+				window->_events.push(event);
 			}
 		}
 	}
@@ -734,26 +734,22 @@ namespace spl
 		_window(nullptr),
 		_size(0, 0),
 		_events(),
-		_lastEventSent(nullptr)
+		_lastEventSent(nullptr),
+		_framebuffer(this)
 	{
 	}
 
 	Window::Window(const uvec2& size, const std::string& title) : Window()
 	{
-		static std::mutex mutex;
-
-		mutex.lock();
-		SPL_WINDOWS.push_back(this);
-		mutex.unlock();
-
-		ContextManager* contextManager = ContextManager::get();
+		ContextManager* contextManager = ContextManager::getContextManager();
 		if (!contextManager)
 		{
 			SPL_DEBUG("Could not retrieve context manager.");
+			assert(false);
 			return;
 		}
 
-		mutex.lock();
+		// Create window and OpenGL context
 
 		// TODO: Gestion de contextes différents (versions d'OpenGL... Vulkan ? Autres ?)
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -762,17 +758,19 @@ namespace spl
 
 		// TODO: Flags (triple buffering, full screen, etc...)
 		// TODO: Gestion du choix du moniteur
-		_window = glfwCreateWindow(size.x, size.y, title.c_str(), nullptr, nullptr);
+		// TODO: Shared context
+		_size = size;
+		_window = glfwCreateWindow(_size.x, _size.y, title.c_str(), nullptr, nullptr);
 
-		mutex.unlock();
-
-		if (!contextManager->setCurrentThreadContext(this))
+		ContextManager::Context* context = contextManager->createContext(this);
+		if (!context)
 		{
-			SPL_DEBUG("Could not assign window context to current thread.");
+			SPL_DEBUG("Could not create context in ContextManager.");
+			assert(false);
 			return;
 		}
 
-		_size = size;
+		// Set input callbacks
 
 		GLFWwindow* glfwWindow = static_cast<GLFWwindow*>(_window);
 
@@ -793,6 +791,10 @@ namespace spl
 
 		glfwSetFramebufferSizeCallback(glfwWindow, glfwFramebufferSizeCallback);
 		// TODO: Window event callbacks
+
+		s_windowsMutex.lock();
+		s_windows.insert(this);
+		s_windowsMutex.unlock();
 	}
 
 	bool Window::pollEvent(Event*& event)
@@ -817,6 +819,12 @@ namespace spl
 		}
 
 		return processEvent(event);
+	}
+
+	void Window::display()
+	{
+		GLFWwindow* glfwWindow = static_cast<GLFWwindow*>(_window);
+		glfwSwapBuffers(glfwWindow);
 	}
 
 	bool Window::processEvent(Event*& event)
@@ -844,6 +852,7 @@ namespace spl
 			{
 				ResizeEvent resizeEvent = event->specialize<EventType::ResizeEvent>();
 				_size = resizeEvent.size;
+				glViewport(0, 0, _size.x, _size.y);
 				break;
 			}
 			default:
@@ -919,26 +928,16 @@ namespace spl
 		return _size;
 	}
 
-	void Window::setCurrentContext(const Window* window)
+	const Framebuffer& Window::getFramebuffer() const
 	{
-		if (window)
-		{
-			assert(window->isValid());
-			glfwMakeContextCurrent(static_cast<GLFWwindow*>(window->_window));
-		}
-		else
-		{
-			glfwMakeContextCurrent(nullptr);
-		}
+		return _framebuffer;
 	}
 
 	Window::~Window()
 	{
-		static std::mutex mutex;
-
-		mutex.lock();
-		SPL_WINDOWS.erase(std::find(SPL_WINDOWS.begin(), SPL_WINDOWS.end(), this));
-		mutex.unlock();
+		s_windowsMutex.lock();
+		s_windows.erase(this);
+		s_windowsMutex.unlock();
 
 		while (!_events.empty())
 		{
@@ -946,10 +945,33 @@ namespace spl
 			_events.pop();
 		}
 
-		ContextManager* contextManager = ContextManager::get();
-		if (contextManager && contextManager->getCurrentThreadContext())
+		ContextManager* contextManager = ContextManager::getContextManager();
+		if (contextManager)
 		{
-			contextManager->setCurrentThreadContext(nullptr);
+			ContextManager::Context* context = contextManager->getContext(this);
+			if (context)
+			{
+				if (context->window == this)
+				{
+					contextManager->setCurrentContext(nullptr);
+				}
+
+				if (!contextManager->destroyContext(context))
+				{
+					SPL_DEBUG("Could not destroy context in ContextManager.");
+					assert(false);
+				}
+			}
+			else
+			{
+				SPL_DEBUG("Could not retrieve context from window in ContextManager.");
+				assert(false);
+			}
+		}
+		else
+		{
+			SPL_DEBUG("Could not retrieve context manager.");
+			assert(false);
 		}
 
 		if (_window)

@@ -85,7 +85,7 @@ namespace spl
 			std::unordered_map<FramebufferAttachment, TextureBase*> _textureAttachments;
 			std::unordered_map<FramebufferAttachment, RenderBuffer*> _renderBufferAttachments;
 
-		friend class RenderWindow;
+		friend class Window;
 	};
 }
 
