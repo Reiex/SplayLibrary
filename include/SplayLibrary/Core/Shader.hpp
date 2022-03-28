@@ -17,8 +17,6 @@ namespace spl
 			Shader& operator=(const Shader& shader) = delete;
 			Shader& operator=(Shader&& shader) = delete;
 
-			void use() const;
-
 			void setUniform(const std::string& location, float value);
 			void setUniform(const std::string& location, const vec2& value);
 			void setUniform(const std::string& location, const vec3& value);
@@ -72,9 +70,15 @@ namespace spl
 			bool isValid() const;
 			uint32_t getHandle() const;
 
+			static void bind(const Shader& shader);
+			static void unbind();
+
 			~Shader();
 
 		private:
+
+			template<typename TFunc, typename... TArgs>
+			void setUniform(const TFunc& func, const std::string& location, const TArgs&... args);
 
 			Shader();
 
@@ -84,3 +88,5 @@ namespace spl
 			std::unordered_map<std::string, int32_t> _uniformLocations;
 	};
 }
+
+#include <SplayLibrary/Core/template/Shader.hpp>

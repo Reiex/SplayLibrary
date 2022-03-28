@@ -9,7 +9,7 @@ int basicPhongMain()
 	glEnable(GL_DEPTH_TEST);
 
 	spl::Shader shader("examples/basicPhong/resources/shaders/main.vert", "examples/basicPhong/resources/shaders/main.frag");
-	shader.use();
+	spl::Shader::bind(shader);
 
 	spl::PerspectiveCamera camera({ 1000, 600 }, 0.1f, 100.f, 1.f);
 	camera.setTranslation({ 0.f, 0.f, 2.f });

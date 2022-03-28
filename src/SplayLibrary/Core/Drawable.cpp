@@ -1,5 +1,5 @@
 #include <SplayLibrary/SplayLibrary.hpp>
-#include <SplayLibrary/Core/Private.hpp>
+#include <SplayLibrary/Private/Private.hpp>
 
 namespace spl
 {

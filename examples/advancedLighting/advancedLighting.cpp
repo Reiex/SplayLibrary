@@ -62,7 +62,7 @@ int advancedLightingMain()
 
 		meshTransform.rotate({ -0.5f, 1.f, 0.3f }, 0.01f);
 
-		shader1.use();
+		spl::Shader::bind(shader1);
 		shader1.setUniform("cameraPos", camera.getTranslation());
 		shader1.setUniform("lightDir", lightDir);
 
@@ -76,7 +76,7 @@ int advancedLightingMain()
 		spl::Framebuffer::clearColor({ 0.f, 0.f, 0.f, 1.f });
 		spl::Framebuffer::clearDepth(1.f);
 
-		shader2.use();
+		spl::Shader::bind(shader2);
 		shader2.setUniform("scene", *framebuffer.getTextureAttachment(spl::FramebufferAttachment::ColorAttachment0));
 
 		screen.draw();

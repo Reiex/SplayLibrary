@@ -1,5 +1,5 @@
 #include <SplayLibrary/SplayLibrary.hpp>
-#include <SplayLibrary/Core/Private.hpp>
+#include <SplayLibrary/Private/Private.hpp>
 
 #define SPLD_VEC(vecName, vecSize, eltType)																														\
 SPLD_VEC_EXTERNAL_OP(vecName, vecSize, eltType)																													\

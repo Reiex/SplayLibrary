@@ -31,6 +31,9 @@
     <Filter Include="Header Files\Core\template">
       <UniqueIdentifier>{27d7d1ac-8e3e-4d28-9229-7582446a6519}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Private">
+      <UniqueIdentifier>{eb7e9762-bb9b-4ac8-973b-bc480877c6f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\SplayLibrary\Core\Drawable.cpp">
@@ -81,9 +84,6 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Glsl.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Core\Private.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Shader.hpp">
@@ -148,6 +148,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\template\Framebuffer.hpp">
       <Filter>Header Files\Core\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\template\Shader.hpp">
+      <Filter>Header Files\Core\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Private\Private.hpp">
+      <Filter>Header Files\Private</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
