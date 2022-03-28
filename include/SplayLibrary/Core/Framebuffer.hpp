@@ -69,9 +69,7 @@ namespace spl
 			uint32_t getHandle() const;
 
 			static void bind(const Framebuffer& framebuffer, FramebufferTarget target);
-			static void clearColor(const vec4& color);
-			static void clearDepth(double depth);
-			static void clearStencil(int32_t stencil);
+			static void clear(bool color = true, bool depth = true, bool stencil = true);
 
 			~Framebuffer();
 

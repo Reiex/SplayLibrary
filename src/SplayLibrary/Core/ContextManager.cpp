@@ -3,11 +3,87 @@
 
 namespace spl
 {
-	std::mutex ContextManager::s_mutex;
-	std::unordered_set<ContextManager::Context*> ContextManager::s_contexts;
-	std::unordered_map<std::thread::id, ContextManager::Context*> ContextManager::s_currentContexts;
+	void Context::setClearColor(const vec4& clearColor)
+	{
+		assert(clearColor.x >= 0.f && clearColor.x <= 1);
+		assert(clearColor.y >= 0.f && clearColor.y <= 1);
+		assert(clearColor.z >= 0.f && clearColor.z <= 1);
+		assert(clearColor.w >= 0.f && clearColor.w <= 1);
 
-	bool ContextManager::createContext(Window& window)
+		_clearColor = clearColor;
+		glClearColor(_clearColor.x, _clearColor.y, _clearColor.z, _clearColor.w);
+	}
+
+	void Context::setClearDepth(double clearDepth)
+	{
+		assert(clearDepth >= 0.f && clearDepth <= 1);
+
+		_clearDepth = clearDepth;
+		glClearDepth(_clearDepth);
+	}
+
+	void Context::setClearStencil(int32_t clearStencil)
+	{
+		_clearStencil = clearStencil;
+		glClearStencil(_clearStencil);
+	}
+
+	void Context::setViewport(const ivec2& offset, const uvec2& size)
+	{
+		_viewportOffset = offset;
+		_viewportSize = size;
+		glViewport(_viewportOffset.x, _viewportOffset.y, _viewportSize.x, _viewportSize.y);
+	}
+
+	void Context::setIsDepthTestEnabled(bool isEnabled)
+	{
+		_isDepthTestEnabled = isEnabled;
+		if (_isDepthTestEnabled)
+		{
+			glEnable(GL_DEPTH_TEST);
+		}
+		else
+		{
+			glDisable(GL_DEPTH_TEST);
+		}
+	}
+
+	const vec4& Context::getClearColor() const
+	{
+		return _clearColor;
+	}
+
+	double Context::getClearDepth() const
+	{
+		return _clearDepth;
+	}
+
+	int32_t Context::getClearStencil() const
+	{
+		return _clearStencil;
+	}
+
+	const ivec2& Context::getViewportOffset() const
+	{
+		return _viewportOffset;
+	}
+
+	const uvec2& Context::getViewportSize() const
+	{
+		return _viewportSize;
+	}
+
+	bool Context::getIsDepthTestEnabled() const
+	{
+		return _isDepthTestEnabled;
+	}
+
+
+	std::mutex ContextManager::s_mutex;
+	std::unordered_set<Context*> ContextManager::s_contexts;
+	std::unordered_map<std::thread::id, Context*> ContextManager::s_currentContexts;
+
+	Context* ContextManager::createContext()
 	{
 		s_mutex.lock();
 
@@ -15,30 +91,31 @@ namespace spl
 		{
 			if (!glfwInit())
 			{
-				s_mutex.unlock();	// Could not initialize GLFW
-				return false;
+				s_mutex.unlock();	// Could not initialize glfw
+				return nullptr;
 			}
 		}
 
-		Context* context = new Context;
-		context->window = &window;
-		context->currentFramebuffer = &window.getFramebuffer();
-		context->currentShader = nullptr;
+		Context* context = new Context();
 		s_contexts.insert(context);
-		
+
 		s_mutex.unlock();
 
-		return true;
+		return context;
 	}
 
-	bool ContextManager::setCurrentContext(nullptr_t ptr)
+	void ContextManager::initContext(Window* window)
 	{
-		return setCurrentContext(static_cast<Context*>(nullptr));
-	}
-
-	bool ContextManager::setCurrentContext(const Window& window)
-	{
-		return setCurrentContext(getContext(window));
+		Context* context = window->getContext();
+		context->window = window;
+		context->currentFramebuffer = &window->getFramebuffer();
+		context->currentShader = nullptr;
+		context->_clearColor = { 0.f, 0.f, 0.f, 1.f };
+		context->_clearDepth = 1.f;
+		context->_clearStencil = 0;
+		context->_viewportOffset = { 0, 0 };
+		context->_viewportSize = window->getSize();
+		context->_isDepthTestEnabled = false;
 	}
 
 	bool ContextManager::setCurrentContext(Context* context)
@@ -106,7 +183,7 @@ namespace spl
 		return getCurrentContext() != nullptr;
 	}
 
-	ContextManager::Context* ContextManager::getCurrentContext()
+	Context* ContextManager::getCurrentContext()
 	{
 		s_mutex.lock();
 
@@ -123,25 +200,6 @@ namespace spl
 			s_mutex.unlock();
 			return nullptr;
 		}
-	}
-
-	ContextManager::Context* ContextManager::getContext(const Window& window)
-	{
-		s_mutex.lock();
-
-		for (Context* context : s_contexts)
-		{
-			if (context->window == &window)
-			{
-				s_mutex.unlock();
-				return context;
-			}
-		}
-
-		assert(false);	// Context related to window not found !
-		s_mutex.unlock();
-
-		return nullptr;
 	}
 
 	bool ContextManager::destroyContext(Context* context)

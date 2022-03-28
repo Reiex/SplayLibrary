@@ -79,6 +79,7 @@ namespace spl
 	enum class DrawableStorage;
 	class Drawable;
 
+	class Context;
 	class ContextManager;
 
 	enum class EventType;

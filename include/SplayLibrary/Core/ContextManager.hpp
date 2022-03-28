@@ -4,34 +4,65 @@
 
 namespace spl
 {
+	class Context
+	{
+		public:
+
+			Context(const Context& context) = delete;
+			Context(Context&& context) = delete;
+
+			Context& operator=(const Context& context) = delete;
+			Context& operator=(Context&& context) = delete;
+
+			void setClearColor(const vec4& clearColor);
+			void setClearDepth(double clearDepth);
+			void setClearStencil(int32_t clearStencil);
+			void setViewport(const ivec2& offset, const uvec2& size);
+			void setIsDepthTestEnabled(bool isEnabled);
+
+			const vec4& getClearColor() const;
+			double getClearDepth() const;
+			int32_t getClearStencil() const;
+			const ivec2& getViewportOffset() const;
+			const uvec2& getViewportSize() const;
+			bool getIsDepthTestEnabled() const;
+
+			~Context() = default;
+
+			Window* window;
+
+			const Framebuffer* currentFramebuffer;
+			const Shader* currentShader;
+
+		private:
+
+			Context() = default;
+
+			vec4 _clearColor;
+			double _clearDepth;
+			int32_t _clearStencil;
+			ivec2 _viewportOffset;
+			uvec2 _viewportSize;
+			bool _isDepthTestEnabled;
+
+		friend class ContextManager;
+	};
+
 	class ContextManager
 	{
 		public:
 
 			ContextManager() = delete;
 
-			struct Context
-			{
-				Window* window;
-
-				const Framebuffer* currentFramebuffer;
-				const Shader* currentShader;
-			};
-
-			static bool setCurrentContext(std::nullptr_t ptr);
-			static bool setCurrentContext(const Window& window);
+			static bool setCurrentContext(Context* context);
 
 			static bool isInValidContext();
 			static Context* getCurrentContext();
 
 		private:
 
-			static bool createContext(Window& window);
-
-			static bool setCurrentContext(Context* context);
-
-			static Context* getContext(const Window& window);
-
+			static Context* createContext();
+			static void initContext(Window* window);
 			static bool destroyContext(Context* context);
 
 

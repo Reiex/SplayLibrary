@@ -3,10 +3,10 @@
 int basicPhongMain()
 {
 	spl::Window window({ 1000, 600 }, "SPL Example");
-	spl::ContextManager::setCurrentContext(window);
-
-	glViewport(0, 0, 1000, 600);
-	glEnable(GL_DEPTH_TEST);
+	spl::Context* context = window.getContext();
+	spl::ContextManager::setCurrentContext(context);
+	context->setIsDepthTestEnabled(true);
+	context->setClearColor({ 0.2f, 0.3f, 0.3f, 1.f });
 
 	spl::Shader shader("examples/basicPhong/resources/shaders/main.vert", "examples/basicPhong/resources/shaders/main.frag");
 	spl::Shader::bind(shader);
@@ -30,6 +30,7 @@ int basicPhongMain()
 				case spl::EventType::ResizeEvent:
 				{
 					spl::ResizeEvent event = rawEvent->specialize<spl::EventType::ResizeEvent>();
+					context->setViewport({ 0, 0 }, event.size);
 					camera.setAspect(event.size);
 					break;
 				}
@@ -55,8 +56,7 @@ int basicPhongMain()
 		mesh.draw();
 
 		window.display();
-		spl::Framebuffer::clearColor({ 0.2f, 0.3f, 0.3f, 1.f });
-		spl::Framebuffer::clearDepth(1.f);
+		spl::Framebuffer::clear();
 	}
 
 	return 0;

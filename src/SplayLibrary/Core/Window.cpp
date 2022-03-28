@@ -11,11 +11,11 @@ namespace spl
 
 	static void stackEvent(void* window, Event* event)
 	{
-		for (Window* window : s_windows)
+		for (Window* splWindow : s_windows)
 		{
-			if (window->getHandle() == window)
+			if (splWindow->getHandle() == window)
 			{
-				window->_events.push(event);
+				splWindow->_events.push(event);
 			}
 		}
 	}
@@ -735,7 +735,8 @@ namespace spl
 		_size(0, 0),
 		_events(),
 		_lastEventSent(nullptr),
-		_framebuffer(this)
+		_framebuffer(this),
+		_context(nullptr)
 	{
 	}
 
@@ -743,7 +744,8 @@ namespace spl
 	{
 		// Create window and OpenGL context
 
-		if (!ContextManager::createContext(*this))
+		_context = ContextManager::createContext();
+		if (!_context)
 		{
 			return;
 		}
@@ -758,11 +760,13 @@ namespace spl
 		// TODO: Shared context
 		_size = size;
 		_window = glfwCreateWindow(_size.x, _size.y, title.c_str(), nullptr, nullptr);
-
 		if (!_window)
 		{
+			ContextManager::destroyContext(_context);
 			return;
 		}
+
+		ContextManager::initContext(this);
 
 		// Set input callbacks
 
@@ -846,7 +850,6 @@ namespace spl
 			{
 				ResizeEvent resizeEvent = event->specialize<EventType::ResizeEvent>();
 				_size = resizeEvent.size;
-				glViewport(0, 0, _size.x, _size.y);
 				break;
 			}
 			default:
@@ -917,6 +920,11 @@ namespace spl
 		return _window;
 	}
 
+	Context* Window::getContext()
+	{
+		return _context;
+	}
+
 	const uvec2& Window::getSize() const
 	{
 		return _size;
@@ -939,12 +947,12 @@ namespace spl
 			_events.pop();
 		}
 
-		ContextManager::Context* context = ContextManager::getContext(*this);
-		if (context == ContextManager::getCurrentContext())
+		if (_context == ContextManager::getCurrentContext())
 		{
 			ContextManager::setCurrentContext(nullptr);
 		}
-		ContextManager::destroyContext(context);
+		ContextManager::destroyContext(_context);
+		_context = nullptr;
 
 		if (_window)
 		{

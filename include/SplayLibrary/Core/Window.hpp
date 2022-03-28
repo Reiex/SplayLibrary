@@ -40,6 +40,7 @@ namespace spl
 
 			bool isValid() const;
 			void* getHandle();
+			Context* getContext();
 			const void* getHandle() const;
 			const uvec2& getSize() const;
 			const Framebuffer& getFramebuffer() const;
@@ -53,12 +54,13 @@ namespace spl
 			bool processEvent(Event*& event);
 
 			void* _window;
+			Context* _context;
 			uvec2 _size;
+
+			Framebuffer _framebuffer;
 
 			std::queue<Event*> _events;
 			Event* _lastEventSent;
-
-			Framebuffer _framebuffer;
 
 		friend void stackEvent(void* window, Event* event);
 	};

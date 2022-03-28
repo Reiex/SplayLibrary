@@ -204,22 +204,24 @@ namespace spl
 		glBindFramebuffer(framebufferTargetToGL(target), framebuffer._framebuffer);
 	}
 
-	void Framebuffer::clearColor(const vec4& color)
+	void Framebuffer::clear(bool color, bool depth, bool stencil)
 	{
-		glClearColor(color.x, color.y, color.z, color.w);
-		glClear(GL_COLOR_BUFFER_BIT);
-	}
+		GLbitfield bitfield = 0;
+		
+		if (color)
+		{
+			bitfield |= GL_COLOR_BUFFER_BIT;
+		}
+		if (depth)
+		{
+			bitfield |= GL_DEPTH_BUFFER_BIT;
+		}
+		if (stencil)
+		{
+			bitfield |= GL_STENCIL_BUFFER_BIT;
+		}
 
-	void Framebuffer::clearDepth(double depth)
-	{
-		glClearDepth(depth);
-		glClear(GL_DEPTH_BUFFER_BIT);
-	}
-
-	void Framebuffer::clearStencil(int32_t stencil)
-	{
-		glClearStencil(stencil);
-		glClear(GL_STENCIL_BUFFER_BIT);
+		glClear(bitfield);
 	}
 
 	Framebuffer::~Framebuffer()

@@ -3,10 +3,9 @@
 int advancedLightingMain()
 {
 	spl::Window window({ 1000, 600 }, "SPL Example");
-	spl::ContextManager::setCurrentContext(window);
-
-	glViewport(0, 0, 1000, 600);
-	glEnable(GL_DEPTH_TEST);
+	spl::Context* context = window.getContext();
+	spl::ContextManager::setCurrentContext(context);
+	context->setIsDepthTestEnabled(true);
 
 	spl::Framebuffer framebuffer;
 	framebuffer.createNewTextureAttachment<spl::Texture2D>(spl::FramebufferAttachment::ColorAttachment0, spl::uvec2{ 1000, 600 });
@@ -46,6 +45,7 @@ int advancedLightingMain()
 				case spl::EventType::ResizeEvent:
 				{
 					spl::ResizeEvent event = rawEvent->specialize<spl::EventType::ResizeEvent>();
+					context->setViewport({0, 0}, event.size);
 					camera.setAspect(event.size);
 
 					framebuffer.createNewTextureAttachment<spl::Texture2D>(spl::FramebufferAttachment::ColorAttachment0, event.size);
@@ -57,8 +57,7 @@ int advancedLightingMain()
 		}
 
 		spl::Framebuffer::bind(framebuffer, spl::FramebufferTarget::DrawFramebuffer);
-		spl::Framebuffer::clearColor({ 0.2f, 0.3f, 0.3f, 1.f });
-		spl::Framebuffer::clearDepth(1.f);
+		spl::Framebuffer::clear();
 
 		meshTransform.rotate({ -0.5f, 1.f, 0.3f }, 0.01f);
 
@@ -73,8 +72,7 @@ int advancedLightingMain()
 		mesh.draw();
 
 		spl::Framebuffer::bind(window.getFramebuffer(), spl::FramebufferTarget::DrawFramebuffer);
-		spl::Framebuffer::clearColor({ 0.f, 0.f, 0.f, 1.f });
-		spl::Framebuffer::clearDepth(1.f);
+		spl::Framebuffer::clear();
 
 		spl::Shader::bind(shader2);
 		shader2.setUniform("scene", *framebuffer.getTextureAttachment(spl::FramebufferAttachment::ColorAttachment0));
