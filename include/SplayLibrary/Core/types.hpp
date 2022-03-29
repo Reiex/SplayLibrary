@@ -59,10 +59,16 @@ namespace spl
 	typedef dmat3x3 dmat3;
 	typedef dmat4x4 dmat4;
 
+
 	enum class BufferTarget;
 	enum class BufferUsage;
 	namespace BufferStorageFlags { enum Flags; }
 	class Buffer;
+
+	struct VertexAttribute;
+	enum class DrawableStorage;
+	class Drawable;
+
 
 	enum class TextureTarget;
 	enum class TextureCubeMapTarget;
@@ -75,12 +81,12 @@ namespace spl
 	class TextureBase;
 	class Texture2D;
 
-	struct VertexAttribute;
-	enum class DrawableStorage;
-	class Drawable;
 
-	class Context;
-	class ContextManager;
+	class Shader;
+
+
+	class Framebuffer;
+	class WindowFramebuffer;
 
 	enum class EventType;
 	struct Event;
@@ -95,10 +101,9 @@ namespace spl
 	struct MouseButtonEvent;
 	struct ScrollEvent;
 	struct ResizeEvent;
-	
-	class Framebuffer;
 
 	class Window;
 
-	class Shader;
+	class Context;
+	class ContextManager;
 }

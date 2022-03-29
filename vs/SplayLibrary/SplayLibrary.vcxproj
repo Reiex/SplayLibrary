@@ -32,6 +32,7 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\RawTexture.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\TextureBase.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Window.cpp" />
+    <ClCompile Include="..\..\src\SplayLibrary\Core\WindowFramebuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\SplayLibrary\3D\3D.hpp" />
@@ -58,6 +59,7 @@
     <ClInclude Include="..\..\include\SplayLibrary\Core\TextureBase.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\types.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Window.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\WindowFramebuffer.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Private\Private.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\SplayLibrary.hpp" />
   </ItemGroup>

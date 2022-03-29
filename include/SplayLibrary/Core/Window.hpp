@@ -43,7 +43,7 @@ namespace spl
 			Context* getContext();
 			const void* getHandle() const;
 			const uvec2& getSize() const;
-			Framebuffer& getFramebuffer();
+			WindowFramebuffer& getFramebuffer();
 
 			~Window();
 
@@ -57,7 +57,7 @@ namespace spl
 			Context* _context;
 			uvec2 _size;
 
-			Framebuffer _framebuffer;
+			WindowFramebuffer _framebuffer;
 
 			std::queue<Event*> _events;
 			Event* _lastEventSent;

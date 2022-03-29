@@ -930,7 +930,7 @@ namespace spl
 		return _size;
 	}
 
-	Framebuffer& Window::getFramebuffer()
+	WindowFramebuffer& Window::getFramebuffer()
 	{
 		return _framebuffer;
 	}

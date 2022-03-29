@@ -75,6 +75,9 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\Framebuffer.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\SplayLibrary\Core\WindowFramebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Drawable.hpp">
@@ -154,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Private\Private.hpp">
       <Filter>Header Files\Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\WindowFramebuffer.hpp">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
