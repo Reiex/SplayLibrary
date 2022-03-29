@@ -20,6 +20,9 @@ namespace spl
 			void setViewport(const ivec2& offset, const uvec2& size);
 			void setIsDepthTestEnabled(bool isEnabled);
 
+			Window* getWindow();
+			Framebuffer* getCurrentFramebuffer();
+			Shader* getCurrentShader();
 			const vec4& getClearColor() const;
 			double getClearDepth() const;
 			int32_t getClearStencil() const;
@@ -29,14 +32,14 @@ namespace spl
 
 			~Context() = default;
 
-			Window* window;
-
-			const Framebuffer* currentFramebuffer;
-			const Shader* currentShader;
-
 		private:
 
 			Context() = default;
+
+			Window* _window;
+
+			Framebuffer* _currentFramebuffer;
+			Shader* _currentShader;
 
 			vec4 _clearColor;
 			double _clearDepth;

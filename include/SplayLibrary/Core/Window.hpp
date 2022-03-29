@@ -43,7 +43,7 @@ namespace spl
 			Context* getContext();
 			const void* getHandle() const;
 			const uvec2& getSize() const;
-			const Framebuffer& getFramebuffer() const;
+			Framebuffer& getFramebuffer();
 
 			~Window();
 

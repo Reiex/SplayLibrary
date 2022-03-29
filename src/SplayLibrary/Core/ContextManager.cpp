@@ -48,6 +48,21 @@ namespace spl
 		}
 	}
 
+	Window* Context::getWindow()
+	{
+		return _window;
+	}
+
+	Framebuffer* Context::getCurrentFramebuffer()
+	{
+		return _currentFramebuffer;
+	}
+
+	Shader* Context::getCurrentShader()
+	{
+		return _currentShader;
+	}
+
 	const vec4& Context::getClearColor() const
 	{
 		return _clearColor;
@@ -107,9 +122,9 @@ namespace spl
 	void ContextManager::initContext(Window* window)
 	{
 		Context* context = window->getContext();
-		context->window = window;
-		context->currentFramebuffer = &window->getFramebuffer();
-		context->currentShader = nullptr;
+		context->_window = window;
+		context->_currentFramebuffer = &window->getFramebuffer();
+		context->_currentShader = nullptr;
 		context->_clearColor = { 0.f, 0.f, 0.f, 1.f };
 		context->_clearDepth = 1.f;
 		context->_clearStencil = 0;
@@ -153,7 +168,7 @@ namespace spl
 
 		if (context)
 		{
-			GLFWwindow* glfwWindow = static_cast<GLFWwindow*>(context->window->getHandle());
+			GLFWwindow* glfwWindow = static_cast<GLFWwindow*>(context->_window->getHandle());
 			glfwMakeContextCurrent(glfwWindow);
 
 			if (s_currentContexts.empty())
