@@ -86,7 +86,7 @@ namespace spl
 
 
 	class Framebuffer;
-	class WindowFramebuffer;
+	class DefaultFramebuffer;
 
 	enum class EventType;
 	struct Event;

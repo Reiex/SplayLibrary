@@ -12,7 +12,7 @@
 #include <SplayLibrary/Core/Shader.hpp>
 
 #include <SplayLibrary/Core/Framebuffer.hpp>
-#include <SplayLibrary/Core/WindowFramebuffer.hpp>
+#include <SplayLibrary/Core/DefaultFramebuffer.hpp>
 #include <SplayLibrary/Core/Event.hpp>
 #include <SplayLibrary/Core/Window.hpp>
 #include <SplayLibrary/Core/ContextManager.hpp>

@@ -75,8 +75,8 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\Framebuffer.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\SplayLibrary\Core\WindowFramebuffer.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\..\src\SplayLibrary\Core\DefaultFramebuffer.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -90,9 +90,6 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Shader.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Core\types.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\SplayLibrary.hpp">
@@ -158,7 +155,10 @@
     <ClInclude Include="..\..\include\SplayLibrary\Private\Private.hpp">
       <Filter>Header Files\Private</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Core\WindowFramebuffer.hpp">
+    <ClInclude Include="..\..\include\SplayLibrary\Core\DefaultFramebuffer.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\types.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
