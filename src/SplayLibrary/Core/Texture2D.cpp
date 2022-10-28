@@ -78,7 +78,7 @@ namespace spl
 	void Texture2D::createNew(const std::filesystem::path& path, TextureInternalFormat internalFormat)
 	{
 		// TODO: Load only necessary components
-		djv::RGBAImg image(path.string());
+		djv::Image<djv::Pixel<float, 4>> image(path.string());
 		createNew(image, internalFormat);
 	}
 
@@ -141,7 +141,7 @@ namespace spl
 	void Texture2D::update(const std::filesystem::path& path, const uvec2& offset)
 	{
 		// TODO: Load only necessary components
-		djv::RGBAImg image(path.string());
+		djv::Image<djv::Pixel<float, 4>> image(path.string());
 		update(image, offset);
 	}
 

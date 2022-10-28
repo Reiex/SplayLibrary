@@ -77,9 +77,13 @@ namespace spl
 	vec3 Transformable3D::applyRotationTo(const vec3& vector) const
 	{
 		scp::Quat<float> v{ 0.f, vector.x, vector.y, vector.z };
-		v = _rotation * v * _rotation.inverse();
 
-		return vec3{ v.b, v.c, v.d };
+		scp::Quat<float> inv = _rotation;
+		inv.inverse();
+
+		v = _rotation * v * inv;
+
+		return vec3{ v.x, v.y, v.z };
 	}
 
 	vec3 Transformable3D::applyScaleTo(const vec3& vector) const
@@ -100,9 +104,13 @@ namespace spl
 	vec3 Transformable3D::applyInverseRotationTo(const vec3& vector) const
 	{
 		scp::Quat<float> v{ 0.f, vector.x, vector.y, vector.z };
-		v = _rotation.inverse() * v * _rotation;
 
-		return normalize(vec3{ v.b, v.c, v.d });
+		scp::Quat<float> inv = _rotation;
+		inv.inverse();
+
+		v = inv * v * _rotation;
+
+		return normalize(vec3{ v.x, v.y, v.z });
 	}
 
 	vec3 Transformable3D::applyInverseScaleTo(const vec3& vector) const
@@ -117,19 +125,19 @@ namespace spl
 
 	mat3 Transformable3D::getRotationMatrix() const
 	{
-		const float aa = _rotation.a * _rotation.a;
-		const float bb = _rotation.b * _rotation.b;
-		const float cc = _rotation.c * _rotation.c;
-		const float dd = _rotation.d * _rotation.d;
+		const float aa = _rotation.w * _rotation.w;
+		const float bb = _rotation.x * _rotation.x;
+		const float cc = _rotation.y * _rotation.y;
+		const float dd = _rotation.z * _rotation.z;
 
-		const float ab2 = 2.f * _rotation.a * _rotation.b;
-		const float ac2 = 2.f * _rotation.a * _rotation.c;
-		const float ad2 = 2.f * _rotation.a * _rotation.d;
+		const float ab2 = 2.f * _rotation.w * _rotation.x;
+		const float ac2 = 2.f * _rotation.w * _rotation.y;
+		const float ad2 = 2.f * _rotation.w * _rotation.z;
 
-		const float bc2 = 2.f * _rotation.b * _rotation.c;
-		const float bd2 = 2.f * _rotation.b * _rotation.d;
+		const float bc2 = 2.f * _rotation.x * _rotation.y;
+		const float bd2 = 2.f * _rotation.x * _rotation.z;
 
-		const float cd2 = 2.f * _rotation.c * _rotation.d;
+		const float cd2 = 2.f * _rotation.y * _rotation.z;
 
 		const float r11 = aa + bb - cc - dd;
 		const float r12 = bc2 - ad2;
@@ -154,19 +162,19 @@ namespace spl
 		const float& ty = _translation.y;
 		const float& tz = _translation.z;
 
-		const float aa = _rotation.a * _rotation.a;
-		const float bb = _rotation.b * _rotation.b;
-		const float cc = _rotation.c * _rotation.c;
-		const float dd = _rotation.d * _rotation.d;
+		const float aa = _rotation.w * _rotation.w;
+		const float bb = _rotation.x * _rotation.x;
+		const float cc = _rotation.y * _rotation.y;
+		const float dd = _rotation.z * _rotation.z;
 
-		const float ab2 = 2.f * _rotation.a * _rotation.b;
-		const float ac2 = 2.f * _rotation.a * _rotation.c;
-		const float ad2 = 2.f * _rotation.a * _rotation.d;
+		const float ab2 = 2.f * _rotation.w * _rotation.x;
+		const float ac2 = 2.f * _rotation.w * _rotation.y;
+		const float ad2 = 2.f * _rotation.w * _rotation.z;
 
-		const float bc2 = 2.f * _rotation.b * _rotation.c;
-		const float bd2 = 2.f * _rotation.b * _rotation.d;
+		const float bc2 = 2.f * _rotation.x * _rotation.y;
+		const float bd2 = 2.f * _rotation.x * _rotation.z;
 
-		const float cd2 = 2.f * _rotation.c * _rotation.d;
+		const float cd2 = 2.f * _rotation.y * _rotation.z;
 
 		const float r11 = aa + bb - cc - dd;
 		const float r12 = bc2 - ad2;
@@ -192,21 +200,22 @@ namespace spl
 
 	mat3 Transformable3D::getInverseRotationMatrix() const
 	{
-		scp::Quat<float> rot = _rotation.inverse();
+		scp::Quat<float> rot = _rotation;
+		rot.inverse();
 
-		const float aa = rot.a * rot.a;
-		const float bb = rot.b * rot.b;
-		const float cc = rot.c * rot.c;
-		const float dd = rot.d * rot.d;
+		const float aa = rot.w * rot.w;
+		const float bb = rot.x * rot.x;
+		const float cc = rot.y * rot.y;
+		const float dd = rot.z * rot.z;
 
-		const float ab2 = 2.f * rot.a * rot.b;
-		const float ac2 = 2.f * rot.a * rot.c;
-		const float ad2 = 2.f * rot.a * rot.d;
+		const float ab2 = 2.f * rot.w * rot.x;
+		const float ac2 = 2.f * rot.w * rot.y;
+		const float ad2 = 2.f * rot.w * rot.z;
 
-		const float bc2 = 2.f * rot.b * rot.c;
-		const float bd2 = 2.f * rot.b * rot.d;
+		const float bc2 = 2.f * rot.x * rot.y;
+		const float bd2 = 2.f * rot.x * rot.z;
 
-		const float cd2 = 2.f * rot.c * rot.d;
+		const float cd2 = 2.f * rot.y * rot.z;
 
 		const float r11 = aa + bb - cc - dd;
 		const float r12 = bc2 - ad2;
@@ -231,21 +240,22 @@ namespace spl
 		const float sy = 1.f / _scale.y;
 		const float sz = 1.f / _scale.z;
 
-		scp::Quat<float> rot = _rotation.inverse();
+		scp::Quat<float> rot = _rotation;
+		rot.inverse();
 
-		const float aa = rot.a * rot.a;
-		const float bb = rot.b * rot.b;
-		const float cc = rot.c * rot.c;
-		const float dd = rot.d * rot.d;
+		const float aa = rot.w * rot.w;
+		const float bb = rot.x * rot.x;
+		const float cc = rot.y * rot.y;
+		const float dd = rot.z * rot.z;
 
-		const float ab2 = 2.f * rot.a * rot.b;
-		const float ac2 = 2.f * rot.a * rot.c;
-		const float ad2 = 2.f * rot.a * rot.d;
+		const float ab2 = 2.f * rot.w * rot.x;
+		const float ac2 = 2.f * rot.w * rot.y;
+		const float ad2 = 2.f * rot.w * rot.z;
 
-		const float bc2 = 2.f * rot.b * rot.c;
-		const float bd2 = 2.f * rot.b * rot.d;
+		const float bc2 = 2.f * rot.x * rot.y;
+		const float bd2 = 2.f * rot.x * rot.z;
 
-		const float cd2 = 2.f * rot.c * rot.d;
+		const float cd2 = 2.f * rot.y * rot.z;
 
 		const float r11 = sx * (aa + bb - cc - dd);
 		const float r12 = sx * (bc2 - ad2);

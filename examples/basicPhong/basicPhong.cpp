@@ -14,9 +14,9 @@ int basicPhongMain()
 	spl::PerspectiveCamera camera({ 1000, 600 }, 0.1f, 100.f, 1.f);
 	camera.setTranslation({ 0.f, 0.f, 2.f });
 
-	spl::Mesh<> mesh("examples/basicPhong/resources/meshes/teapot.obj");
+	spl::Mesh<> mesh("examples/basicPhong/resources/meshes/suzanne.obj");
 	spl::Transformable3D meshTransform;
-	meshTransform.scale(0.01f);
+	meshTransform.scale(0.5);
 
 	spl::vec3 lightDir = -spl::normalize(spl::vec3{ 1.0, 1.0, 1.0 });
 

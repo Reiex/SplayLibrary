@@ -148,8 +148,8 @@ SPLD_VEC##vecSize##_REAL_FUNC(vecName, vecSize, eltType)
 
 
 #define SPLD_VEC_REAL_FUNC(vecName, vecSize, eltType)																											\
-vecName##vecSize radians(const vecName##vecSize& u) { return u * scp::pi / 180.0; }																				\
-vecName##vecSize degrees(const vecName##vecSize& u) { return u * 180.0 / scp::pi; }																				\
+vecName##vecSize radians(const vecName##vecSize& u) { return u * std::numbers::pi / 180.0; }																	\
+vecName##vecSize degrees(const vecName##vecSize& u) { return u * 180.0 / std::numbers::pi; }																	\
 vecName##vecSize inversesqrt(const vecName##vecSize& u) { return 1.0 / sqrt(u); }																				\
 vecName##vecSize fract(const vecName##vecSize& u) { return u - floor(u); }																						\
 vecName##vecSize mod(const vecName##vecSize& u, const vecName##vecSize& v) { return u - v * floor(u / v); }														\

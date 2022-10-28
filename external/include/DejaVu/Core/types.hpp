@@ -1,28 +1,34 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//! \file
+//! \author Reiex
+//! \copyright The MIT License (MIT)
+//! \date 2019-2022
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma once
 
-#include <algorithm>
-#include <array>
-#include <cassert>
-#include <cmath>
-#include <cstdint>
-#include <cstdlib>
-#include <functional>
-#include <memory>
-#include <stdexcept>
-#include <string>
-#include <vector>
-
 #include <SciPP/SciPP.hpp>
-
-#include <DejaVu/Core/stb/stb_image.hpp>
-#include <DejaVu/Core/stb/stb_image_write.hpp>
+#include <Diskon/Diskon.hpp>
 
 namespace djv
 {
-	template<uint64_t N> class PixelBase;
-	template<typename PixelType> class Img;
-	struct GrayScalePixel;
-	class GrayScaleImg;
-	struct RGBAPixel;
-	class RGBAImg;
+	template<typename TComponent, uint8_t ComponentCount> class Pixel;
+	template<typename T> concept PixelConcept = requires { typename T::ComponentType; T::componentCount; } && std::derived_from<T, Pixel<typename T::ComponentType, T::componentCount>>;
+	
+	enum class ImageFormat;
+	template<PixelConcept TPixel> class Image;
+	template<typename T> concept ImageConcept = requires { typename T::PixelType; } && PixelConcept<typename T::PixelType> && std::derived_from<T, Image<typename T::PixelType>>;
+
+
+	class Shape;
+	namespace shape
+	{
+		class ThickRect;
+		class FilledRect;
+		class Rect;
+		class Crown;
+		class Disc;
+		class Circle;
+		class Line;
+	}
 }

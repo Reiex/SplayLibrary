@@ -18,7 +18,7 @@ namespace spl
 			Texture2D(const uvec2& size, const uint32_t* data, TextureInternalFormat internalFormat = TextureInternalFormat::RGB8);
 			Texture2D(const uvec2& size, const float* data, TextureInternalFormat internalFormat = TextureInternalFormat::RGB8);
 			Texture2D(const std::filesystem::path& path, TextureInternalFormat internalFormat = TextureInternalFormat::RGB8);
-			template<typename PixelType> Texture2D(const djv::Img<PixelType>& image, TextureInternalFormat internalFormat = TextureInternalFormat::RGB8);
+			template<djv::PixelConcept TPixel> Texture2D(const djv::Image<TPixel>& image, TextureInternalFormat internalFormat = TextureInternalFormat::RGB8);
 			Texture2D(const Texture2D& texture) = delete;
 			Texture2D(Texture2D&& texture) = delete;
 
@@ -31,13 +31,13 @@ namespace spl
 			void createNew(const uvec2& size, const uint32_t* data, TextureInternalFormat internalFormat = TextureInternalFormat::RGB8);
 			void createNew(const uvec2& size, const float* data, TextureInternalFormat internalFormat = TextureInternalFormat::RGB8);
 			void createNew(const std::filesystem::path& path, TextureInternalFormat internalFormat = TextureInternalFormat::RGB8);
-			template<typename PixelType> void createNew(const djv::Img<PixelType>& image, TextureInternalFormat internalFormat = TextureInternalFormat::RGB8);
+			template<djv::PixelConcept TPixel> void createNew(const djv::Image<TPixel>& image, TextureInternalFormat internalFormat = TextureInternalFormat::RGB8);
 			void update(const uvec2& size, const uint8_t* data, const uvec2& offset = { 0, 0 });
 			void update(const uvec2& size, const uint16_t* data, const uvec2& offset = { 0, 0 });
 			void update(const uvec2& size, const uint32_t* data, const uvec2& offset = { 0, 0 });
 			void update(const uvec2& size, const float* data, const uvec2& offset = { 0, 0 });
 			void update(const std::filesystem::path& path, const uvec2& offset = { 0, 0 });
-			template<typename PixelType> void update(const djv::Img<PixelType>& image, const uvec2& offset = { 0, 0 });
+			template<djv::PixelConcept TPixel> void update(const djv::Image<TPixel>& image, const uvec2& offset = { 0, 0 });
 			void destroy();
 
 			const uvec2& getSize() const;

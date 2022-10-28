@@ -20,7 +20,7 @@ namespace spl
 	{
 		assert(_aspect > 0.f && !std::isinf(_aspect));
 		assert(_far > _near && _near > 0.f);
-		assert(scp::pi > _fov && _fov > 0.f);
+		assert(std::numbers::pi > _fov && _fov > 0.f);
 	}
 
 	PerspectiveCamera::PerspectiveCamera(const uvec2& resolution, float near, float far, float fov) : PerspectiveCamera(static_cast<float>(resolution.x) / resolution.y, near, far, fov)
@@ -79,7 +79,7 @@ namespace spl
 		dirPlane = { 0.f, dir.y, dir.z };
 		if (length(dirPlane) != 0.f)
 		{
-			const float angle = scp::pi / 2 - std::acos(dot(dirPlane, { 0.f, 1.f, 0.f }));
+			const float angle = std::numbers::pi / 2 - std::acos(dot(dirPlane, { 0.f, 1.f, 0.f }));
 
 			rotate(-getLeftVector(), angle);
 		}

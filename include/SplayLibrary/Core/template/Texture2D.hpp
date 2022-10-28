@@ -4,35 +4,35 @@
 
 namespace spl
 {
-	template<typename PixelType>
-	Texture2D::Texture2D(const djv::Img<PixelType>& image, TextureInternalFormat internalFormat) : Texture2D()
+	template<djv::PixelConcept TPixel>
+	Texture2D::Texture2D(const djv::Image<TPixel>& image, TextureInternalFormat internalFormat) : Texture2D()
 	{
 		createNew(image, internalFormat);
 	}
 
-	template<typename PixelType>
-	void Texture2D::createNew(const djv::Img<PixelType>& image, TextureInternalFormat internalFormat)
+	template<djv::PixelConcept TPixel>
+	void Texture2D::createNew(const djv::Image<TPixel>& image, TextureInternalFormat internalFormat)
 	{
-		const uvec2 size(image.width(), image.height());
+		const uvec2 size(image.getWidth(), image.getHeight());
 		createNew(size, internalFormat);
 		update(image, uvec2(0, 0));
 
 		_size = size;
 	}
 
-	template<typename PixelType>
-	void Texture2D::update(const djv::Img<PixelType>& image, const uvec2& offset)
+	template<djv::PixelConcept TPixel>
+	void Texture2D::update(const djv::Image<TPixel>& image, const uvec2& offset)
 	{
 		RawTexture::UpdateParams params;
 		params.data = nullptr;
 		params.dataFormat = TextureFormat::Undefined;
 		params.dataType = TextureDataType::Undefined;
-		params.width = image.width();
-		params.height = image.height();
+		params.width = image.getWidth();
+		params.height = image.getHeight();
 		params.offsetX = offset.x;
 		params.offsetY = offset.y;
 
-		TextureBase::createDejaVuImgBuffer<PixelType>(image, _texture.getCreationParams().internalFormat, (void*&) params.data, params.dataFormat, params.dataType);
+		TextureBase::createDejaVuImgBuffer(image, _texture.getCreationParams().internalFormat, (void*&) params.data, params.dataFormat, params.dataType);
 
 		_texture.update(params);
 

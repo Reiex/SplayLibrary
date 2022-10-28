@@ -117,38 +117,44 @@ namespace spl
 	template<typename VertexType>
 	bool Mesh<VertexType>::loadObj(const std::filesystem::path& path)
 	{
-		dsk::ObjFile objFile;
-		if (!objFile.loadFromFile(path))
-		{
-			return false;
-		}
+		dsk::fmt::ObjIStream objIStream;
+		objIStream.setSource(path);
 
-		for (const std::vector<dsk::obj::Vertex>& objFace : objFile.faces)
+		dsk::fmt::obj::File objFile;
+		objIStream.readFile(objFile);
+
+		for (const dsk::fmt::obj::Face& face : objFile.faces)
 		{
-			if (objFace.size() != 3)
+			if (face.vertices.size() != 3)
 			{
 				return false;
 			}
 
-			for (const dsk::obj::Vertex& objVertex : objFace)
+			for (const dsk::fmt::obj::FaceVertex& vertex : face.vertices)
 			{
-				DefaultVertex vertex;
-				if (objVertex.position)
+				DefaultVertex outVertex;
+				
+				if (vertex.position != UINT64_MAX)
 				{
-					vertex.pos = { (float)objVertex.position->x, (float)objVertex.position->y, (float)objVertex.position->z };
+					outVertex.pos.x = objFile.positions[vertex.position].x;
+					outVertex.pos.y = objFile.positions[vertex.position].y;
+					outVertex.pos.z = objFile.positions[vertex.position].z;
 				}
 
-				if (objVertex.normal)
+				if (vertex.normal != UINT64_MAX)
 				{
-					vertex.normal = { (float)objVertex.normal->x, (float)objVertex.normal->y, (float)objVertex.normal->z };
+					outVertex.normal.x = objFile.normals[vertex.normal].i;
+					outVertex.normal.y = objFile.normals[vertex.normal].j;
+					outVertex.normal.z = objFile.normals[vertex.normal].k;
 				}
 
-				if (objVertex.texCoord)
+				if (vertex.texCoord != UINT64_MAX)
 				{
-					vertex.texCoords = { (float)objVertex.texCoord->x, (float)objVertex.texCoord->y };
+					outVertex.texCoords.x = objFile.texCoords[vertex.texCoord].u;
+					outVertex.texCoords.y = objFile.texCoords[vertex.texCoord].v;
 				}
 
-				_vertices.push_back(vertex);
+				_vertices.push_back(outVertex);
 				_indices.push_back(_indices.size());
 			}
 		}

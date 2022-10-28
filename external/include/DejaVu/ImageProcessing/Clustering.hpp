@@ -1,10 +1,11 @@
-#pragma once
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//! \file
+//! \author Reiex
+//! \copyright The MIT License (MIT)
+//! \date 2019-2022
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// \file
-/// \brief Functions and classes for image clustering.
-/// \author Reiex
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma once
 
 #include <DejaVu/ImageProcessing/types.hpp>
 
@@ -12,66 +13,28 @@ namespace djv
 {
 	namespace clustering
 	{
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		/// \addtogroup clustering
-		/// \{
-		/// \ingroup ImageProcessing
-		/// \{
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		/// \brief Struct representing an image clustering.
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		struct Clustering
 		{
-			Clustering() = delete;
-			Clustering(uint64_t w, uint64_t h);
-			Clustering(const Clustering& seg) = default;
-			Clustering(Clustering&& seg) = default;
+			constexpr Clustering() = delete;
+			constexpr Clustering(uint64_t w, uint64_t h);
+			constexpr Clustering(const Clustering& clustering) = default;
+			constexpr Clustering(Clustering&& clustering) = default;
 
-			///////////////////////////////////////////////////////////////////////////////////////////////////////////
-			/// \brief Apply the clustering to an image, giving each pixel a color computed for his cluster.
-			///
-			/// The color of a cluster is the mean of the colors of the pixel in the image belonging to the cluster.
-			///////////////////////////////////////////////////////////////////////////////////////////////////////////
-			template<typename PixelType>
-			Img<PixelType> appliedTo(const Img<PixelType>& image) const;
+			constexpr Clustering& operator=(const Clustering& clustering) = default;
+			constexpr Clustering& operator=(Clustering&& clustering) = default;
 
-			scp::Mat<uint64_t> clusterMap;	///< Map of indices. Two pixels having the same index are in the same cluster.
+			template<PixelConcept TPixel> constexpr void applyTo(Image<TPixel>& image) const;	// TODO: 'ColorSelectionMethod' (not just picking
+
+			constexpr ~Clustering() = default;
+
+			scp::Matrix<uint64_t> clusterMap;	// size = {w, h}
 		};
 
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		/// \brief K-Means algorithm. Compute clusters only according to colors and not positions of pixels.
-		///
-		/// The algorithm chose `k` pixels randomly, consider them as colors for `k` clusters, then compute the cluster
-		/// belonging of each pixel and recompute the color of each cluster and so on...
-		/// 
-		/// \param k Number of clusters.
-		/// \param epsilon Maximum distance between the colors of a cluster in two successive iterations before
-		/// stopping.
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		template<typename PixelType>
-		Clustering kMeans(const Img<PixelType>& img, uint64_t k, float epsilon = 1e-2f);
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		/// \brief Simple Linear Iterative Clustering. Compute clusters according to colors AND positions of pixels.
-		///
-		/// Same as kMeans but with positions in addition to colors.
-		/// 
-		/// \param k Number of clusters.
-		/// \param relativePosWeight How much times the difference of position must be importanter than the difference
-		/// of colors in the "distance" between two pixels.
-		/// \param epsilon Maximum distance between two pixels (color and position) of a cluster in two successive
-		/// iterations before stopping.
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		template<typename PixelType>
-		Clustering slic(const Img<PixelType>& img, uint64_t k, float relativePosWeight = 40.f, float epsilon = 1e-2f);
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		/// \}
-		/// \}
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// template<PixelConcept TPixel>
+		// Clustering kMeans(const Image<TPixel>& image, uint64_t k, float epsilon = 1e-2f);
+		// template<PixelConcept TPixel>
+		// Clustering slic(const Image<TPixel>& image, uint64_t k, float relativePosWeight = 40.f, float epsilon = 1e-2f);
 	}
 }
 
-#include <DejaVu/ImageProcessing/ClusteringT.hpp>
+#include <DejaVu/ImageProcessing/templates/Clustering.hpp>
