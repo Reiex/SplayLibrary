@@ -158,7 +158,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)external\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>DejaVu-$(Configuration)-$(Platform).lib;Diskon-$(Configuration)-$(Platform).lib;glfw3-$(Configuration)-$(Platform).lib;glad-$(Configuration)-$(Platform).lib</AdditionalDependencies>
+      <AdditionalDependencies>DejaVu-$(Configuration)-$(Platform).lib;glfw3-$(Platform).lib;glad-$(Configuration)-$(Platform).lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -184,7 +184,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)external\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>DejaVu-$(Configuration)-$(Platform).lib;Diskon-$(Configuration)-$(Platform).lib;glfw3-$(Configuration)-$(Platform).lib;glad-$(Configuration)-$(Platform).lib</AdditionalDependencies>
+      <AdditionalDependencies>DejaVu-$(Configuration)-$(Platform).lib;glfw3-$(Platform).lib;glad-$(Configuration)-$(Platform).lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -206,7 +206,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)external\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>DejaVu-$(Configuration)-$(Platform).lib;Diskon-$(Configuration)-$(Platform).lib;glfw3-$(Configuration)-$(Platform).lib;glad-$(Configuration)-$(Platform).lib</AdditionalDependencies>
+      <AdditionalDependencies>DejaVu-$(Configuration)-$(Platform).lib;glfw3-$(Platform).lib;glad-$(Configuration)-$(Platform).lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -232,7 +232,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)external\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>DejaVu-$(Configuration)-$(Platform).lib;Diskon-$(Configuration)-$(Platform).lib;glfw3-$(Configuration)-$(Platform).lib;glad-$(Configuration)-$(Platform).lib</AdditionalDependencies>
+      <AdditionalDependencies>DejaVu-$(Configuration)-$(Platform).lib;glfw3-$(Platform).lib;glad-$(Configuration)-$(Platform).lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
