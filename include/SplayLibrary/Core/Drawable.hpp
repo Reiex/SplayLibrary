@@ -60,6 +60,17 @@ namespace spl
 		Stream		///< The data is updated at each frame. Equivalent to BufferUsage::StreamDraw.
 	};
 
+	enum class PrimitiveType
+	{
+		Points,
+		Lines,
+		LineStrip,
+		LineLoop,
+		Triangles,
+		TriangleStrip,
+		TriangleFan
+	};
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// \ingroup Core
 	/// \class Drawable
@@ -98,7 +109,7 @@ namespace spl
 			///						index buffer. This param specifies how many indices the draw command must read. If
 			///						-1, all the indices are read.
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
-			virtual void draw(uint32_t indicesCount = -1) const;
+			virtual void draw(PrimitiveType primitiveType = PrimitiveType::Triangles, uint32_t indicesCount = -1) const;
 
 			~Drawable();
 

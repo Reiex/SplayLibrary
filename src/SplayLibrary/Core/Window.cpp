@@ -750,13 +750,13 @@ namespace spl
 			return;
 		}
 
-		// TODO: Different contexts ? Different OpenGL version, dirvers, etc...
+		// TODO: Different contexts ? Different OpenGL version, drivers, etc...
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		// TODO: Flags (triple buffering, full screen, etc...)
-		// TODO: Gestion du choix du moniteur
+		// TODO: Choice of monitor
 		// TODO: Shared context
 		_size = size;
 		_window = glfwCreateWindow(_size.x, _size.y, title.c_str(), nullptr, nullptr);

@@ -37,6 +37,30 @@ namespace spl
 				return BufferStorageFlags::None;
 			}
 		}
+	
+		GLenum primitiveTypeToGL(PrimitiveType primitiveType)
+		{
+			switch (primitiveType)
+			{
+				case PrimitiveType::Points:
+					return GL_POINTS;
+				case PrimitiveType::Lines:
+					return GL_LINES;
+				case PrimitiveType::LineStrip:
+					return GL_LINE_STRIP;
+				case PrimitiveType::LineLoop:
+					return GL_LINE_LOOP;
+				case PrimitiveType::Triangles:
+					return GL_TRIANGLES;
+				case PrimitiveType::TriangleStrip:
+					return GL_TRIANGLE_STRIP;
+				case PrimitiveType::TriangleFan:
+					return GL_TRIANGLE_FAN;
+				default:
+					assert(false);
+					return 0;
+			}
+		}
 	}
 
 	Drawable::Drawable() :
@@ -51,12 +75,12 @@ namespace spl
 		glCreateVertexArrays(1, &_vao);
 	}
 
-	void Drawable::draw(uint32_t indicesCount) const
+	void Drawable::draw(PrimitiveType primitiveType, uint32_t indicesCount) const
 	{
 		assert((0 < indicesCount && indicesCount <= _indicesCount) || indicesCount == -1);
 
 		glBindVertexArray(_vao);
-		glDrawElements(GL_TRIANGLES, std::min(indicesCount, _indicesCount), GL_UNSIGNED_INT, nullptr);
+		glDrawElements(primitiveTypeToGL(primitiveType), std::min(indicesCount, _indicesCount), GL_UNSIGNED_INT, nullptr);
 		glBindVertexArray(0);
 	}
 
