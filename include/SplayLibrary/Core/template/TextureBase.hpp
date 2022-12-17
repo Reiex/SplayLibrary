@@ -4,7 +4,7 @@
 
 namespace spl
 {
-	template<djv::PixelConcept TPixel>
+	template<djv::CPixel TPixel>
 	void TextureBase::createDejaVuImgBuffer(const djv::Image<TPixel>& image, TextureInternalFormat internalFormat, void*& buffer, TextureFormat& format, TextureDataType& dataType)
 	{
 		format = getUsualTextureFormatOf(internalFormat);

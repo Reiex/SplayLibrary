@@ -33,7 +33,7 @@ namespace spl
 
 			TextureBase() = default;
 
-			template<djv::PixelConcept TPixel> static void createDejaVuImgBuffer(const djv::Image<TPixel>& image, TextureInternalFormat internalFormat, void*& buffer, TextureFormat& format, TextureDataType& dataType);
+			template<djv::CPixel TPixel> static void createDejaVuImgBuffer(const djv::Image<TPixel>& image, TextureInternalFormat internalFormat, void*& buffer, TextureFormat& format, TextureDataType& dataType);
 
 			RawTexture _texture;
 	};

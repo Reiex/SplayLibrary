@@ -11,88 +11,6 @@
 
 namespace djv
 {
-	#pragma pack(push, 1)
-	template<typename TComponent, uint8_t ComponentCount>
-	class Pixel
-	{
-		static_assert(ComponentCount != 0);
-
-		public:
-
-			using ComponentType = TComponent;
-			static constexpr uint8_t componentCount = ComponentCount;
-
-			constexpr Pixel() = default;
-			constexpr Pixel(const TComponent& value);
-			constexpr Pixel(const std::initializer_list<TComponent>& components);
-			constexpr Pixel(const Pixel<TComponent, ComponentCount>& pixel) = default;
-			constexpr Pixel(Pixel<TComponent, ComponentCount>&& pixel) = default;
-	
-			constexpr Pixel<TComponent, ComponentCount>& operator=(const Pixel<TComponent, ComponentCount>& pixel) = default;
-			constexpr Pixel<TComponent, ComponentCount>& operator=(Pixel<TComponent, ComponentCount>&& pixel) = default;
-	
-			constexpr TComponent& operator[](uint8_t i);
-			constexpr const TComponent& operator[](uint8_t i) const;
-
-			constexpr Pixel<TComponent, ComponentCount>& operator+=(const Pixel<TComponent, ComponentCount>& pixel);
-			constexpr Pixel<TComponent, ComponentCount>& operator-=(const Pixel<TComponent, ComponentCount>& pixel);
-			constexpr Pixel<TComponent, ComponentCount>& operator*=(float value);
-			constexpr Pixel<TComponent, ComponentCount>& operator/=(float value);
-	
-			constexpr bool operator==(const Pixel<TComponent, ComponentCount>& pixel);
-			constexpr bool operator!=(const Pixel<TComponent, ComponentCount>& pixel);
-	
-			template<typename T> constexpr void set(uint8_t i, const T& value);
-			template<typename T> constexpr void get(uint8_t i, T& value) const;
-	
-			constexpr ~Pixel() = default;
-	
-		private:
-	
-			TComponent _components[ComponentCount];
-	};
-	#pragma pack(pop)
-
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount> operator+(const Pixel<TComponent, ComponentCount>& a, const Pixel<TComponent, ComponentCount>& b);
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount>&& operator+(Pixel<TComponent, ComponentCount>&& a, const Pixel<TComponent, ComponentCount>& b);
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount>&& operator+(const Pixel<TComponent, ComponentCount>& a, Pixel<TComponent, ComponentCount>&& b);
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount>&& operator+(Pixel<TComponent, ComponentCount>&& a, Pixel<TComponent, ComponentCount>&& b);
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount> operator-(const Pixel<TComponent, ComponentCount>& a, const Pixel<TComponent, ComponentCount>& b);
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount>&& operator-(Pixel<TComponent, ComponentCount>&& a, const Pixel<TComponent, ComponentCount>& b);
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount> operator*(const Pixel<TComponent, ComponentCount>& a, float x);
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount>&& operator*(Pixel<TComponent, ComponentCount>&& a, float x);
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount> operator*(float x, const Pixel<TComponent, ComponentCount>& a);
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount>&& operator*(float x, Pixel<TComponent, ComponentCount>&& a);
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount> operator/(const Pixel<TComponent, ComponentCount>& a, float x);
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount>&& operator/(Pixel<TComponent, ComponentCount>&& a, float x);
-
-
-	namespace colors
-	{
-		template<typename TComponent, uint8_t ComponentCount>
-		static constexpr Pixel<TComponent, ComponentCount> black = std::integral<TComponent> ? std::numeric_limits<TComponent>::min() : -1.0;
-
-		template<typename TComponent, uint8_t ComponentCount>
-		static constexpr Pixel<TComponent, ComponentCount> white = std::integral<TComponent> ? std::numeric_limits<TComponent>::max() : 1.0;
-	}
-
-
 	enum class ImageFormat
 	{
 		Png,
@@ -104,16 +22,18 @@ namespace djv
 	};
 
 
-	template<PixelConcept TPixelFrom, PixelConcept TPixelTo>
+	template<CPixel TPixelFrom, CPixel TPixelTo>
 	using PixelConversionFunction = std::function<void(const TPixelFrom&, TPixelTo&)>;
 
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	class Image
 	{
 		public:
 			
 			using PixelType = TPixel;
+			using ComponentType = typename TPixel::ComponentType;
+			static constexpr uint8_t componentCount = TPixel::componentCount;
 
 			constexpr Image(uint64_t width, uint64_t height);
 			constexpr Image(uint64_t width, uint64_t height, const TPixel& value);
@@ -124,8 +44,8 @@ namespace djv
 			constexpr Image(const std::istream& stream, ImageFormat format);
 			constexpr Image(const std::istream& stream, ImageFormat format, const uint8_t* swizzling);
 			constexpr Image(const std::istream& stream, ImageFormat format, const std::initializer_list<uint8_t>& swizzling);
-			template<ImageConcept TImage> constexpr Image(const TImage& image);
-			template<ImageConcept TImage> constexpr Image(const TImage& image, const PixelConversionFunction<typename TImage::PixelType, TPixel>& conversionFunc);
+			template<CImage TImage> constexpr Image(const TImage& image);
+			template<CImage TImage> constexpr Image(const TImage& image, const PixelConversionFunction<typename TImage::PixelType, TPixel>& conversionFunc);
 			constexpr Image(const Image<TPixel>& image);
 			constexpr Image(Image<TPixel>&& image);
 
@@ -134,6 +54,7 @@ namespace djv
 			constexpr Image<TPixel>& operator=(const Image<TPixel>& image);
 			constexpr Image<TPixel>& operator=(Image<TPixel>&& image);
 
+			// Load from / Save to format
 
 			constexpr void loadFromFile(const std::filesystem::path& path);
 			constexpr void loadFromFile(const std::filesystem::path& path, const uint8_t* swizzling); // {0, 3, -1} means first component is red, second is alpha and third is set to 0
@@ -142,19 +63,6 @@ namespace djv
 			constexpr void loadFromStream(const std::istream& stream, ImageFormat format, const uint8_t* swizzling);
 			constexpr void loadFromStream(const std::istream& stream, ImageFormat format, const std::initializer_list<uint8_t>& swizzling);
 
-			template<ImageConcept TImage> constexpr void convertFrom(const TImage& image);
-			template<ImageConcept TImage> constexpr void convertFrom(const TImage& image, const PixelConversionFunction<typename TImage::PixelType, TPixel>& conversionFunc);
-
-			template<scp::InterpolationMethod IMethod> constexpr void resize(const Image<TPixel>& image);
-			constexpr void crop(const Image<TPixel>& image, uint64_t x, uint64_t y);
-
-			constexpr Image<TPixel>& transpose();
-			template<scp::InterpolationMethod IMethod> constexpr Image<TPixel>& rotate(float angle, const TPixel& backgroundColor);	// TODO: BorderBehaviour (FixedColor, repeat, continuous...)
-
-			constexpr Image<TPixel>& flip(bool vertically, bool horizontally);
-			constexpr Image<TPixel>& draw(const Shape& shape, const TPixel& color);
-			constexpr Image<TPixel>& draw(const Shape& shape, const Image<TPixel>& image);
-
 			constexpr void saveToFile(const std::filesystem::path& path) const;
 			constexpr void saveToFile(const std::filesystem::path& path, const uint8_t* swizzling) const;	// {0, 3, -1, -1} means red is first component, green is fourth component, blue is set to 0 and alpha is 255
 			constexpr void saveToFile(const std::filesystem::path& path, const std::initializer_list<uint8_t>& swizzling) const;
@@ -162,9 +70,47 @@ namespace djv
 			constexpr void saveToStream(const std::istream& stream, ImageFormat format, const uint8_t* swizzling);
 			constexpr void saveToStream(const std::istream& stream, ImageFormat format, const std::initializer_list<uint8_t>& swizzling);
 
+			// Create from another image
+
+			template<CImage TImage> constexpr void convertFrom(const TImage& image);
+			template<CImage TImage> constexpr void convertFrom(const TImage& image, const PixelConversionFunction<typename TImage::PixelType, TPixel>& conversionFunc);
+
+			template<scp::InterpolationMethod IMethod> constexpr void resizeFrom(const Image<TPixel>& image);
+			constexpr void cropFrom(const Image<TPixel>& image, uint64_t x, uint64_t y);
+
+			// Simple image manipulation
+
+			// TODO: resize
+			// TODO: crop
+			constexpr void transpose();
+			template<scp::InterpolationMethod IMethod, scp::BorderBehaviour BBehaviour> constexpr void rotate(float angle);
+
+			template<bool Vertically, bool Horizontally> constexpr void flip();
+			constexpr void draw(const Shape& shape, const TPixel& color);
+			constexpr void draw(const Shape& shape, const Image<TPixel>& image);
+
+			// Blurs
+
+			template<scp::BorderBehaviour BBehaviour> constexpr void blurGaussian(float sigma);
+			template<scp::BorderBehaviour BBehaviour> constexpr void blurGaussian(float sigmaX, float sigmaY);
+			template<scp::BorderBehaviour BBehaviour> constexpr void blurMean(uint64_t radius);
+			template<scp::BorderBehaviour BBehaviour> constexpr void blurMean(uint64_t radiusX, uint64_t radiusY);
+			template<scp::BorderBehaviour BBehaviour> constexpr void blurMedian(uint64_t radius);
+			template<scp::BorderBehaviour BBehaviour> constexpr void blurMedian(uint64_t radiusX, uint64_t radiusY);
+
+			template<scp::BorderBehaviour BBehaviour> constexpr void blurGaussianBilateral(float sigmaSpace, float sigmaColor);
+
+			// TODO: other blurs - defocus aberration, directional blur, etc...
+
+			// Accessors
+
+			constexpr bool operator==(const Image<TPixel>& image) const;
+			constexpr bool operator!=(const Image<TPixel>& image) const;
 
 			constexpr TPixel& operator[](const std::initializer_list<uint64_t>& indices);
 			constexpr const TPixel& operator[](const std::initializer_list<uint64_t>& indices) const;
+
+			template<scp::BorderBehaviour BBehaviour> constexpr const TPixel& getOutOfBound(int64_t x, int64_t y) const;
 
 			constexpr TPixel* begin();
 			constexpr TPixel* end();
@@ -173,15 +119,17 @@ namespace djv
 			constexpr const TPixel* cbegin() const;
 			constexpr const TPixel* cend() const;
 
-			constexpr TPixel* getData();
-			constexpr const TPixel* getData() const;
 			constexpr const uint64_t& getWidth() const;
 			constexpr const uint64_t& getHeight() const;
+			constexpr TPixel* getData();
+			constexpr const TPixel* getData() const;
 			constexpr bool isValid() const;
+			constexpr void setZeroColor(const TPixel& color);
+			constexpr const TPixel& getZeroColor() const;
 
 			constexpr ~Image();
 
-		private:
+		protected:
 
 			using TComponent = typename TPixel::ComponentType;
 
@@ -225,11 +173,29 @@ namespace djv
 			uint64_t _height;
 
 			TPixel* _pixels;
+			TPixel _zeroColor;
 
 			bool _owner;
 
-		template<PixelConcept T> friend class Image;
+		template<CPixel T> friend class Image;
 	};
+
+
+	using Image_gs_u8 = Image<Pixel_gs_u8>;
+	using Image_gs_i8 = Image<Pixel_gs_i8>;
+	using Image_gs_u16 = Image<Pixel_gs_u16>;
+	using Image_gs_i16 = Image<Pixel_gs_i16>;
+	using Image_gs_f32 = Image<Pixel_gs_f32>;
+	using Image_rgb_u8 = Image<Pixel_rgb_u8>;
+	using Image_rgb_i8 = Image<Pixel_rgb_i8>;
+	using Image_rgb_u16 = Image<Pixel_rgb_u16>;
+	using Image_rgb_i16 = Image<Pixel_rgb_i16>;
+	using Image_rgb_f32 = Image<Pixel_rgb_f32>;
+	using Image_rgba_u8 = Image<Pixel_rgba_u8>;
+	using Image_rgba_i8 = Image<Pixel_rgba_i8>;
+	using Image_rgba_u16 = Image<Pixel_rgba_u16>;
+	using Image_rgba_i16 = Image<Pixel_rgba_i16>;
+	using Image_rgba_f32 = Image<Pixel_rgba_f32>;
 }
 
 #include <DejaVu/Core/templates/Image.hpp>

@@ -11,180 +11,6 @@
 
 namespace djv
 {
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount>::Pixel(const TComponent& value)
-	{
-		std::fill_n(_components, ComponentCount, value);
-	}
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount>::Pixel(const std::initializer_list<TComponent>& components)
-	{
-		assert(components.size() == ComponentCount);
-		std::copy_n(components.begin(), ComponentCount, _components);
-	}
-	
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr TComponent& Pixel<TComponent, ComponentCount>::operator[](uint8_t i)
-	{
-		assert(i < ComponentCount);
-		return _components[i];
-	}
-	
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr const TComponent& Pixel<TComponent, ComponentCount>::operator[](uint8_t i) const
-	{
-		assert(i < ComponentCount);
-		return _components[i];
-	}
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount>& Pixel<TComponent, ComponentCount>::operator+=(const Pixel<TComponent, ComponentCount>& pixel)
-	{
-		std::transform(_components, _components + ComponentCount, pixel._components, _components, std::plus<TComponent>());
-		return *this;
-	}
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount>& Pixel<TComponent, ComponentCount>::operator-=(const Pixel<TComponent, ComponentCount>& pixel)
-	{
-		std::transform(_components, _components + ComponentCount, pixel._components, _components, std::minus<TComponent>());
-		return *this;
-	}
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount>& Pixel<TComponent, ComponentCount>::operator*=(float value)
-	{
-		std::transform(_components, _components + ComponentCount, _components, [&](const TComponent& x) { return x * value; });
-		return *this;
-	}
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount>& Pixel<TComponent, ComponentCount>::operator/=(float value)
-	{
-		std::transform(_components, _components + ComponentCount, _components, [&](const TComponent& x) { return x / value; });
-		return *this;
-	}
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr bool Pixel<TComponent, ComponentCount>::operator==(const Pixel<TComponent, ComponentCount>& pixel)
-	{
-		return std::equal(_components, _components + ComponentCount, pixel._components);
-	}
-	
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr bool Pixel<TComponent, ComponentCount>::operator!=(const Pixel<TComponent, ComponentCount>& pixel)
-	{
-		return !(*this == pixel);
-	}
-
-	template<typename TComponent, uint8_t ComponentCount>
-	template<typename T>
-	constexpr void Pixel<TComponent, ComponentCount>::set(uint8_t i, const T& value)
-	{
-		assert(i < ComponentCount);
-		dsk::convertNum<T, TComponent>(&value, &_components[i]);
-	}
-
-	template<typename TComponent, uint8_t ComponentCount>
-	template<typename T>
-	constexpr void Pixel<TComponent, ComponentCount>::get(uint8_t i, T& value) const
-	{
-		assert(i < ComponentCount);
-		dsk::convertNum<TComponent, T>(&_components[i], &value);
-	}
-
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount> operator+(const Pixel<TComponent, ComponentCount>& a, const Pixel<TComponent, ComponentCount>& b)
-	{
-		Pixel<TComponent, ComponentCount> c(a);
-		c += b;
-		return c;
-	}
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount>&& operator+(Pixel<TComponent, ComponentCount>&& a, const Pixel<TComponent, ComponentCount>& b)
-	{
-		a += b;
-		return std::forward<Pixel<TComponent, ComponentCount>>(a);
-	}
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount>&& operator+(const Pixel<TComponent, ComponentCount>& a, Pixel<TComponent, ComponentCount>&& b)
-	{
-		b += a;
-		return std::forward<Pixel<TComponent, ComponentCount>>(b);
-	}
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount>&& operator+(Pixel<TComponent, ComponentCount>&& a, Pixel<TComponent, ComponentCount>&& b)
-	{
-		a += b;
-		return std::forward<Pixel<TComponent, ComponentCount>>(a);
-	}
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount> operator-(const Pixel<TComponent, ComponentCount>& a, const Pixel<TComponent, ComponentCount>& b)
-	{
-		Pixel<TComponent, ComponentCount> c(a);
-		c -= b;
-		return c;
-	}
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount>&& operator-(Pixel<TComponent, ComponentCount>&& a, const Pixel<TComponent, ComponentCount>& b)
-	{
-		a -= b;
-		return std::forward<Pixel<TComponent, ComponentCount>>(a);
-	}
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount> operator*(const Pixel<TComponent, ComponentCount>& a, float x)
-	{
-		Pixel<TComponent, ComponentCount> b(a);
-		b *= x;
-		return b;
-	}
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount>&& operator*(Pixel<TComponent, ComponentCount>&& a, float x)
-	{
-		a *= x;
-		return std::forward<Pixel<TComponent, ComponentCount>>(a);
-	}
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount> operator*(float x, const Pixel<TComponent, ComponentCount>& a)
-	{
-		Pixel<TComponent, ComponentCount> b(a);
-		b *= x;
-		return b;
-	}
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount>&& operator*(float x, Pixel<TComponent, ComponentCount>&& a)
-	{
-		a *= x;
-		return std::forward<Pixel<TComponent, ComponentCount>>(a);
-	}
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount> operator/(const Pixel<TComponent, ComponentCount>& a, float x)
-	{
-		Pixel<TComponent, ComponentCount> b(a);
-		b /= x;
-		return b;
-	}
-
-	template<typename TComponent, uint8_t ComponentCount>
-	constexpr Pixel<TComponent, ComponentCount>&& operator/(Pixel<TComponent, ComponentCount>&& a, float x)
-	{
-		a /= x;
-		return std::forward<Pixel<TComponent, ComponentCount>>(a);
-	}
-
-
 	namespace _djv
 	{
 		template<uint8_t ComponentCount>
@@ -217,7 +43,7 @@ namespace djv
 			}
 		}
 	
-		template<PixelConcept TPixelFrom, PixelConcept TPixelTo>
+		template<CPixel TPixelFrom, CPixel TPixelTo>
 		constexpr void defaultConversionFunction(const TPixelFrom& from, TPixelTo& to)
 		{
 			constexpr uint8_t n = std::min(TPixelFrom::componentCount, TPixelTo::componentCount);
@@ -228,96 +54,97 @@ namespace djv
 		}
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr Image<TPixel>::Image() :
 		_width(0),
 		_height(0),
 		_pixels(nullptr),
+		_zeroColor(colors::black<ComponentType, componentCount>),
 		_owner(true)
 	{
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr Image<TPixel>::Image(uint64_t width, uint64_t height) : Image<TPixel>()
 	{
 		_create(width, height);
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr Image<TPixel>::Image(uint64_t width, uint64_t height, const TPixel& value) : Image<TPixel>(width, height)
 	{
 		std::fill_n(_pixels, _width * _height, value);
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr Image<TPixel>::Image(uint64_t width, uint64_t height, const TPixel* values) : Image<TPixel>(width, height)
 	{
 		std::copy_n(values, _width * _height, _pixels);
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr Image<TPixel>::Image(const std::filesystem::path& path) : Image<TPixel>()
 	{
 		loadFromFile(path);
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr Image<TPixel>::Image(const std::filesystem::path& path, const uint8_t* swizzling) : Image<TPixel>()
 	{
 		loadFromFile(path, swizzling);
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr Image<TPixel>::Image(const std::filesystem::path& path, const std::initializer_list<uint8_t>& swizzling) : Image<TPixel>()
 	{
 		loadFromFile(path, swizzling);
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr Image<TPixel>::Image(const std::istream& stream, ImageFormat format) : Image<TPixel>()
 	{
 		loadFromStream(stream, format);
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr Image<TPixel>::Image(const std::istream& stream, ImageFormat format, const uint8_t* swizzling) : Image<TPixel>()
 	{
 		loadFromStream(stream, format, swizzling);
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr Image<TPixel>::Image(const std::istream& stream, ImageFormat format, const std::initializer_list<uint8_t>& swizzling) : Image<TPixel>()
 	{
 		loadFromStream(stream, format, swizzling);
 	}
 
-	template<PixelConcept TPixel>
-	template<ImageConcept TImage>
+	template<CPixel TPixel>
+	template<CImage TImage>
 	constexpr Image<TPixel>::Image(const TImage& image) : Image<TPixel>()
 	{
 		convertFrom(image);
 	}
 
-	template<PixelConcept TPixel>
-	template<ImageConcept TImage>
+	template<CPixel TPixel>
+	template<CImage TImage>
 	constexpr Image<TPixel>::Image(const TImage& image, const PixelConversionFunction<typename TImage::PixelType, TPixel>& conversionFunc) : Image<TPixel>()
 	{
 		convertFrom(image, conversionFunc);
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr Image<TPixel>::Image(const Image<TPixel>& image) : Image<TPixel>()
 	{
 		_copyFrom(image);
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr Image<TPixel>::Image(Image<TPixel>&& image) : Image<TPixel>()
 	{
 		_moveFrom(std::forward<Image<TPixel>>(image));
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr Image<TPixel>* Image<TPixel>::constructAroundMemory(uint64_t width, uint64_t height, TPixel* memory)
 	{
 		assert(width != 0);
@@ -333,71 +160,113 @@ namespace djv
 		return image;
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr Image<TPixel>& Image<TPixel>::operator=(const Image<TPixel>& image)
 	{
 		_copyFrom(image);
 		return *this;
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr Image<TPixel>& Image<TPixel>::operator=(Image<TPixel>&& image)
 	{
 		_moveFrom(std::forward<Image<TPixel>>(image));
 		return *this;
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr void Image<TPixel>::loadFromFile(const std::filesystem::path& path)
 	{
-		uint8_t swizzling[TPixel::componentCount];
-		_djv::defaultLoadSwizzling<TPixel::componentCount>(swizzling);
+		uint8_t swizzling[componentCount];
+		_djv::defaultLoadSwizzling<componentCount>(swizzling);
 		_loadFromFile(path, swizzling);
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr void Image<TPixel>::loadFromFile(const std::filesystem::path& path, const uint8_t* swizzling)
 	{
 		_loadFromFile(path, swizzling);
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr void Image<TPixel>::loadFromFile(const std::filesystem::path& path, const std::initializer_list<uint8_t>& swizzling)
 	{
-		assert(swizzling.size() == TPixel::componentCount);
+		assert(swizzling.size() == componentCount);
 		_loadFromFile(path, swizzling.begin());
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr void Image<TPixel>::loadFromStream(const std::istream& stream, ImageFormat format)
 	{
-		uint8_t swizzling[TPixel::componentCount];
-		_djv::defaultLoadSwizzling<TPixel::componentCount>(swizzling);
+		uint8_t swizzling[componentCount];
+		_djv::defaultLoadSwizzling<componentCount>(swizzling);
 		_loadFromStream(stream, format, swizzling);
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr void Image<TPixel>::loadFromStream(const std::istream& stream, ImageFormat format, const uint8_t* swizzling)
 	{
 		_loadFromStream(stream, format, swizzling);
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr void Image<TPixel>::loadFromStream(const std::istream& stream, ImageFormat format, const std::initializer_list<uint8_t>& swizzling)
 	{
-		assert(swizzling.size() == TPixel::componentCount);
+		assert(swizzling.size() == componentCount);
 		_loadFromStream(stream, format, swizzling.begin());
 	}
 
-	template<PixelConcept TPixel>
-	template<ImageConcept TImage>
+	template<CPixel TPixel>
+	constexpr void Image<TPixel>::saveToFile(const std::filesystem::path& path) const
+	{
+		uint8_t swizzling[4];
+		_djv::defaultSaveSwizzling<componentCount>(swizzling);
+		_saveToFile(path, swizzling);
+	}
+
+	template<CPixel TPixel>
+	constexpr void Image<TPixel>::saveToFile(const std::filesystem::path& path, const uint8_t* swizzling) const
+	{
+		_saveToFile(path, swizzling);
+	}
+
+	template<CPixel TPixel>
+	constexpr void Image<TPixel>::saveToFile(const std::filesystem::path& path, const std::initializer_list<uint8_t>& swizzling) const
+	{
+		assert(swizzling.size() == 4);
+		_saveToFile(path, swizzling.begin());
+	}
+
+	template<CPixel TPixel>
+	constexpr void Image<TPixel>::saveToStream(const std::istream& stream, ImageFormat format)
+	{
+		uint8_t swizzling[4];
+		_djv::defaultSaveSwizzling<componentCount>(swizzling);
+		_saveToStream(stream, format, swizzling);
+	}
+
+	template<CPixel TPixel>
+	constexpr void Image<TPixel>::saveToStream(const std::istream& stream, ImageFormat format, const uint8_t* swizzling)
+	{
+		_saveToStream(stream, format, swizzling);
+	}
+
+	template<CPixel TPixel>
+	constexpr void Image<TPixel>::saveToStream(const std::istream& stream, ImageFormat format, const std::initializer_list<uint8_t>& swizzling)
+	{
+		assert(swizzling.size() == 4);
+		_saveToStream(stream, format, swizzling);
+	}
+
+	template<CPixel TPixel>
+	template<CImage TImage>
 	constexpr void Image<TPixel>::convertFrom(const TImage& image)
 	{
 		convertFrom(image, _djv::defaultConversionFunction<typename TImage::PixelType, TPixel>);
 	}
 
-	template<PixelConcept TPixel>
-	template<ImageConcept TImage>
+	template<CPixel TPixel>
+	template<CImage TImage>
 	constexpr void Image<TPixel>::convertFrom(const TImage& image, const PixelConversionFunction<typename TImage::PixelType, TPixel>& conversionFunc)
 	{
 		if (_width != image._width || _height != image._height)
@@ -416,9 +285,9 @@ namespace djv
 		}
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	template<scp::InterpolationMethod IMethod>
-	constexpr void Image<TPixel>::resize(const Image<TPixel>& image)
+	constexpr void Image<TPixel>::resizeFrom(const Image<TPixel>& image)
 	{
 		// Simple copy
 
@@ -540,8 +409,8 @@ namespace djv
 		}
 	}
 
-	template<PixelConcept TPixel>
-	constexpr void Image<TPixel>::crop(const Image<TPixel>& image, uint64_t x, uint64_t y)
+	template<CPixel TPixel>
+	constexpr void Image<TPixel>::cropFrom(const Image<TPixel>& image, uint64_t x, uint64_t y)
 	{
 		assert(x + _width <= image._width);
 		assert(y + _height <= image._height);
@@ -555,21 +424,19 @@ namespace djv
 		}
 	}
 
-	template<PixelConcept TPixel>
-	constexpr Image<TPixel>& Image<TPixel>::transpose()
+	template<CPixel TPixel>
+	constexpr void Image<TPixel>::transpose()
 	{
 		scp::Matrix<TPixel>* matrix = scp::Matrix<TPixel>::createAroundMemory(_height, _width, _pixels);
 		matrix->transpose();
 		delete matrix;
 
 		std::swap(_width, _height);
-
-		return *this;
 	}
 
-	template<PixelConcept TPixel>
-	template<scp::InterpolationMethod IMethod>
-	constexpr Image<TPixel>& Image<TPixel>::rotate(float angle, const TPixel& backgroundColor)
+	template<CPixel TPixel>
+	template<scp::InterpolationMethod IMethod, scp::BorderBehaviour BBehaviour>
+	constexpr void Image<TPixel>::rotate(float angle)
 	{
 		if (std::abs(angle - 0.f) < 1e-3)
 		{
@@ -578,15 +445,15 @@ namespace djv
 		else if (std::abs(angle - 0.5f * std::numbers::pi) < 1e-3)
 		{
 			transpose();
-			flip(true, false);
+			flip<true, false>();
 		}
 		else if (std::abs(angle - std::numbers::pi) < 1e-3)
 		{
-			flip(true, true);
+			flip<true, true>();
 		}
 		else if (std::abs(angle - 1.5f * std::numbers::pi) < 1e-3)
 		{
-			flip(true, false);
+			flip<true, false>();
 			transpose();
 		}
 		else
@@ -624,9 +491,13 @@ namespace djv
 					{
 						*it = tensor->getInterpolated<float, IMethod>(indices);
 					}
+					else if constexpr (BBehaviour == scp::BorderBehaviour::Zero)
+					{
+						*it = _zeroColor;
+					}
 					else
 					{
-						*it = backgroundColor;
+						*it = tensor->getOutOfBound<BBehaviour>({ static_cast<int64_t>(indices[0]), static_cast<int64_t>(indices[1]) });
 					}
 				}
 			}
@@ -638,17 +509,16 @@ namespace djv
 			}
 			_pixels = pixels;
 		}
-
-		return *this;
 	}
 
-	template<PixelConcept TPixel>
-	constexpr Image<TPixel>& Image<TPixel>::flip(bool vertically, bool horizontally)
+	template<CPixel TPixel>
+	template<bool Vertically, bool Horizontally>
+	constexpr void Image<TPixel>::flip()
 	{
 		uint64_t index;
 		uint64_t revIndex;
 
-		if (vertically && horizontally)
+		if constexpr (Vertically && Horizontally)
 		{
 			index = 0;
 			revIndex = _width * _height - 1;
@@ -657,7 +527,7 @@ namespace djv
 				std::swap(_pixels[index], _pixels[revIndex]);
 			}
 		}
-		else if (vertically && !horizontally)
+		else if constexpr (Vertically && !Horizontally)
 		{
 			const uint64_t halfHeight = _height / 2;
 
@@ -671,7 +541,7 @@ namespace djv
 				}
 			}
 		}
-		else if (!vertically && horizontally)
+		else if constexpr (!Vertically && Horizontally)
 		{
 			for (uint64_t j = 0; j < _height; ++j)
 			{
@@ -683,12 +553,10 @@ namespace djv
 				}
 			}
 		}
-
-		return *this;
 	}
 
-	template<PixelConcept TPixel>
-	constexpr Image<TPixel>& Image<TPixel>::draw(const Shape& shape, const TPixel& color)
+	template<CPixel TPixel>
+	constexpr void Image<TPixel>::draw(const Shape& shape, const TPixel& color)
 	{
 		auto it = shape.getPixelIterator();
 
@@ -700,13 +568,18 @@ namespace djv
 				_pixels[x * _height + y] = color;
 			}
 		}
-
-		return *this;
 	}
 
-	template<PixelConcept TPixel>
-	constexpr Image<TPixel>& Image<TPixel>::draw(const Shape& shape, const Image<TPixel>& image)
+	template<CPixel TPixel>
+	constexpr void Image<TPixel>::draw(const Shape& shape, const Image<TPixel>& image)
 	{
+		// TODO: Rewrite draw
+		/*
+			- This function only allows to draw a shape composed of "image" into "this".
+			- The part of the image drawn should be offsetable...
+			- Pixels out of image but in shape should be drawn using BBehaviour/_zeroColor
+		*/
+
 		auto it = shape.getPixelIterator();
 
 		int64_t x, y;
@@ -714,56 +587,485 @@ namespace djv
 		{
 			if (x >= 0 && y >= 0 && x < _width && y < _height && x < image._width && y < image._height)
 			{
-				_pixels[x * _height + y] = image._pixels[x * _height + y];
+				_pixels[y * _width + x] = image._pixels[y * image._width + x];
+			}
+		}
+	}
+
+	template<CPixel TPixel>
+	template<scp::BorderBehaviour BBehaviour>
+	constexpr void Image<TPixel>::blurGaussian(float sigma)
+	{
+		blurGaussian<BBehaviour>(sigma, sigma);
+	}
+
+	template<CPixel TPixel>
+	template<scp::BorderBehaviour BBehaviour>
+	constexpr void Image<TPixel>::blurGaussian(float sigmaX, float sigmaY)
+	{
+		const int64_t rx = sigmaX * 2.57;
+		const int64_t ry = sigmaY * 2.57;
+		const uint64_t dx = 2 * rx + 1;
+		const uint64_t dy = 2 * ry + 1;
+
+		float acc[componentCount];
+
+		// Compute gaussian weights
+
+		float gaussianFactorX = 0.f;
+		float* weightsX = reinterpret_cast<float*>(alloca(sizeof(float) * dx));
+		for (int64_t i = 0, x = -rx; i < dx; ++i, ++x)
+		{
+			const float ratio = x / sigmaX;
+			weightsX[i] = std::exp(-ratio * ratio / 2);
+			gaussianFactorX += weightsX[i];
+		}
+		for (int64_t i = 0, x = -rx; i < dx; ++i, ++x)
+		{
+			weightsX[i] /= gaussianFactorX;
+		}
+
+		float gaussianFactorY = 0.f;
+		float* weightsY = reinterpret_cast<float*>(alloca(sizeof(float) * dy));
+		for (int64_t i = 0, y = -ry; i < dy; ++i, ++y)
+		{
+			const float ratio = y / sigmaY;
+			weightsY[i] = std::exp(-ratio * ratio / 2);
+			gaussianFactorY += weightsY[i];
+		}
+		for (int64_t i = 0, y = -ry; i < dy; ++i, ++y)
+		{
+			weightsY[i] /= gaussianFactorY;
+		}
+
+		// Compute gaussian blur horizontally
+
+		TPixel* scanline = new TPixel[std::max(_width, _height)];
+
+		TPixel* it = _pixels;
+		for (int64_t j = 0; j < _height; ++j)
+		{
+			for (int64_t i = 0; i < _width; ++i, ++scanline)
+			{
+				std::fill_n(acc, componentCount, 0.f);
+				for (int64_t p = 0, x = i - rx; p < dx; ++p, ++x)
+				{
+					const TPixel& pixel = getOutOfBound<BBehaviour>(x, j);
+					for (uint8_t k = 0; k < componentCount; ++k)
+					{
+						acc[k] += pixel[k] * weightsX[p];
+					}
+				}
+
+				for (uint8_t k = 0; k < componentCount; ++k)
+				{
+					(*scanline)[k] = acc[k];
+				}
+			}
+
+			scanline -= _width;
+			std::copy_n(scanline, _width, it);
+			it += _width;
+		}
+
+		// Compute gaussian blur vertically
+
+		const TPixel* const scanlineEnd = scanline;
+		for (int64_t i = 0; i < _width; ++i)
+		{
+			for (int64_t j = 0; j < _height; ++j, ++scanline)
+			{
+				std::fill_n(acc, componentCount, 0.f);
+				for (int64_t q = 0, y = j - ry; q < dy; ++q, ++y)
+				{
+					const TPixel& pixel = getOutOfBound<BBehaviour>(i, y);
+					for (uint8_t k = 0; k < componentCount; ++k)
+					{
+						acc[k] += pixel[k] * weightsY[q];
+					}
+				}
+
+				for (uint8_t k = 0; k < componentCount; ++k)
+				{
+					(*scanline)[k] = acc[k];
+				}
+			}
+
+			it = _pixels + i + _width * (_height - 1);
+			for (; scanline != scanlineEnd; it -= _width)
+			{
+				*it = *(--scanline);
 			}
 		}
 
-		return *this;
+		delete[] scanline;
 	}
 
-	template<PixelConcept TPixel>
-	constexpr void Image<TPixel>::saveToFile(const std::filesystem::path& path) const
+	template<CPixel TPixel>
+	template<scp::BorderBehaviour BBehaviour>
+	constexpr void Image<TPixel>::blurMean(uint64_t radius)
 	{
-		uint8_t swizzling[4];
-		_djv::defaultSaveSwizzling<TPixel::componentCount>(swizzling);
-		_saveToFile(path, swizzling);
+		blurMean<BBehaviour>(radius, radius);
 	}
 
-	template<PixelConcept TPixel>
-	constexpr void Image<TPixel>::saveToFile(const std::filesystem::path& path, const uint8_t* swizzling) const
+	template<CPixel TPixel>
+	template<scp::BorderBehaviour BBehaviour>
+	constexpr void Image<TPixel>::blurMean(uint64_t radiusX, uint64_t radiusY)
 	{
-		_saveToFile(path, swizzling);
+		const int64_t rx = radiusX;
+		const int64_t ry = radiusY;
+		const uint64_t dx = 2 * rx + 1;
+		const uint64_t dy = 2 * ry + 1;
+
+		float acc[componentCount];
+
+		// Compute mean blur horizontally
+
+		TPixel* scanline = new TPixel[std::max(_width, _height)];
+
+		TPixel* it = _pixels;
+		for (int64_t j = 0; j < _height; ++j)
+		{
+			std::fill_n(acc, componentCount, 0.f);
+			for (int64_t i = -rx; i <= rx; ++i)
+			{
+				const TPixel& pixel = getOutOfBound<BBehaviour>(i, j);
+				for (uint8_t k = 0; k < componentCount; ++k)
+				{
+					acc[k] += pixel[k];
+				}
+			}
+
+			for (uint8_t k = 0; k < componentCount; ++k)
+			{
+				(*scanline)[k] = acc[k] / dx;
+			}
+			++scanline;
+
+			for (int64_t i = 1, iPreced = -rx, iNext = 1 + rx; i < _width; ++i, ++iPreced, ++iNext, ++scanline)
+			{
+				const TPixel& pixelPreced = getOutOfBound<BBehaviour>(iPreced, j);
+				const TPixel& pixelNext = getOutOfBound<BBehaviour>(iNext, j);
+				for (uint8_t k = 0; k < componentCount; ++k)
+				{
+					acc[k] -= pixelPreced[k];
+					acc[k] += pixelNext[k];
+					(*scanline)[k] = acc[k] / dx;
+				}
+			}
+
+			scanline -= _width;
+			std::copy_n(scanline, _width, it);
+			it += _width;
+		}
+
+		// Compute mean blur vertically
+
+		const TPixel* const scanlineEnd = scanline;
+		for (int64_t i = 0; i < _width; ++i)
+		{
+			std::fill_n(acc, componentCount, 0.0);
+			for (int64_t j = -ry; j <= ry; ++j)
+			{
+				const TPixel& pixel = getOutOfBound<BBehaviour>(i, j);
+				for (uint8_t k = 0; k < componentCount; ++k)
+				{
+					acc[k] += pixel[k];
+				}
+			}
+
+			for (uint8_t k = 0; k < componentCount; ++k)
+			{
+				(*scanline)[k] = acc[k] / dy;
+			}
+			++scanline;
+
+			for (int64_t j = 1, jPreced = -ry, jNext = 1 + ry; j < _height; ++j, ++jPreced, ++jNext, ++scanline)
+			{
+				const TPixel& pixelPreced = getOutOfBound<BBehaviour>(i, jPreced);
+				const TPixel& pixelNext = getOutOfBound<BBehaviour>(i, jNext);
+				for (uint8_t k = 0; k < componentCount; ++k)
+				{
+					acc[k] -= pixelPreced[k];
+					acc[k] += pixelNext[k];
+					(*scanline)[k] = acc[k] / dy;
+				}
+			}
+
+			it = _pixels + i + _width * (_height - 1);
+			for (; scanline != scanlineEnd; it -= _width)
+			{
+				*it = *(--scanline);
+			}
+		}
+
+		delete[] scanline;
 	}
 
-	template<PixelConcept TPixel>
-	constexpr void Image<TPixel>::saveToFile(const std::filesystem::path& path, const std::initializer_list<uint8_t>& swizzling) const
+	template<CPixel TPixel>
+	template<scp::BorderBehaviour BBehaviour>
+	constexpr void Image<TPixel>::blurMedian(uint64_t radius)
 	{
-		assert(swizzling.size() == 4);
-		_saveToFile(path, swizzling.begin());
+		blurMedian<BBehaviour>(radius, radius);
 	}
 
-	template<PixelConcept TPixel>
-	constexpr void Image<TPixel>::saveToStream(const std::istream& stream, ImageFormat format)
+	template<CPixel TPixel>
+	template<scp::BorderBehaviour BBehaviour>
+	constexpr void Image<TPixel>::blurMedian(uint64_t radiusX, uint64_t radiusY)
 	{
-		uint8_t swizzling[4];
-		_djv::defaultSaveSwizzling<TPixel::componentCount>(swizzling);
-		_saveToStream(stream, format, swizzling);
+		const int64_t rx = radiusX;
+		const int64_t ry = radiusY;
+		const uint64_t dx = 2 * radiusX + 1;
+		const uint64_t dy = 2 * radiusY + 1;
+		const uint64_t histIndex = (dx * dy) / 2;
+
+		std::deque<const TPixel*> pixelList;
+
+		TPixel* itResult = new TPixel[_width * _height];
+
+		if constexpr (sizeof(TComponent) == 1)
+		{
+			uint8_t tmp;
+			std::array<std::array<uint64_t, 256>, componentCount> histogram;
+
+			for (uint64_t j = 0; j < _height; ++j)
+			{
+				// Create histogram at start of line
+
+				pixelList.clear();
+				for (uint8_t k = 0; k < componentCount; ++k)
+				{
+					std::fill_n(histogram[k].data(), 256, 0);
+				}
+
+				for (int64_t i = -rx; i <= rx; ++i)
+				{
+					for (int64_t p = 0, y = j - ry; p < dy; ++p, ++y)
+					{
+						pixelList.push_back(&getOutOfBound<BBehaviour>(i, y));
+						for (uint8_t k = 0; k < componentCount; ++k)
+						{
+							pixelList.back()->get(k, tmp);
+							++histogram[k][tmp];
+						}
+					}
+				}
+
+				for (uint8_t k = 0; k < componentCount; ++k)
+				{
+					uint64_t* it = histogram[k].data();
+					uint64_t n = *it;
+					while (n < histIndex) { n += *(++it); }
+					itResult->set(k, static_cast<uint8_t>(std::distance(histogram[k].data(), it)));
+				}
+				++itResult;
+
+				// Update histogram along the line
+
+				for (uint64_t i = 1; i < _width; ++i, ++itResult)
+				{
+					int64_t xBefore = i - rx - 1;
+					int64_t xAfter = i + rx;
+
+					for (int64_t p = 0, y = j - ry; p < dy; ++p, ++y)
+					{
+						pixelList.push_back(&getOutOfBound<BBehaviour>(xAfter, y));
+						for (uint8_t k = 0; k < componentCount; ++k)
+						{
+							pixelList.back()->get(k, tmp);
+							++histogram[k][tmp];
+							pixelList.front()->get(k, tmp);
+							--histogram[k][tmp];
+						}
+						pixelList.pop_front();
+					}
+
+					for (uint8_t k = 0; k < componentCount; ++k)
+					{
+						uint64_t* it = histogram[k].data();
+						uint64_t n = *it;
+						while (n < histIndex) { n += *(++it); }
+						itResult->set(k, static_cast<uint8_t>(std::distance(histogram[k].data(), it)));
+					}
+				}
+			}
+		}
+		else
+		{
+			std::array<std::map<TComponent, uint64_t>, componentCount> histogram;
+
+			for (uint64_t j = 0; j < _height; ++j)
+			{
+				// Create histogram at start of line
+
+				pixelList.clear();
+				for (uint8_t k = 0; k < componentCount; ++k)
+				{
+					histogram[k].clear();
+				}
+
+				for (int64_t i = -rx; i <= rx; ++i)
+				{
+					for (int64_t p = 0, y = j - ry; p < dy; ++p, ++y)
+					{
+						pixelList.push_back(&getOutOfBound<BBehaviour>(i, y));
+						for (uint8_t k = 0; k < componentCount; ++k)
+						{
+							auto it = histogram[k].find((*pixelList.back())[k]);
+							if (it == histogram[k].end())
+							{
+								histogram[k].emplace((*pixelList.back())[k], 1);
+							}
+							else
+							{
+								++it->second;
+							}
+						}
+					}
+				}
+
+				for (uint8_t k = 0; k < componentCount; ++k)
+				{
+					auto it = histogram[k].begin();
+					uint64_t n = it->second;
+					while (n < histIndex)
+					{
+						++it;
+						n += it->second;
+					}
+					(*itResult)[k] = it->first;
+				}
+				++itResult;
+
+				// Update histogram along the line
+
+				for (uint64_t i = 1; i < _width; ++i, ++itResult)
+				{
+					int64_t xBefore = i - rx - 1;
+					int64_t xAfter = i + rx;
+
+					for (int64_t p = 0, y = j - ry; p < dy; ++p, ++y)
+					{
+						pixelList.push_back(&getOutOfBound<BBehaviour>(xAfter, y));
+						for (uint8_t k = 0; k < componentCount; ++k)
+						{
+							auto it = histogram[k].find((*pixelList.back())[k]);
+							if (it == histogram[k].end())
+							{
+								histogram[k].emplace((*pixelList.back())[k], 1);
+							}
+							else
+							{
+								++it->second;
+							}
+
+							it = histogram[k].find((*pixelList.front())[k]);
+							--it->second;
+							if (it->second == 0)
+							{
+								histogram[k].erase(it);
+							}
+						}
+						pixelList.pop_front();
+					}
+
+					for (uint8_t k = 0; k < componentCount; ++k)
+					{
+						auto it = histogram[k].begin();
+						uint64_t n = it->second;
+						while (n < histIndex)
+						{
+							++it;
+							n += it->second;
+						}
+						(*itResult)[k] = it->first;
+					}
+				}
+			}
+		}
+
+		itResult -= _width * _height;
+		std::copy_n(itResult, _width * _height, _pixels);
+		delete[] itResult;
 	}
 
-	template<PixelConcept TPixel>
-	constexpr void Image<TPixel>::saveToStream(const std::istream& stream, ImageFormat format, const uint8_t* swizzling)
+	template<CPixel TPixel>
+	template<scp::BorderBehaviour BBehaviour>
+	constexpr void Image<TPixel>::blurGaussianBilateral(float sigmaSpace, float sigmaColor)
 	{
-		_saveToStream(stream, format, swizzling);
+		const int64_t r = sigmaSpace * 2.57;
+		const uint64_t d = 2 * r + 1;
+
+		float acc[componentCount];
+		float value[componentCount];
+		float tmp[componentCount];
+		float ratio, coeff, coeffSpace, coeffColor;
+		const TPixel* pixel;
+
+		TPixel* itResult = new TPixel[_width * _height];
+		for (uint64_t j = 0; j < _height; ++j)
+		{
+			for (uint64_t i = 0; i < _width; ++i, ++itResult)
+			{
+				pixel = &getOutOfBound<BBehaviour>(i, j);
+				ratio = 0.0;
+				for (uint8_t k = 0; k < componentCount; ++k)
+				{
+					acc[k] = 0.0;
+					pixel->get(k, value[k]);
+				}
+
+				for (int64_t q = 0, y = j - r; q < d; ++q, ++y)
+				{
+					for (int64_t p = 0, x = i - r; p < d; ++p, ++x)
+					{
+						coeffColor = 0.0;
+						coeffSpace = ((x - i) * (x - i) + (y - j) * (y - j)) / (2.0 * sigmaSpace);
+
+						pixel = &getOutOfBound<BBehaviour>(x, y);
+						for (uint8_t k = 0; k < componentCount; ++k)
+						{
+							pixel->get(k, tmp[k]);
+							coeffColor += (tmp[k] - value[k]) * (tmp[k] - value[k]);
+						}
+
+						coeffColor /= (8.0 * sigmaColor);
+						coeff = std::exp(-coeffSpace - coeffColor);
+
+						for (uint8_t k = 0; k < componentCount; ++k)
+						{
+							acc[k] += tmp[k] * coeff;
+						}
+
+						ratio += coeff;
+					}
+				}
+
+				for (uint8_t k = 0; k < componentCount; ++k)
+				{
+					itResult->set(k, acc[k] / ratio);
+				}
+			}
+		}
+
+		itResult -= _width * _height;
+		std::copy_n(itResult, _width * _height, _pixels);
+		delete[] itResult;
 	}
 
-	template<PixelConcept TPixel>
-	constexpr void Image<TPixel>::saveToStream(const std::istream& stream, ImageFormat format, const std::initializer_list<uint8_t>& swizzling)
+	template<CPixel TPixel>
+	constexpr bool Image<TPixel>::operator==(const Image<TPixel>& image) const
 	{
-		assert(swizzling.size() == 4);
-		_saveToStream(stream, format, swizzling);
+		return _width == image._width && _height == image._height && std::equal(_pixels, _pixels + _width * _height, image._pixels);
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
+	constexpr bool Image<TPixel>::operator!=(const Image<TPixel>& image) const
+	{
+		return !operator==(image);
+	}
+
+	template<CPixel TPixel>
 	constexpr TPixel& Image<TPixel>::operator[](const std::initializer_list<uint64_t>& indices)
 	{
 		assert(indices.size() == 2);
@@ -772,7 +1074,7 @@ namespace djv
 		return _pixels[indices.begin()[1] * _width + indices.begin()[0]];
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr const TPixel& Image<TPixel>::operator[](const std::initializer_list<uint64_t>& indices) const
 	{
 		assert(indices.size() == 2);
@@ -781,79 +1083,134 @@ namespace djv
 		return _pixels[indices.begin()[1] * _width + indices.begin()[0]];
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
+	template<scp::BorderBehaviour BBehaviour>
+	constexpr const TPixel& Image<TPixel>::getOutOfBound(int64_t x, int64_t y) const
+	{
+		if constexpr (BBehaviour == scp::BorderBehaviour::Zero)
+		{
+			if (x < 0 || x >= _width || y < 0 || y >= _height)
+			{
+				return _zeroColor;
+			}
+			else
+			{
+				return _pixels[y * _width + x];
+			}
+		}
+		else if constexpr (BBehaviour == scp::BorderBehaviour::Continuous)
+		{
+			uint64_t ux = x & -(x > 0);
+			ux = (ux | -(ux >= _width)) & ((_width - 1) | -(ux < _width));
+
+			uint64_t uy = y & -(y > 0);
+			uy = (uy | -(uy >= _height)) & ((_height - 1) | -(uy < _height));
+
+			return _pixels[uy * _width + ux];
+		}
+		else if constexpr (BBehaviour == scp::BorderBehaviour::Periodic)
+		{
+			uint64_t ux = x;
+			if (x < 0 || x >= _width)
+			{
+				ux = (x % _width) + (_width & -(x < 0));
+			}
+
+			uint64_t uy = y;
+			if (y < 0 || y >= _height)
+			{
+				uy = (y % _height) + (_height & -(y < 0));
+			}
+
+			return _pixels[uy * _width + ux];
+		}
+	}
+
+	template<CPixel TPixel>
 	constexpr TPixel* Image<TPixel>::begin()
 	{
 		return _pixels;
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr TPixel* Image<TPixel>::end()
 	{
 		return _pixels + _width * _height;
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr const TPixel* Image<TPixel>::begin() const
 	{
 		return _pixels;
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr const TPixel* Image<TPixel>::end() const
 	{
 		return _pixels + _width * _height;
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr const TPixel* Image<TPixel>::cbegin() const
 	{
 		return _pixels;
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr const TPixel* Image<TPixel>::cend() const
 	{
 		return _pixels + _width * _height;
 	}
 
-	template<PixelConcept TPixel>
-	constexpr TPixel* Image<TPixel>::getData()
-	{
-		return _pixels;
-	}
-
-	template<PixelConcept TPixel>
-	constexpr const TPixel* Image<TPixel>::getData() const
-	{
-		return _pixels;
-	}
-
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr const uint64_t& Image<TPixel>::getWidth() const
 	{
 		return _width;
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr const uint64_t& Image<TPixel>::getHeight() const
 	{
 		return _height;
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
+	constexpr TPixel* Image<TPixel>::getData()
+	{
+		return _pixels;
+	}
+
+	template<CPixel TPixel>
+	constexpr const TPixel* Image<TPixel>::getData() const
+	{
+		return _pixels;
+	}
+
+	template<CPixel TPixel>
 	constexpr bool Image<TPixel>::isValid() const
 	{
 		return _pixels;
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
+	constexpr void Image<TPixel>::setZeroColor(const TPixel& color)
+	{
+		_zeroColor = color;
+	}
+
+	template<CPixel TPixel>
+	constexpr const TPixel& Image<TPixel>::getZeroColor() const
+	{
+		return _zeroColor;
+	}
+
+	template<CPixel TPixel>
 	constexpr Image<TPixel>::~Image()
 	{
 		_destroy();
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr void Image<TPixel>::_create(uint64_t width, uint64_t height)
 	{
 		assert(width != 0);
@@ -865,7 +1222,7 @@ namespace djv
 		_owner = true;
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr void Image<TPixel>::_copyFrom(const Image<TPixel>& image)
 	{
 		if (_width != image._width || _height != image._height)
@@ -877,7 +1234,7 @@ namespace djv
 		std::copy_n(image._pixels, _width * _height, _pixels);
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr void Image<TPixel>::_moveFrom(Image<TPixel>&& image)
 	{
 		if (!_owner || !image._owner)
@@ -893,7 +1250,7 @@ namespace djv
 		_pixels = image._pixels;
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr void Image<TPixel>::_destroy()
 	{
 		if (_pixels && _owner)
@@ -907,7 +1264,7 @@ namespace djv
 		_owner = true;
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr bool Image<TPixel>::_extensionToImageFormat(const std::filesystem::path& extension, ImageFormat& imageFormat)
 	{
 		static const std::unordered_map<std::filesystem::path, ImageFormat> extensionToImageFormat = {
@@ -931,7 +1288,7 @@ namespace djv
 		}
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr void Image<TPixel>::_loadFromFile(const std::filesystem::path& path, const uint8_t* swizzling)
 	{
 		if (!std::filesystem::exists(path))
@@ -952,12 +1309,12 @@ namespace djv
 		}
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr void Image<TPixel>::_loadFromStream(std::istream& stream, ImageFormat format, const uint8_t* swizzling)
 	{
 		assert(stream);
 
-		for (uint8_t i = 0; i < TPixel::componentCount; ++i)
+		for (uint8_t i = 0; i < componentCount; ++i)
 		{
 			assert(swizzling[i] < 4 || swizzling[i] == UINT8_MAX);
 		}
@@ -965,75 +1322,45 @@ namespace djv
 		(this->*(_imageFormatToLoadFunc[static_cast<size_t>(format)]))(stream, swizzling);
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr void Image<TPixel>::_loadFromPng(std::istream& stream, const uint8_t* swizzling)
 	{
-		dsk::fmt::PngIStream pngIStream;
-		pngIStream.setSource(stream);
+		stream.seekg(0, std::ios_base::end);
+		uint64_t length = stream.tellg();
+		stream.seekg(0);
+		uint8_t* buffer = new uint8_t[length];
+		stream.read((char*) buffer, length);
 
-		// TODO: Repair PNG in Diskon and replace this by the commented block below (stream read instead of buffered read)
-		// TODO: Do the same for _saveToPng
+		int w, h, channels;
+		uint8_t* img = stbi_load_from_memory(buffer, length, &w, &h, &channels, 4);
 
-		dsk::fmt::png::File<TComponent> pngFile;
-		pngIStream.readFile(pngFile);
-
-		if (_width != pngFile.header.imageStructure.width || _height != pngFile.header.imageStructure.height)
+		if (_width != w || _height != h)
 		{
 			_destroy();
-			_create(pngFile.header.imageStructure.width, pngFile.header.imageStructure.height);
+			_create(w, h);
 		}
 
 		const uint64_t n = _width * _height;
-		TComponent* buffer = pngFile.pixels.data();
-
-		for (uint64_t i = 0; i < n; ++i, buffer += 4)
+		for (uint64_t i = 0; i < n; ++i)
 		{
-			for (uint8_t j = 0; j < TPixel::componentCount; ++j)
+			for (uint8_t j = 0; j < componentCount; ++j)
 			{
-				if (swizzling[j] == UINT8_MAX)
+				if (swizzling[j] == 255)
 				{
-					_pixels[i][j] = colors::black<TComponent, TPixel::componentCount>[j];
+					_pixels[i].set(j, 0);
 				}
 				else
 				{
-					_pixels[i][j] = buffer[swizzling[j]];
+					_pixels[i].set(j, img[i*4 + swizzling[j]]);
 				}
 			}
 		}
 
-		// dsk::fmt::png::Header pngHeader;
-		// pngIStream.readHeader(pngHeader);
-		// 
-		// _create(pngHeader.imageStructure.width, pngHeader.imageStructure.height);
-		// 
-		// const uint64_t n = _width * _height;
-		// TComponent buffer[4];
-		// 
-		// // TODO: Check if something must be done with metadatas...
-		// // TODO: Deinterlacing
-		// 
-		// for (uint64_t i = 0; i < n; ++i)
-		// {
-		// 	pngIStream.readPixels(buffer, 1);
-		// 
-		// 	for (uint8_t j = 0; j < TPixel::componentCount; ++j)
-		// 	{
-		// 		if (swizzling[j] == UINT8_MAX)
-		// 		{
-		// 			_pixels[i][j] = colors::black<TComponent, TPixel::componentCount>[j];
-		// 		}
-		// 		else
-		// 		{
-		// 			_pixels[i][j] = buffer[swizzling[j]];
-		// 		}
-		// 	}
-		// }
-		// 
-		// dsk::fmt::png::Ending pngEnding;
-		// pngIStream.readEnding(pngEnding);
+		stbi_image_free(img);
+		delete[] buffer;
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	template<ImageFormat Format>
 	constexpr void Image<TPixel>::_loadFromPnm(std::istream& stream, const uint8_t* swizzling)
 	{
@@ -1088,15 +1415,15 @@ namespace djv
 		{
 			pnmIStream.readPixels(buffer, 1);
 
-			for (uint64_t j = 0; j < TPixel::componentCount; ++j)
+			for (uint8_t j = 0; j < componentCount; ++j)
 			{
 				if (swizzling[j] == UINT8_MAX)
 				{
-					_pixels[i][j] = colors::black<TComponent, TPixel::componentCount>[j];
+					_pixels[i][j] = colors::black<TComponent, componentCount>[j];
 				}
 				else if (swizzling[j] == 3)
 				{
-					_pixels[i][j] = colors::white<TComponent, TPixel::componentCount>[j];
+					_pixels[i][j] = colors::white<TComponent, componentCount>[j];
 				}
 				else
 				{
@@ -1105,7 +1432,7 @@ namespace djv
 						case dsk::fmt::pnm::Format::PlainPBM:
 						case dsk::fmt::pnm::Format::RawPBM:
 						{
-							_pixels[i][j] = buffer[0] ? colors::white<TComponent, TPixel::componentCount>[j] : colors::black<TComponent, TPixel::componentCount>[j];
+							_pixels[i][j] = buffer[0] ? colors::white<TComponent, componentCount>[j] : colors::black<TComponent, componentCount>[j];
 							break;
 						}
 						case dsk::fmt::pnm::Format::PlainPGM:
@@ -1126,7 +1453,7 @@ namespace djv
 		}
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr void Image<TPixel>::_saveToFile(const std::filesystem::path& path, const uint8_t* swizzling) const
 	{
 		std::ofstream stream(path, std::ios::out | std::ios::binary);
@@ -1142,51 +1469,62 @@ namespace djv
 		}
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
 	constexpr void Image<TPixel>::_saveToStream(std::ostream& stream, ImageFormat format, const uint8_t* swizzling) const
 	{
 		assert(stream);
-		assert(swizzling[0] < TPixel::componentCount || swizzling[0] == UINT8_MAX);
-		assert(swizzling[1] < TPixel::componentCount || swizzling[1] == UINT8_MAX);
-		assert(swizzling[2] < TPixel::componentCount || swizzling[2] == UINT8_MAX);
-		assert(swizzling[3] < TPixel::componentCount || swizzling[3] == UINT8_MAX);
+		assert(swizzling[0] < componentCount || swizzling[0] == UINT8_MAX);
+		assert(swizzling[1] < componentCount || swizzling[1] == UINT8_MAX);
+		assert(swizzling[2] < componentCount || swizzling[2] == UINT8_MAX);
+		assert(swizzling[3] < componentCount || swizzling[3] == UINT8_MAX);
 
 		(this->*(_imageFormatToSaveFunc[static_cast<size_t>(format)]))(stream, swizzling);
 	}
 
-	template<PixelConcept TPixel>
-	constexpr void Image<TPixel>::_saveToPng(std::ostream& stream, const uint8_t* swizzling) const
+	namespace _djv
 	{
-		// TODO (see _loadFromPng)
-
-		dsk::fmt::PngOStream pngOStream;
-		pngOStream.setDestination(stream);
-
-		dsk::fmt::png::File<TComponent> pngFile;
-		pngFile.header.imageStructure.width = _width;
-		pngFile.header.imageStructure.height = _height;
-		pngFile.header.imageStructure.bitDepth = 8;
-		pngFile.header.imageStructure.colorType = dsk::fmt::png::ColorType::TrueColorAlpha;
-		pngFile.header.imageStructure.compressionMethod = dsk::fmt::png::CompressionMethod::Deflate;
-		pngFile.header.imageStructure.filterMethod = dsk::fmt::png::FilterMethod::Default;
-		pngFile.header.imageStructure.interlaceMethod = dsk::fmt::png::InterlaceMethod::NoInterlace;
-
-		const uint64_t n = _width * _height;
-		pngFile.pixels.resize(4 * n);
-		TComponent* buffer = pngFile.pixels.data();
-
-		for (uint64_t i = 0; i < n; ++i, buffer += 4)
+		inline void stbWriteFunc(void* context, void* data, int size)
 		{
-			buffer[0] = swizzling[0] == UINT8_MAX ? colors::black<TComponent, TPixel::componentCount>[0] : _pixels[i][swizzling[0]];
-			buffer[1] = swizzling[1] == UINT8_MAX ? colors::black<TComponent, TPixel::componentCount>[1] : _pixels[i][swizzling[1]];
-			buffer[2] = swizzling[2] == UINT8_MAX ? colors::black<TComponent, TPixel::componentCount>[2] : _pixels[i][swizzling[2]];
-			buffer[3] = swizzling[3] == UINT8_MAX ? colors::white<TComponent, TPixel::componentCount>[3] : _pixels[i][swizzling[3]];
+			reinterpret_cast<std::ostream*>(context)->write((char*) data, size);
 		}
-
-		pngOStream.writeFile(pngFile);
 	}
 
-	template<PixelConcept TPixel>
+	template<CPixel TPixel>
+	constexpr void Image<TPixel>::_saveToPng(std::ostream& stream, const uint8_t* swizzling) const
+	{
+		uint8_t* img = new uint8_t[_width * _height * 4];
+
+		const uint64_t n = _width * _height;
+		for (uint64_t i = 0; i < n; ++i)
+		{
+			for (uint8_t j = 0; j < 4; ++j, ++img)
+			{
+				if (swizzling[j] == 255)
+				{
+					if (j == 3)
+					{
+						*img = 255;
+					}
+					else
+					{
+						*img = 0;
+					}
+				}
+				else
+				{
+					_pixels[i].get(swizzling[j], *img);
+				}
+			}
+		}
+
+		img -= _width * _height * 4;
+
+		stbi_write_png_to_func(_djv::stbWriteFunc, &stream, _width, _height, 4, img, _width * 4);
+
+		delete[] img;
+	}
+
+	template<CPixel TPixel>
 	template<ImageFormat Format>
 	constexpr void Image<TPixel>::_saveToPnm(std::ostream& stream, const uint8_t* swizzling) const
 	{
@@ -1198,7 +1536,15 @@ namespace djv
 		dsk::fmt::pnm::Header pnmHeader;
 		pnmHeader.width = _width;
 		pnmHeader.height = _height;
-		pnmHeader.maxSampleVal.emplace(65535);
+
+		if constexpr (sizeof(TComponent) == 1)
+		{
+			pnmHeader.maxSampleVal.emplace(255);
+		}
+		else
+		{
+			pnmHeader.maxSampleVal.emplace(65535);
+		}
 
 		switch (Format)
 		{
@@ -1240,7 +1586,16 @@ namespace djv
 					}
 					else
 					{
-						_pixels[i].get(swizzling[0], buffer[0]);
+						if constexpr (sizeof(TComponent) == 1)
+						{
+							uint8_t tmp;
+							_pixels[i].get(swizzling[0], tmp);
+							buffer[0] = tmp;
+						}
+						else
+						{
+							_pixels[i].get(swizzling[0], buffer[0]);
+						}
 					}
 
 					break;
@@ -1255,7 +1610,16 @@ namespace djv
 						}
 						else
 						{
-							_pixels[i].get(swizzling[j], buffer[j]);
+							if constexpr (sizeof(TComponent) == 1)
+							{
+								uint8_t tmp;
+								_pixels[i].get(swizzling[j], tmp);
+								buffer[j] = tmp;
+							}
+							else
+							{
+								_pixels[i].get(swizzling[j], buffer[j]);
+							}
 						}
 					}
 

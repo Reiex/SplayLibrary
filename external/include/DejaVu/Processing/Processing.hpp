@@ -7,6 +7,6 @@
 
 #pragma once
 
-#include <DejaVu/Core/Shape.hpp>
-#include <DejaVu/Core/Pixel.hpp>
-#include <DejaVu/Core/Image.hpp>
+#include <DejaVu/Processing/types.hpp>
+
+#include <DejaVu/Processing/PrImage.hpp>

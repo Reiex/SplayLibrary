@@ -4,13 +4,13 @@
 
 namespace spl
 {
-	template<djv::PixelConcept TPixel>
+	template<djv::CPixel TPixel>
 	Texture2D::Texture2D(const djv::Image<TPixel>& image, TextureInternalFormat internalFormat) : Texture2D()
 	{
 		createNew(image, internalFormat);
 	}
 
-	template<djv::PixelConcept TPixel>
+	template<djv::CPixel TPixel>
 	void Texture2D::createNew(const djv::Image<TPixel>& image, TextureInternalFormat internalFormat)
 	{
 		const uvec2 size(image.getWidth(), image.getHeight());
@@ -20,7 +20,7 @@ namespace spl
 		_size = size;
 	}
 
-	template<djv::PixelConcept TPixel>
+	template<djv::CPixel TPixel>
 	void Texture2D::update(const djv::Image<TPixel>& image, const uvec2& offset)
 	{
 		RawTexture::UpdateParams params;
