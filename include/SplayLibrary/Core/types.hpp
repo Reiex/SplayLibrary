@@ -1,3 +1,10 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//! \file
+//! \author Reiex
+//! \copyright The MIT License (MIT)
+//! \date 2019-2022
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma once
 
 #include <algorithm>
@@ -25,39 +32,20 @@
 
 namespace spl
 {
-	template<typename EltType, uint8_t Col, uint8_t Row, typename ColType> struct _Mat;
+	using uvec2 = scp::u32vec2;	using uvec3 = scp::u32vec3;	using uvec4 = scp::u32vec4;
+	using ivec2 = scp::i32vec2;	using ivec3 = scp::i32vec3;	using ivec4 = scp::i32vec4;
+	using vec2 = scp::f32vec2;	using vec3 = scp::f32vec3;	using vec4 = scp::f32vec4;
+	using dvec2 = scp::f64vec2;	using dvec3 = scp::f64vec3;	using dvec4 = scp::f64vec4;
 
-	struct vec2; struct vec3; struct vec4;
-	struct dvec2; struct dvec3; struct dvec4;
-	struct ivec2; struct ivec3; struct ivec4;
-	struct uvec2; struct uvec3; struct uvec4;
-	struct bvec2; struct bvec3; struct bvec4;
-
-	typedef _Mat<float, 2, 2, vec2> mat2x2;
-	typedef _Mat<float, 3, 2, vec3> mat3x2;
-	typedef _Mat<float, 4, 2, vec4> mat4x2;
-	typedef _Mat<float, 2, 3, vec2> mat2x3;
-	typedef _Mat<float, 3, 3, vec3> mat3x3;
-	typedef _Mat<float, 4, 3, vec4> mat4x3;
-	typedef _Mat<float, 2, 4, vec2> mat2x4;
-	typedef _Mat<float, 3, 4, vec3> mat3x4;
-	typedef _Mat<float, 4, 4, vec4> mat4x4;
-	typedef mat2x2 mat2;
-	typedef mat3x3 mat3;
-	typedef mat4x4 mat4;
-
-	typedef _Mat<double, 2, 2, dvec2> dmat2x2;
-	typedef _Mat<double, 3, 2, dvec3> dmat3x2;
-	typedef _Mat<double, 4, 2, dvec4> dmat4x2;
-	typedef _Mat<double, 2, 3, dvec2> dmat2x3;
-	typedef _Mat<double, 3, 3, dvec3> dmat3x3;
-	typedef _Mat<double, 4, 3, dvec4> dmat4x3;
-	typedef _Mat<double, 2, 4, dvec2> dmat2x4;
-	typedef _Mat<double, 3, 4, dvec3> dmat3x4;
-	typedef _Mat<double, 4, 4, dvec4> dmat4x4;
-	typedef dmat2x2 dmat2;
-	typedef dmat3x3 dmat3;
-	typedef dmat4x4 dmat4;
+	using mat2x2 = scp::f32mat2x2;	using mat2x3 = scp::f32mat2x3;	using mat2x4 = scp::f32mat2x4;
+	using mat3x2 = scp::f32mat3x2;	using mat3x3 = scp::f32mat3x3;	using mat3x4 = scp::f32mat3x4;
+	using mat4x2 = scp::f32mat4x2;	using mat4x3 = scp::f32mat4x3;	using mat4x4 = scp::f32mat4x4;
+	using mat2 = mat2x2; using mat3 = mat3x3; using mat4 = mat4x4;
+ 
+	using dmat2x2 = scp::f64mat2x2;	using dmat2x3 = scp::f64mat2x3;	using dmat2x4 = scp::f64mat2x4;
+	using dmat3x2 = scp::f64mat3x2;	using dmat3x3 = scp::f64mat3x3;	using dmat3x4 = scp::f64mat3x4;
+	using dmat4x2 = scp::f64mat4x2;	using dmat4x3 = scp::f64mat4x3;	using dmat4x4 = scp::f64mat4x4;
+	using dmat2 = dmat2x2; using dmat3 = dmat3x3; using dmat4 = dmat4x4;
 
 
 	enum class BufferTarget;

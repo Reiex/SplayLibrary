@@ -18,7 +18,7 @@ int basicPhongMain()
 	spl::Transformable3D meshTransform;
 	meshTransform.scale(0.5);
 
-	spl::vec3 lightDir = -spl::normalize(spl::vec3{ 1.0, 1.0, 1.0 });
+	spl::vec3 lightDir = -scp::normalize(spl::vec3{ 1.0, 1.0, 1.0 });
 
 	while (!window.shouldClose())
 	{
