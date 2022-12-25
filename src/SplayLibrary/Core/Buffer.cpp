@@ -12,45 +12,45 @@ namespace spl
 {
 	namespace
 	{
-		GLenum bufferTargetToGL(BufferTarget target)
+		constexpr GLenum bufferTargetToGL(BufferTarget target)
 		{
 			switch (target)
 			{
-			case BufferTarget::Array:
-				return GL_ARRAY_BUFFER;
-			case BufferTarget::AtomicCounter:
-				return GL_ATOMIC_COUNTER_BUFFER;
-			case BufferTarget::CopyRead:
-				return GL_COPY_READ_BUFFER;
-			case BufferTarget::CopyWrite:
-				return GL_COPY_WRITE_BUFFER;
-			case BufferTarget::DispatchIndirect:
-				return GL_DISPATCH_INDIRECT_BUFFER;
-			case BufferTarget::ElementArray:
-				return GL_ELEMENT_ARRAY_BUFFER;
-			case BufferTarget::Parameter:
-				return GL_PARAMETER_BUFFER;
-			case BufferTarget::PixelPack:
-				return GL_PIXEL_PACK_BUFFER;
-			case BufferTarget::PixelUnpack:
-				return GL_PIXEL_UNPACK_BUFFER;
-			case BufferTarget::Query:
-				return GL_QUERY_BUFFER;
-			case BufferTarget::ShaderStorage:
-				return GL_SHADER_STORAGE_BUFFER;
-			case BufferTarget::Texture:
-				return GL_TEXTURE_BUFFER;
-			case BufferTarget::TransformFeedback:
-				return GL_TRANSFORM_FEEDBACK_BUFFER;
-			case BufferTarget::Uniform:
-				return GL_UNIFORM_BUFFER;
-			default:
-				assert(false);
-				return 0;
+				case BufferTarget::Array:
+					return GL_ARRAY_BUFFER;
+				case BufferTarget::AtomicCounter:
+					return GL_ATOMIC_COUNTER_BUFFER;
+				case BufferTarget::CopyRead:
+					return GL_COPY_READ_BUFFER;
+				case BufferTarget::CopyWrite:
+					return GL_COPY_WRITE_BUFFER;
+				case BufferTarget::DispatchIndirect:
+					return GL_DISPATCH_INDIRECT_BUFFER;
+				case BufferTarget::ElementArray:
+					return GL_ELEMENT_ARRAY_BUFFER;
+				case BufferTarget::Parameter:
+					return GL_PARAMETER_BUFFER;
+				case BufferTarget::PixelPack:
+					return GL_PIXEL_PACK_BUFFER;
+				case BufferTarget::PixelUnpack:
+					return GL_PIXEL_UNPACK_BUFFER;
+				case BufferTarget::Query:
+					return GL_QUERY_BUFFER;
+				case BufferTarget::ShaderStorage:
+					return GL_SHADER_STORAGE_BUFFER;
+				case BufferTarget::Texture:
+					return GL_TEXTURE_BUFFER;
+				case BufferTarget::TransformFeedback:
+					return GL_TRANSFORM_FEEDBACK_BUFFER;
+				case BufferTarget::Uniform:
+					return GL_UNIFORM_BUFFER;
+				default:
+					assert(false);
+					return 0;
 			}
 		}
 
-		GLenum bufferUsageToGL(BufferUsage usage)
+		constexpr GLenum bufferUsageToGL(BufferUsage usage)
 		{
 			switch (usage)
 			{
@@ -78,36 +78,16 @@ namespace spl
 			}
 		}
 
-		GLbitfield bufferStorageFlagsToGL(BufferStorageFlags::Flags flags)
+		constexpr GLbitfield bufferStorageFlagsToGL(BufferStorageFlags::Flags flags)
 		{
-			GLbitfield flagsGL = 0;
-
-			if (flags & BufferStorageFlags::DynamicStorage)
-			{
-				flagsGL &= GL_DYNAMIC_STORAGE_BIT;
-			}
-			if (flags & BufferStorageFlags::MapRead)
-			{
-				flagsGL &= GL_MAP_READ_BIT;
-			}
-			if (flags & BufferStorageFlags::MapWrite)
-			{
-				flagsGL &= GL_MAP_WRITE_BIT;
-			}
-			if (flags & BufferStorageFlags::MapPersistent)
-			{
-				flagsGL &= GL_MAP_PERSISTENT_BIT;
-			}
-			if (flags & BufferStorageFlags::MapCoherent)
-			{
-				flagsGL &= GL_MAP_COHERENT_BIT;
-			}
-			if (flags & BufferStorageFlags::ClientStorage)
-			{
-				flagsGL &= GL_CLIENT_STORAGE_BIT;
-			}
-
-			return flagsGL;
+			return (
+					(-((flags & BufferStorageFlags::DynamicStorage) >> 0) & GL_DYNAMIC_STORAGE_BIT)
+				|	(-((flags & BufferStorageFlags::MapRead)		>> 1) & GL_MAP_READ_BIT)
+				|	(-((flags & BufferStorageFlags::MapWrite)		>> 2) & GL_MAP_WRITE_BIT)
+				|	(-((flags & BufferStorageFlags::MapPersistent)	>> 3) & GL_MAP_PERSISTENT_BIT)
+				|	(-((flags & BufferStorageFlags::MapCoherent)	>> 4) & GL_MAP_COHERENT_BIT)
+				|	(-((flags & BufferStorageFlags::ClientStorage)	>> 5) & GL_CLIENT_STORAGE_BIT)
+			);
 		}
 	}
 
@@ -156,9 +136,12 @@ namespace spl
 		assert(size > 0);
 		assert(bufferUsageToGL(usage) != 0);
 
-		destroy();
+		if (_usage == BufferUsage::Undefined)
+		{
+			destroy();
+			glCreateBuffers(1, &_buffer);
+		}
 
-		glCreateBuffers(1, &_buffer);
 		glNamedBufferData(_buffer, size, data, bufferUsageToGL(usage));
 
 		_size = size;
@@ -169,10 +152,16 @@ namespace spl
 	void Buffer::createNew(uint32_t size, BufferStorageFlags::Flags flags, const void* data)
 	{
 		assert(size > 0);
+		// TODO: Is it legal to not have dynamic_storage_bit but map_write_bit ?
+		assert(!(flags & BufferStorageFlags::MapCoherent) || (flags & BufferStorageFlags::MapPersistent));
+		assert(!(flags & BufferStorageFlags::MapPersistent) || (flags & BufferStorageFlags::MapRead) || (flags & BufferStorageFlags::MapWrite));
 
-		destroy();
+		if (_usage == BufferUsage::Undefined)
+		{
+			destroy();
+			glCreateBuffers(1, &_buffer);
+		}
 
-		glCreateBuffers(1, &_buffer);
 		glNamedBufferStorage(_buffer, size, data, bufferStorageFlagsToGL(flags));
 
 		_size = size;
@@ -184,18 +173,6 @@ namespace spl
 	{
 		assert(buffer.isValid());
 
-		if (isValid() && _size != buffer._size)
-		{
-			if (_usage != BufferUsage::Undefined)
-			{
-				createNew(buffer._size, _usage);
-			}
-			else
-			{
-				createNew(buffer._size, _flags);
-			}
-		}
-
 		if (!isValid())
 		{
 			if (buffer._usage != BufferUsage::Undefined)
@@ -205,6 +182,17 @@ namespace spl
 			else
 			{
 				createNew(buffer._size, buffer._flags);
+			}
+		}
+		else if (_size != buffer._size)
+		{
+			if (_usage != BufferUsage::Undefined)
+			{
+				createNew(buffer._size, _usage);
+			}
+			else
+			{
+				createNew(buffer._size, _flags);
 			}
 		}
 
@@ -228,11 +216,13 @@ namespace spl
 
 	void Buffer::update(const void* data, uint32_t size, uint32_t dstOffset)
 	{
-		assert(data != nullptr);
+		assert(data);
 		assert(isValid());
 		assert(dstOffset + size <= _size);
 
-		if (_usage != BufferUsage::Undefined || _flags & BufferStorageFlags::DynamicStorage)
+		// TODO: Check for mappings, cannot be updated that way for some kinds of mappings...
+
+		if (_usage != BufferUsage::Undefined || (_flags & BufferStorageFlags::DynamicStorage))
 		{
 			glNamedBufferSubData(_buffer, dstOffset, size, data);
 		}
@@ -255,17 +245,15 @@ namespace spl
 
 	void Buffer::destroy()
 	{
-		assert(_buffer != 0 || (_size == 0 && _usage == BufferUsage::Undefined && _flags == BufferStorageFlags::None));
-
 		if (_buffer != 0)
 		{
 			glDeleteBuffers(1, &_buffer);
-
-			_buffer = 0;
-			_size = 0;
-			_usage = BufferUsage::Undefined;
-			_flags = BufferStorageFlags::None;
 		}
+
+		_buffer = 0;
+		_size = 0;
+		_usage = BufferUsage::Undefined;
+		_flags = BufferStorageFlags::None;
 	}
 
 	uint32_t Buffer::getHandle() const

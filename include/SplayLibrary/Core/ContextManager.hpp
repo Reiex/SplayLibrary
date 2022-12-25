@@ -45,6 +45,7 @@ namespace spl
 
 			Window* _window;
 
+			// TODO ? (costly, maybe in debug) : Check buffers binding
 			Framebuffer* _currentFramebuffer;
 			Shader* _currentShader;
 
