@@ -11,6 +11,47 @@
 
 namespace spl
 {
+	enum class DebugMessageSource
+	{
+		Api,
+		ShaderCompiler,
+		WindowSystem,
+		ThirdParty,
+		Application,
+		Other
+	};
+
+	enum class DebugMessageType
+	{
+		Error,
+		DeprecatedBehavior,
+		UndefinedBehavior,
+		Performance,
+		Portability,
+		Marker,
+		PushGroup,
+		PopGroup,
+		Other
+	};
+
+	enum class DebugMessageSeverity
+	{
+		High,
+		Medium,
+		Low,
+		Notification
+	};
+
+	struct DebugMessage
+	{
+		DebugMessageSource source;
+		DebugMessageType type;
+		uint32_t id;
+
+		DebugMessageSeverity severity;
+		std::string descr;
+	};
+
 	class Context
 	{
 		public:
@@ -27,7 +68,10 @@ namespace spl
 			void setViewport(const ivec2& offset, const uvec2& size);
 			void setIsDepthTestEnabled(bool isEnabled);
 
+			bool pollDebugMessage(DebugMessage*& message);
+
 			Window* getWindow();
+			bool getIsDebugContext() const;
 			Framebuffer* getCurrentFramebuffer();
 			Shader* getCurrentShader();
 			const vec4& getClearColor() const;
@@ -37,13 +81,18 @@ namespace spl
 			const uvec2& getViewportSize() const;
 			bool getIsDepthTestEnabled() const;
 
-			~Context() = default;
+			~Context();
 
 		private:
 
-			Context() = default;
+			Context();
+
+			void setWindow(Window* window);
+			void onFirstActivation();
 
 			Window* _window;
+			bool _debugContext;
+			bool _hasBeenActivated;
 
 			// TODO ? (costly, maybe in debug) : Check buffers binding
 			Framebuffer* _currentFramebuffer;
@@ -56,7 +105,12 @@ namespace spl
 			uvec2 _viewportSize;
 			bool _isDepthTestEnabled;
 
+			std::queue<DebugMessage*> _debugMessages;
+			DebugMessage* _lastDebugMessageSent;
+
 		friend class ContextManager;
+		friend class Window;
+		friend void stackDebugMessage(DebugMessage* message, Context* context);
 	};
 
 	class ContextManager
@@ -73,7 +127,6 @@ namespace spl
 		private:
 
 			static Context* createContext();
-			static void initContext(Window* window);
 			static bool destroyContext(Context* context);
 
 

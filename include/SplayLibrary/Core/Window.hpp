@@ -25,7 +25,7 @@ namespace spl
 			// TODO: Cursor object
 			// TODO: Shared context (here and in ContextManager)
 
-			Window(const uvec2& size, const std::string& title);
+			Window(const uvec2& size, const std::string& title, bool debugContext);
 			Window(const Window& window) = delete;
 			Window(Window&& window) = delete;
 

@@ -2,7 +2,7 @@
 
 int basicPhongMain()
 {
-	spl::Window window({ 1000, 600 }, "SPL Example");
+	spl::Window window({ 1000, 600 }, "SPL Example", true);
 	spl::Context* context = window.getContext();
 	spl::ContextManager::setCurrentContext(context);
 	context->setIsDepthTestEnabled(true);
@@ -35,6 +35,14 @@ int basicPhongMain()
 					break;
 				}
 			}
+		}
+
+		spl::DebugMessage* message = nullptr;
+		while (context->pollDebugMessage(message))
+		{
+			std::cout << "#======== START OF DEBUG MESSAGE ==========================#" << std::endl;
+			std::cout << message->descr << std::endl;
+			std::cout << "#======== END OF DEBUG MESSAGE ============================#" << std::endl;
 		}
 
 		if (window.isKeyPressed(spl::KeyboardKey::W)) camera.move(camera.getUpVector() * 0.01f);

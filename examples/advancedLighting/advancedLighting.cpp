@@ -2,7 +2,7 @@
 
 int advancedLightingMain()
 {
-	spl::Window window({ 1000, 600 }, "SPL Example");
+	spl::Window window({ 1000, 600 }, "SPL Example", false);
 	spl::Context* context = window.getContext();
 	spl::ContextManager::setCurrentContext(context);
 	context->setIsDepthTestEnabled(true);

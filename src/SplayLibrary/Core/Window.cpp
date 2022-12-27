@@ -23,6 +23,7 @@ namespace spl
 			if (splWindow->getHandle() == window)
 			{
 				splWindow->_events.push(event);
+				break;
 			}
 		}
 	}
@@ -747,7 +748,7 @@ namespace spl
 	{
 	}
 
-	Window::Window(const uvec2& size, const std::string& title) : Window()
+	Window::Window(const uvec2& size, const std::string& title, bool debugContext) : Window()
 	{
 		// Create window and OpenGL context
 
@@ -757,10 +758,15 @@ namespace spl
 			return;
 		}
 
-		// TODO: Different contexts ? Different OpenGL version, drivers, etc...
+		// TODO: Set all hints in https://www.glfw.org/docs/3.3/window_guide.html
+
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+		_context->_debugContext = debugContext;
+		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, debugContext);
+		glfwWindowHint(GLFW_CONTEXT_NO_ERROR, !debugContext);
 
 		// TODO: Flags (triple buffering, full screen, etc...)
 		// TODO: Choice of monitor
@@ -773,7 +779,7 @@ namespace spl
 			return;
 		}
 
-		ContextManager::initContext(this);
+		_context->setWindow(this);
 
 		// Set input callbacks
 
