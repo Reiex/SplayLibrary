@@ -34,22 +34,6 @@ namespace spl
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// \relates RawTexture
-	/// \enum TextureCubeMapTarget
-	/// \brief Encapsulation of OpenGL cube map texture targets. Specifies a face of a cube map texture.
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	enum class TextureCubeMapTarget
-	{
-		Undefined,	///< TODO
-		PositiveX,
-		NegativeX,
-		PositiveY,
-		NegativeY,
-		PositiveZ,
-		NegativeZ
-	};
-
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/// \relates RawTexture
 	/// \enum TextureFormat
 	/// \brief Encapsulation of OpenGL texture format.
 	/// 
@@ -258,8 +242,6 @@ namespace spl
 
 			struct UpdateParams
 			{
-				TextureCubeMapTarget cubeMapTarget = TextureCubeMapTarget::Undefined;
-
 				const Buffer* buffer = nullptr;
 				uint32_t bufferOffset = 0;
 

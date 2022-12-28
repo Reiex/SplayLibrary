@@ -552,20 +552,23 @@ namespace spl
 			}
 			case TextureTarget::CubeMap:
 			{
-				uint32_t layer = static_cast<uint32_t>(params.cubeMapTarget) - 1;
-
-				assert(layer < 6);
 				assert(params.width > 0 && params.offsetX + params.width <= _creationParams.width);
 				assert(params.height > 0 && params.offsetY + params.height <= _creationParams.height);
+				assert(params.depth > 0 && params.offsetZ + params.depth <= 6);
 
-				glTextureSubImage3D(_texture, 0, params.offsetX, params.offsetY, layer, params.width, params.height, 1, formatGL, dataTypeGL, data);
+				glTextureSubImage3D(_texture, 0, params.offsetX, params.offsetY, params.offsetZ, params.width, params.height, params.depth, formatGL, dataTypeGL, data);
 
 				break;
 			}
 			case TextureTarget::CubeMapArray:
 			{
+				assert(params.width > 0 && params.offsetX + params.width <= _creationParams.width);
+				assert(params.height > 0 && params.offsetY + params.height <= _creationParams.height);
+				assert(params.depth > 0 && params.offsetZ + params.depth <= _creationParams.layers);
+
+				glTextureSubImage3D(_texture, 0, params.offsetX, params.offsetY, params.offsetZ, params.width, params.height, params.depth, formatGL, dataTypeGL, data);
+
 				break;
-				// TODO
 			}
 			case TextureTarget::Multisample2D:
 			{
