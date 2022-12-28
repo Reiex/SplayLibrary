@@ -44,28 +44,6 @@ namespace spl
 			}
 		}
 
-		GLenum textureCubeMapTargetToGL(TextureCubeMapTarget target)
-		{
-			switch (target)
-			{
-			case TextureCubeMapTarget::PositiveX:
-				return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-			case TextureCubeMapTarget::NegativeX:
-				return GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
-			case TextureCubeMapTarget::PositiveY:
-				return GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
-			case TextureCubeMapTarget::NegativeY:
-				return GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
-			case TextureCubeMapTarget::PositiveZ:
-				return GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
-			case TextureCubeMapTarget::NegativeZ:
-				return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
-			default:
-				assert(false);
-				return 0;
-			}
-		}
-	
 		GLenum textureFormatToGL(TextureFormat format)
 		{
 			switch (format)
@@ -574,11 +552,13 @@ namespace spl
 			}
 			case TextureTarget::CubeMap:
 			{
-				assert(textureCubeMapTargetToGL(params.cubeMapTarget) != 0);
+				uint32_t layer = static_cast<uint32_t>(params.cubeMapTarget) - 1;
+
+				assert(layer < 6);
 				assert(params.width > 0 && params.offsetX + params.width <= _creationParams.width);
 				assert(params.height > 0 && params.offsetY + params.height <= _creationParams.height);
 
-				glTextureSubImage2D(textureCubeMapTargetToGL(params.cubeMapTarget), 0, params.offsetX, params.offsetY, params.width, params.height, formatGL, dataTypeGL, data);
+				glTextureSubImage3D(_texture, 0, params.offsetX, params.offsetY, layer, params.width, params.height, 1, formatGL, dataTypeGL, data);
 
 				break;
 			}
