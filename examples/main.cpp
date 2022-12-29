@@ -1,7 +1,10 @@
 #include "main.hpp"
 
 // TODO: add "_" in front of private methods
-// TODO: Make constexpr what should be constexpr
+// TODO: Finish buffers (mapping, clearing)
+// TODO: Create all "texture" classes (and put them with TextureBase and Texture2D in a sub-file)
+// TODO: Rewrite 'Drawable'
+// TODO: Allow for better shader debugging ? Maybe... maybe not...
 
 int main()
 {

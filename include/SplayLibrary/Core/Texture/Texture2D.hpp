@@ -9,7 +9,7 @@
 
 #include <SplayLibrary/Core/types.hpp>
 
-#include <SplayLibrary/Core/TextureBase.hpp>
+#include <SplayLibrary/Core/Texture/TextureBase.hpp>
 
 namespace spl
 {
@@ -56,4 +56,4 @@ namespace spl
 	};
 }
 
-#include <SplayLibrary/Core/template/Texture2D.hpp>
+#include <SplayLibrary/Core/Texture/templates/Texture2D.hpp>

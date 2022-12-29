@@ -94,4 +94,4 @@ namespace spl
 	};
 }
 
-#include <SplayLibrary/Core/template/Framebuffer.hpp>
+#include <SplayLibrary/Core/templates/Framebuffer.hpp>

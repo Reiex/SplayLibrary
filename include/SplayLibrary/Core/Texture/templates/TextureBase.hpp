@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <SplayLibrary/Core/TextureBase.hpp>
+#include <SplayLibrary/Core/Texture/TextureBase.hpp>
 
 namespace spl
 {

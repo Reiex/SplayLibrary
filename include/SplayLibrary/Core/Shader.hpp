@@ -96,4 +96,4 @@ namespace spl
 	};
 }
 
-#include <SplayLibrary/Core/template/Shader.hpp>
+#include <SplayLibrary/Core/templates/Shader.hpp>

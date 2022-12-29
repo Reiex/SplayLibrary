@@ -12,7 +12,7 @@ namespace spl
 {
 	namespace
 	{
-		GLenum textureTargetToGL(TextureTarget target)
+		constexpr GLenum textureTargetToGL(TextureTarget target)
 		{
 			switch (target)
 			{
@@ -44,7 +44,7 @@ namespace spl
 			}
 		}
 
-		GLenum textureFormatToGL(TextureFormat format)
+		constexpr GLenum textureFormatToGL(TextureFormat format)
 		{
 			switch (format)
 			{
@@ -92,7 +92,7 @@ namespace spl
 			}
 		}
 	
-		GLenum textureDataTypeToGL(TextureDataType dataType)
+		constexpr GLenum textureDataTypeToGL(TextureDataType dataType)
 		{
 			switch (dataType)
 			{
@@ -150,7 +150,7 @@ namespace spl
 			}
 		}
 		
-		GLenum textureInternalFormatToGL(TextureInternalFormat internalFormat)
+		constexpr GLenum textureInternalFormatToGL(TextureInternalFormat internalFormat)
 		{
 			switch (internalFormat)
 			{
@@ -353,6 +353,7 @@ namespace spl
 				break;
 			}
 			case TextureTarget::Texture2D:
+			case TextureTarget::Array1D:
 			{
 				assert(params.levels > 0);
 				assert(params.width > 0);
@@ -363,6 +364,7 @@ namespace spl
 				break;
 			}
 			case TextureTarget::Texture3D:
+			case TextureTarget::Array2D:
 			{
 				assert(params.levels > 0);
 				assert(params.width > 0);
@@ -373,33 +375,13 @@ namespace spl
 
 				break;
 			}
-			case TextureTarget::Array1D:
-			{
-				assert(params.levels > 0);
-				assert(params.width > 0);
-				assert(params.layers > 0);
-
-				glTextureStorage2D(_texture, params.levels, internalFormatGL, params.width, params.layers);
-
-				break;
-			}
-			case TextureTarget::Array2D:
-			{
-				assert(params.levels > 0);
-				assert(params.width > 0);
-				assert(params.height > 0);
-				assert(params.layers > 0);
-
-				glTextureStorage3D(_texture, params.levels, internalFormatGL, params.width, params.height, params.layers);
-
-				break;
-			}
 			case TextureTarget::Rectangle:
 			{
+				assert(params.levels == 1);
 				assert(params.width > 0);
 				assert(params.height > 0);
 
-				glTextureStorage2D(_texture, 1, internalFormatGL, params.width, params.height);
+				glTextureStorage2D(_texture, params.levels, internalFormatGL, params.width, params.height);
 
 				break;
 			}
@@ -419,6 +401,7 @@ namespace spl
 				assert(params.levels > 0);
 				assert(params.width > 0);
 				assert(params.height > 0);
+				assert(params.depth == 6);
 
 				glTextureStorage2D(_texture, params.levels, internalFormatGL, params.width, params.height);
 
@@ -429,9 +412,9 @@ namespace spl
 				assert(params.levels > 0);
 				assert(params.width > 0);
 				assert(params.height > 0);
-				assert(params.layers > 0 && params.layers % 6 == 0);
+				assert(params.depth > 0 && params.depth % 6 == 0);
 
-				glTextureStorage3D(_texture, params.levels, internalFormatGL, params.width, params.height, params.layers);
+				glTextureStorage3D(_texture, params.levels, internalFormatGL, params.width, params.height, params.depth);
 
 				break;
 			}
@@ -494,6 +477,7 @@ namespace spl
 		{
 			case TextureTarget::Texture1D:
 			{
+				assert(params.level < _creationParams.levels);
 				assert(params.width > 0 && params.offsetX + params.width <= _creationParams.width);
 
 				glTextureSubImage1D(_texture, params.level, params.offsetX, params.width, formatGL, dataTypeGL, data);
@@ -501,7 +485,10 @@ namespace spl
 				break;
 			}
 			case TextureTarget::Texture2D:
+			case TextureTarget::Array1D:
+			case TextureTarget::Rectangle:
 			{
+				assert(params.level < _creationParams.levels);
 				assert(params.width > 0 && params.offsetX + params.width <= _creationParams.width);
 				assert(params.height > 0 && params.offsetY + params.height <= _creationParams.height);
 
@@ -510,7 +497,11 @@ namespace spl
 				break;
 			}
 			case TextureTarget::Texture3D:
+			case TextureTarget::Array2D:
+			case TextureTarget::CubeMap:
+			case TextureTarget::CubeMapArray:
 			{
+				assert(params.level < _creationParams.levels);
 				assert(params.width > 0 && params.offsetX + params.width <= _creationParams.width);
 				assert(params.height > 0 && params.offsetY + params.height <= _creationParams.height);
 				assert(params.depth > 0 && params.offsetZ + params.depth <= _creationParams.depth);
@@ -519,65 +510,11 @@ namespace spl
 
 				break;
 			}
-			case TextureTarget::Array1D:
-			{
-				assert(params.width > 0 && params.offsetX + params.width <= _creationParams.width);
-
-				glTextureSubImage2D(_texture, params.level, params.offsetX, params.layer, params.width, 1, formatGL, dataTypeGL, data);
-
-				break;
-			}
-			case TextureTarget::Array2D:
-			{
-				assert(params.width > 0 && params.offsetX + params.width <= _creationParams.width);
-				assert(params.height > 0 && params.offsetY + params.height <= _creationParams.height);
-
-				glTextureSubImage3D(_texture, params.level, params.offsetX, params.offsetY, params.layer, params.width, params.height, 1, formatGL, dataTypeGL, data);
-
-				break;
-			}
-			case TextureTarget::Rectangle:
-			{
-				assert(params.width > 0 && params.offsetX + params.width <= _creationParams.width);
-				assert(params.height > 0 && params.offsetY + params.height <= _creationParams.height);
-
-				glTextureSubImage2D(_texture, 0, params.offsetX, params.offsetY, params.width, params.height, formatGL, dataTypeGL, data);
-
-				break;
-			}
 			case TextureTarget::Buffer:
-			{
-				assert(false);	// Buffer texture cannot be re-assigned, update buffer instead.
-				break;
-			}
-			case TextureTarget::CubeMap:
-			{
-				assert(params.width > 0 && params.offsetX + params.width <= _creationParams.width);
-				assert(params.height > 0 && params.offsetY + params.height <= _creationParams.height);
-				assert(params.depth > 0 && params.offsetZ + params.depth <= 6);
-
-				glTextureSubImage3D(_texture, 0, params.offsetX, params.offsetY, params.offsetZ, params.width, params.height, params.depth, formatGL, dataTypeGL, data);
-
-				break;
-			}
-			case TextureTarget::CubeMapArray:
-			{
-				assert(params.width > 0 && params.offsetX + params.width <= _creationParams.width);
-				assert(params.height > 0 && params.offsetY + params.height <= _creationParams.height);
-				assert(params.depth > 0 && params.offsetZ + params.depth <= _creationParams.layers);
-
-				glTextureSubImage3D(_texture, 0, params.offsetX, params.offsetY, params.offsetZ, params.width, params.height, params.depth, formatGL, dataTypeGL, data);
-
-				break;
-			}
 			case TextureTarget::Multisample2D:
-			{
-				assert(false);	// Multisample texture cannot be filled.
-				break;
-			}
 			case TextureTarget::Multisample2DArray:
 			{
-				assert(false);	// Multisample texture cannot be filled.
+				assert(false);	// These textures cannot be updated this way.
 				break;
 			}
 			default:

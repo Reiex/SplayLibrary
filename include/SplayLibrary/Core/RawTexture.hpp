@@ -11,14 +11,9 @@
 
 namespace spl
 {
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/// \relates RawTexture
-	/// \enum TextureTarget
-	/// \brief Encapsulation of OpenGL texture targets. Specifies the purpose of a texture.
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	enum class TextureTarget
 	{
-		Undefined,	///< TODO
+		Undefined,
 		Texture1D,
 		Texture2D,
 		Texture3D,
@@ -32,13 +27,6 @@ namespace spl
 		Multisample2DArray
 	};
 
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/// \relates RawTexture
-	/// \enum TextureFormat
-	/// \brief Encapsulation of OpenGL texture format.
-	/// 
-	/// Specifies the format of the texture on application side and how it must be interpreted.
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	enum class TextureFormat
 	{
 		Undefined,	///< TODO
@@ -63,13 +51,6 @@ namespace spl
 		iBGRA
 	};
 
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/// \relates RawTexture
-	/// \enum TextureDataType
-	/// \brief Encapsulation of OpenGL texture data type.
-	/// 
-	/// Specifies data type used on application side when filling/updating a texture.
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	enum class TextureDataType
 	{
 		Undefined,	///< TODO
@@ -99,13 +80,6 @@ namespace spl
 		Float32_UnsignedInt_24_8_Rev
 	};
 
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/// \relates RawTexture
-	/// \enum TextureInternalFormat
-	/// \brief Encapsulation of OpenGL texture internal format.
-	/// 
-	/// Specifies the data type and format of a texture on GPU's side.
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	enum class TextureInternalFormat
 	{
 		Undefined,
@@ -201,21 +175,6 @@ namespace spl
 		Depth32F_Stencil8,
 	};
 
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/// \ingroup Core
-	/// \class RawTexture
-	/// \brief Class for manipulating OpenGL texture almost directly.
-	/// 
-	/// An instance of `RawTexture` is an encapsulation of an OpenGL texture object. It only implements usual OpenGL
-	/// operations on textures - creation, destruction, copy, update, etc. - nothing more or less.
-	/// 
-	/// The goal is to give a unique API for every type of OpenGL textures and to make each operation available to the
-	/// most texture types.
-	/// Even though it is still to the user to know if an operation is possible with some type of texture before
-	/// calling methods of RawTexture, the class provides basic checks in debug mode - check for the data given in
-	/// argument, the type of operation, the type of texture, etc.
-	/// However the checks are totally disabled in release mode for maximum performances.
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	class RawTexture
 	{
 		public:
@@ -233,7 +192,6 @@ namespace spl
 				uint32_t height = 0;
 				uint32_t depth = 0;
 
-				uint32_t layers = 0;
 				uint32_t levels = 1;
 
 				uint32_t samples = 0;
@@ -258,7 +216,6 @@ namespace spl
 				uint32_t height = 0;
 				uint32_t depth = 0;
 
-				uint32_t layer = 0;
 				uint32_t level = 0;
 			};
 
