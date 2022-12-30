@@ -22,51 +22,51 @@ namespace spl
 			Transformable3D& operator=(const Transformable3D& transformable) = default;
 			Transformable3D& operator=(Transformable3D&& transformable) = default;
 
-			Transformable3D& setTranslation(const vec3& translation);
-			Transformable3D& move(const vec3& offset);
+			Transformable3D& setTranslation(const scp::f32vec3& translation);
+			Transformable3D& move(const scp::f32vec3& offset);
 
 			Transformable3D& setRotation(const scp::Quat<float>& rotation);
-			Transformable3D& setRotation(const vec3& axis, float angle);
+			Transformable3D& setRotation(const scp::f32vec3& axis, float angle);
 			Transformable3D& rotate(const scp::Quat<float>& rotation);
-			Transformable3D& rotate(const vec3& axis, float angle);
+			Transformable3D& rotate(const scp::f32vec3& axis, float angle);
 
-			Transformable3D& setScale(const vec3& scale);
+			Transformable3D& setScale(const scp::f32vec3& scale);
 			Transformable3D& setScale(float scale);
-			Transformable3D& scale(const vec3& scale);
+			Transformable3D& scale(const scp::f32vec3& scale);
 			Transformable3D& scale(float scale);
 
 
-			vec3 applyTranslationTo(const vec3& vector) const;
-			vec3 applyRotationTo(const vec3& vector) const;
-			vec3 applyScaleTo(const vec3& vector) const;
-			vec3 applyTransformTo(const vec3& vector) const;
+			scp::f32vec3 applyTranslationTo(const scp::f32vec3& vector) const;
+			scp::f32vec3 applyRotationTo(const scp::f32vec3& vector) const;
+			scp::f32vec3 applyScaleTo(const scp::f32vec3& vector) const;
+			scp::f32vec3 applyTransformTo(const scp::f32vec3& vector) const;
 
-			vec3 applyInverseTranslationTo(const vec3& vector) const;
-			vec3 applyInverseRotationTo(const vec3& vector) const;
-			vec3 applyInverseScaleTo(const vec3& vector) const;
-			vec3 applyInverseTransformTo(const vec3& vector) const;
+			scp::f32vec3 applyInverseTranslationTo(const scp::f32vec3& vector) const;
+			scp::f32vec3 applyInverseRotationTo(const scp::f32vec3& vector) const;
+			scp::f32vec3 applyInverseScaleTo(const scp::f32vec3& vector) const;
+			scp::f32vec3 applyInverseTransformTo(const scp::f32vec3& vector) const;
 
-			mat3 getRotationMatrix() const;
-			mat4 getTransformMatrix() const;
+			scp::f32mat3x3 getRotationMatrix() const;
+			scp::f32mat4x4 getTransformMatrix() const;
 
-			mat3 getInverseRotationMatrix() const;
-			mat4 getInverseTransformMatrix() const;
+			scp::f32mat3x3 getInverseRotationMatrix() const;
+			scp::f32mat4x4 getInverseTransformMatrix() const;
 
 
-			const vec3& getTranslation() const;
+			const scp::f32vec3& getTranslation() const;
 			const scp::Quat<float> getRotation() const;
-			const vec3& getScale() const;
+			const scp::f32vec3& getScale() const;
 
 			~Transformable3D() = default;
 
 		protected:
 
-			static scp::Quat<float> quaternionFromAxisAngle(const vec3& axis, float angle);
+			static scp::Quat<float> quaternionFromAxisAngle(const scp::f32vec3& axis, float angle);
 
 		private:
 
-			vec3 _translation;
+			scp::f32vec3 _translation;
 			scp::Quat<float> _rotation;
-			vec3 _scale;
+			scp::f32vec3 _scale;
 	};
 }

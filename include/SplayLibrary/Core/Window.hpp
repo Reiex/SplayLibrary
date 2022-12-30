@@ -25,7 +25,7 @@ namespace spl
 			// TODO: Cursor object
 			// TODO: Shared context (here and in ContextManager)
 
-			Window(const uvec2& size, const std::string& title, bool debugContext);
+			Window(const scp::u32vec2& size, const std::string& title, bool debugContext);
 			Window(const Window& window) = delete;
 			Window(Window&& window) = delete;
 
@@ -41,7 +41,7 @@ namespace spl
 
 			bool shouldClose() const;
 			bool isKeyPressed(KeyboardKey key) const;
-			dvec2 getMousePosition() const;
+			scp::f64vec2 getMousePosition() const;
 			bool isCursorInWindow() const;
 			bool isMouseButtonPressed(MouseButton button) const;
 
@@ -49,7 +49,7 @@ namespace spl
 			void* getHandle();
 			Context* getContext();
 			const void* getHandle() const;
-			const uvec2& getSize() const;
+			const scp::u32vec2& getSize() const;
 			DefaultFramebuffer& getFramebuffer();
 
 			~Window();
@@ -62,7 +62,7 @@ namespace spl
 
 			void* _window;
 			Context* _context;
-			uvec2 _size;
+			scp::u32vec2 _size;
 
 			DefaultFramebuffer _framebuffer;
 

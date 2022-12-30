@@ -121,7 +121,7 @@ namespace spl
 	{
 	}
 
-	void Context::setClearColor(const vec4& clearColor)
+	void Context::setClearColor(const scp::f32vec4& clearColor)
 	{
 		assert(clearColor.x >= 0.f && clearColor.x <= 1);
 		assert(clearColor.y >= 0.f && clearColor.y <= 1);
@@ -146,7 +146,7 @@ namespace spl
 		glClearStencil(_clearStencil);
 	}
 
-	void Context::setViewport(const ivec2& offset, const uvec2& size)
+	void Context::setViewport(const scp::i32vec2& offset, const scp::u32vec2& size)
 	{
 		_viewportOffset = offset;
 		_viewportSize = size;
@@ -206,7 +206,7 @@ namespace spl
 		return _currentShader;
 	}
 
-	const vec4& Context::getClearColor() const
+	const scp::f32vec4& Context::getClearColor() const
 	{
 		return _clearColor;
 	}
@@ -221,12 +221,12 @@ namespace spl
 		return _clearStencil;
 	}
 
-	const ivec2& Context::getViewportOffset() const
+	const scp::i32vec2& Context::getViewportOffset() const
 	{
 		return _viewportOffset;
 	}
 
-	const uvec2& Context::getViewportSize() const
+	const scp::u32vec2& Context::getViewportSize() const
 	{
 		return _viewportSize;
 	}

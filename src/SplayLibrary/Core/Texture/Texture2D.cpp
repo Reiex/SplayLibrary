@@ -15,27 +15,27 @@ namespace spl
 	{
 	}
 
-	Texture2D::Texture2D(const uvec2& size, TextureInternalFormat internalFormat) : Texture2D()
+	Texture2D::Texture2D(const scp::u32vec2& size, TextureInternalFormat internalFormat) : Texture2D()
 	{
 		createNew(size, internalFormat);
 	}
 
-	Texture2D::Texture2D(const uvec2& size, const uint8_t* data, TextureInternalFormat internalFormat) : Texture2D()
+	Texture2D::Texture2D(const scp::u32vec2& size, const uint8_t* data, TextureInternalFormat internalFormat) : Texture2D()
 	{
 		createNew(size, data, internalFormat);
 	}
 
-	Texture2D::Texture2D(const uvec2& size, const uint16_t* data, TextureInternalFormat internalFormat) : Texture2D()
+	Texture2D::Texture2D(const scp::u32vec2& size, const uint16_t* data, TextureInternalFormat internalFormat) : Texture2D()
 	{
 		createNew(size, data, internalFormat);
 	}
 
-	Texture2D::Texture2D(const uvec2& size, const uint32_t* data, TextureInternalFormat internalFormat) : Texture2D()
+	Texture2D::Texture2D(const scp::u32vec2& size, const uint32_t* data, TextureInternalFormat internalFormat) : Texture2D()
 	{
 		createNew(size, data, internalFormat);
 	}
 
-	Texture2D::Texture2D(const uvec2& size, const float* data, TextureInternalFormat internalFormat) : Texture2D()
+	Texture2D::Texture2D(const scp::u32vec2& size, const float* data, TextureInternalFormat internalFormat) : Texture2D()
 	{
 		createNew(size, data, internalFormat);
 	}
@@ -45,7 +45,7 @@ namespace spl
 		createNew(path, internalFormat);
 	}
 
-	void Texture2D::createNew(const uvec2& size, TextureInternalFormat internalFormat)
+	void Texture2D::createNew(const scp::u32vec2& size, TextureInternalFormat internalFormat)
 	{
 		RawTexture::CreationParams params;
 		params.target = TextureTarget::Texture2D;
@@ -58,28 +58,28 @@ namespace spl
 		_size = size;
 	}
 
-	void Texture2D::createNew(const uvec2& size, const uint8_t* data, TextureInternalFormat internalFormat)
+	void Texture2D::createNew(const scp::u32vec2& size, const uint8_t* data, TextureInternalFormat internalFormat)
 	{
 		createNew(size, internalFormat);
-		update(size, data, uvec2(0, 0));
+		update(size, data, scp::u32vec2(0, 0));
 	}
 
-	void Texture2D::createNew(const uvec2& size, const uint16_t* data, TextureInternalFormat internalFormat)
+	void Texture2D::createNew(const scp::u32vec2& size, const uint16_t* data, TextureInternalFormat internalFormat)
 	{
 		createNew(size, internalFormat);
-		update(size, data, uvec2(0, 0));
+		update(size, data, scp::u32vec2(0, 0));
 	}
 
-	void Texture2D::createNew(const uvec2& size, const uint32_t* data, TextureInternalFormat internalFormat)
+	void Texture2D::createNew(const scp::u32vec2& size, const uint32_t* data, TextureInternalFormat internalFormat)
 	{
 		createNew(size, internalFormat);
-		update(size, data, uvec2(0, 0));
+		update(size, data, scp::u32vec2(0, 0));
 	}
 
-	void Texture2D::createNew(const uvec2& size, const float* data, TextureInternalFormat internalFormat)
+	void Texture2D::createNew(const scp::u32vec2& size, const float* data, TextureInternalFormat internalFormat)
 	{
 		createNew(size, internalFormat);
-		update(size, data, uvec2(0, 0));
+		update(size, data, scp::u32vec2(0, 0));
 	}
 
 	void Texture2D::createNew(const std::filesystem::path& path, TextureInternalFormat internalFormat)
@@ -89,7 +89,7 @@ namespace spl
 		createNew(image, internalFormat);
 	}
 
-	void Texture2D::update(const uvec2& size, const uint8_t* data, const uvec2& offset)
+	void Texture2D::update(const scp::u32vec2& size, const uint8_t* data, const scp::u32vec2& offset)
 	{
 		RawTexture::UpdateParams params;
 		params.data = data;
@@ -103,7 +103,7 @@ namespace spl
 		_texture.update(params);
 	}
 
-	void Texture2D::update(const uvec2& size, const uint16_t* data, const uvec2& offset)
+	void Texture2D::update(const scp::u32vec2& size, const uint16_t* data, const scp::u32vec2& offset)
 	{
 		RawTexture::UpdateParams params;
 		params.data = data;
@@ -117,7 +117,7 @@ namespace spl
 		_texture.update(params);
 	}
 
-	void Texture2D::update(const uvec2& size, const uint32_t* data, const uvec2& offset)
+	void Texture2D::update(const scp::u32vec2& size, const uint32_t* data, const scp::u32vec2& offset)
 	{
 		RawTexture::UpdateParams params;
 		params.data = data;
@@ -131,7 +131,7 @@ namespace spl
 		_texture.update(params);
 	}
 
-	void Texture2D::update(const uvec2& size, const float* data, const uvec2& offset)
+	void Texture2D::update(const scp::u32vec2& size, const float* data, const scp::u32vec2& offset)
 	{
 		RawTexture::UpdateParams params;
 		params.data = data;
@@ -145,7 +145,7 @@ namespace spl
 		_texture.update(params);
 	}
 
-	void Texture2D::update(const std::filesystem::path& path, const uvec2& offset)
+	void Texture2D::update(const std::filesystem::path& path, const scp::u32vec2& offset)
 	{
 		// TODO: Load only necessary components
 		djv::Image<djv::Pixel<float, 4>> image(path.string());
@@ -158,7 +158,7 @@ namespace spl
 		_size = { 0, 0 };
 	}
 
-	const uvec2& Texture2D::getSize() const
+	const scp::u32vec2& Texture2D::getSize() const
 	{
 		return _size;
 	}

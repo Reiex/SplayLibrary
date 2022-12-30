@@ -69,7 +69,7 @@ namespace spl
 
 			template<typename TextureType, typename... Args> void createNewTextureAttachment(FramebufferAttachment attachment, Args&&... args);
 			virtual const TextureBase* getTextureAttachment(FramebufferAttachment attachment) const;
-			virtual void createNewRenderBufferAttachment(FramebufferAttachment attachment, TextureInternalFormat internalFormat, const uvec2& size, uint32_t samples = 0);
+			virtual void createNewRenderBufferAttachment(FramebufferAttachment attachment, TextureInternalFormat internalFormat, const scp::u32vec2& size, uint32_t samples = 0);
 			const RenderBuffer* getRenderBufferAttachment(FramebufferAttachment attachment) const;
 			void removeAttachment(FramebufferAttachment attachment);
 

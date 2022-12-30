@@ -748,7 +748,7 @@ namespace spl
 	{
 	}
 
-	Window::Window(const uvec2& size, const std::string& title, bool debugContext) : Window()
+	Window::Window(const scp::u32vec2& size, const std::string& title, bool debugContext) : Window()
 	{
 		// Create window and OpenGL context
 
@@ -895,11 +895,11 @@ namespace spl
 		return glfwGetKey(static_cast<GLFWwindow*>(_window), splKeyToGlfwKey(key)) == GLFW_PRESS;
 	}
 
-	dvec2 Window::getMousePosition() const
+	scp::f64vec2 Window::getMousePosition() const
 	{
 		assert(isValid());
 
-		dvec2 pos;
+		scp::f64vec2 pos;
 		glfwGetCursorPos(static_cast<GLFWwindow*>(_window), &pos.x, &pos.y);
 		return pos;
 	}
@@ -938,7 +938,7 @@ namespace spl
 		return _context;
 	}
 
-	const uvec2& Window::getSize() const
+	const scp::u32vec2& Window::getSize() const
 	{
 		return _size;
 	}

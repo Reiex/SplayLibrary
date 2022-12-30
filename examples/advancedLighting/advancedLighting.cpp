@@ -8,8 +8,8 @@ int advancedLightingMain()
 	context->setIsDepthTestEnabled(true);
 
 	spl::Framebuffer framebuffer;
-	framebuffer.createNewTextureAttachment<spl::Texture2D>(spl::FramebufferAttachment::ColorAttachment0, spl::uvec2{ 1000, 600 });
-	framebuffer.createNewRenderBufferAttachment(spl::FramebufferAttachment::DepthAttachment, spl::TextureInternalFormat::Depth24_Stencil8, spl::uvec2{ 1000, 600 });
+	framebuffer.createNewTextureAttachment<spl::Texture2D>(spl::FramebufferAttachment::ColorAttachment0, scp::u32vec2{ 1000, 600 });
+	framebuffer.createNewRenderBufferAttachment(spl::FramebufferAttachment::DepthAttachment, spl::TextureInternalFormat::Depth24_Stencil8, scp::u32vec2{ 1000, 600 });
 
 	spl::Shader shader1("examples/advancedLighting/resources/shaders/firstPass.vert", "examples/advancedLighting/resources/shaders/firstPass.frag");
 	spl::Shader shader2("examples/advancedLighting/resources/shaders/secondPass.vert", "examples/advancedLighting/resources/shaders/secondPass.frag");
@@ -21,7 +21,7 @@ int advancedLightingMain()
 	spl::Transformable3D meshTransform;
 	meshTransform.scale(0.5f);
 
-	spl::vec3 lightDir = -scp::normalize(spl::vec3{ 1.0, 0.0, 1.0 });
+	scp::f32vec3 lightDir = -scp::normalize(scp::f32vec3{ 1.0, 0.0, 1.0 });
 
 	spl::Mesh<> screen(
 		{

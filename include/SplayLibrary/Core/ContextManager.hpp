@@ -62,10 +62,10 @@ namespace spl
 			Context& operator=(const Context& context) = delete;
 			Context& operator=(Context&& context) = delete;
 
-			void setClearColor(const vec4& clearColor);
+			void setClearColor(const scp::f32vec4& clearColor);
 			void setClearDepth(double clearDepth);
 			void setClearStencil(int32_t clearStencil);
-			void setViewport(const ivec2& offset, const uvec2& size);
+			void setViewport(const scp::i32vec2& offset, const scp::u32vec2& size);
 			void setIsDepthTestEnabled(bool isEnabled);
 
 			bool pollDebugMessage(DebugMessage*& message);
@@ -74,11 +74,11 @@ namespace spl
 			bool getIsDebugContext() const;
 			Framebuffer* getCurrentFramebuffer();
 			Shader* getCurrentShader();
-			const vec4& getClearColor() const;
+			const scp::f32vec4& getClearColor() const;
 			double getClearDepth() const;
 			int32_t getClearStencil() const;
-			const ivec2& getViewportOffset() const;
-			const uvec2& getViewportSize() const;
+			const scp::i32vec2& getViewportOffset() const;
+			const scp::u32vec2& getViewportSize() const;
 			bool getIsDepthTestEnabled() const;
 
 			~Context();
@@ -98,11 +98,11 @@ namespace spl
 			Framebuffer* _currentFramebuffer;
 			Shader* _currentShader;
 
-			vec4 _clearColor;
+			scp::f32vec4 _clearColor;
 			double _clearDepth;
 			int32_t _clearStencil;
-			ivec2 _viewportOffset;
-			uvec2 _viewportSize;
+			scp::i32vec2 _viewportOffset;
+			scp::u32vec2 _viewportSize;
 			bool _isDepthTestEnabled;
 
 			std::queue<DebugMessage*> _debugMessages;

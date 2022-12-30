@@ -23,16 +23,16 @@ namespace spl
 
 	struct DefaultVertex : public VertexBase
 	{
-		DefaultVertex(const vec3& vPos = { 0.f, 0.f, 0.f }, const vec3& vNormal = { 0.f, 0.f, 0.f }, const vec2& vTexCoords = { 0.f, 0.f });
+		DefaultVertex(const scp::f32vec3& vPos = { 0.f, 0.f, 0.f }, const scp::f32vec3& vNormal = { 0.f, 0.f, 0.f }, const scp::f32vec2& vTexCoords = { 0.f, 0.f });
 		DefaultVertex(const DefaultVertex& vertex) = default;
 
 		static std::vector<spl::VertexAttribute> getVertexAttributes();
 
 		virtual void getDefaultVertex(DefaultVertex& vertex) const;
 
-		vec3 pos;
-		vec3 normal;
-		vec2 texCoords;
+		scp::f32vec3 pos;
+		scp::f32vec3 normal;
+		scp::f32vec2 texCoords;
 	};
 
 	template<typename VertexType = DefaultVertex>

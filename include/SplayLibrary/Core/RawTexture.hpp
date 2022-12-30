@@ -252,7 +252,7 @@ namespace spl
 		public:
 
 			RenderBuffer() = delete;
-			RenderBuffer(TextureInternalFormat internalFormat, const uvec2& size, uint32_t samples = 0);
+			RenderBuffer(TextureInternalFormat internalFormat, const scp::u32vec2& size, uint32_t samples = 0);
 			RenderBuffer(const RenderBuffer& renderBuffer) = delete;
 			RenderBuffer(RenderBuffer&& renderBuffer) = delete;
 
@@ -261,7 +261,7 @@ namespace spl
 
 			uint32_t getHandle() const;
 			TextureInternalFormat getInternalFormat() const;
-			const uvec2& getSize() const;
+			const scp::u32vec2& getSize() const;
 
 			~RenderBuffer();
 
@@ -269,6 +269,6 @@ namespace spl
 
 			uint32_t _renderBuffer;
 			TextureInternalFormat _internalFormat;
-			uvec2 _size;
+			scp::u32vec2 _size;
 	};
 }

@@ -30,7 +30,7 @@ namespace spl
 		assert(std::numbers::pi > _fov && _fov > 0.f);
 	}
 
-	PerspectiveCamera::PerspectiveCamera(const uvec2& resolution, float near, float far, float fov) : PerspectiveCamera(static_cast<float>(resolution.x) / resolution.y, near, far, fov)
+	PerspectiveCamera::PerspectiveCamera(const scp::u32vec2& resolution, float near, float far, float fov) : PerspectiveCamera(static_cast<float>(resolution.x) / resolution.y, near, far, fov)
 	{
 	}
 
@@ -40,7 +40,7 @@ namespace spl
 		_updateProjectionMatrix = true;
 	}
 
-	void PerspectiveCamera::setAspect(const uvec2& resolution)
+	void PerspectiveCamera::setAspect(const scp::u32vec2& resolution)
 	{
 		setAspect(static_cast<float>(resolution.x) / resolution.y);
 	}
@@ -63,7 +63,7 @@ namespace spl
 		_updateProjectionMatrix = true;
 	}
 
-	void PerspectiveCamera::lookAt(const vec3& position, float dutchAngle)
+	void PerspectiveCamera::lookAt(const scp::f32vec3& position, float dutchAngle)
 	{
 		if (distance(position, getTranslation()) == 0.f)
 		{
@@ -73,10 +73,10 @@ namespace spl
 		scp::Quat<float> rot = { 1.f, 0.f, 0.f, 0.f };
 		setRotation(rot);
 
-		vec3 dir = normalize(position - getTranslation());
+		scp::f32vec3 dir = normalize(position - getTranslation());
 
-		vec3 dirPlane = { dir.x, 0.f, dir.z };
-		if (length(dirPlane) != 0.f)
+		scp::f32vec3 dirPlane = { dir.x, 0.f, dir.z };
+		if (scp::length(dirPlane) != 0.f)
 		{
 			const float angle = std::atan2(-dirPlane.x, -dirPlane.z);
 
@@ -84,7 +84,7 @@ namespace spl
 		}
 
 		dirPlane = { 0.f, dir.y, dir.z };
-		if (length(dirPlane) != 0.f)
+		if (scp::length(dirPlane) != 0.f)
 		{
 			const float angle = std::numbers::pi / 2 - std::acos(dot(dirPlane, { 0.f, 1.f, 0.f }));
 
@@ -112,27 +112,27 @@ namespace spl
 		return _far;
 	}
 
-	vec3 PerspectiveCamera::getUpVector() const
+	scp::f32vec3 PerspectiveCamera::getUpVector() const
 	{
 		return applyRotationTo({ 0.f, 1.f, 0.f });
 	}
 
-	vec3 PerspectiveCamera::getFrontVector() const
+	scp::f32vec3 PerspectiveCamera::getFrontVector() const
 	{
 		return applyRotationTo({ 0.f, 0.f, -1.f });
 	}
 
-	vec3 PerspectiveCamera::getLeftVector() const
+	scp::f32vec3 PerspectiveCamera::getLeftVector() const
 	{
 		return applyRotationTo({ -1.f, 0.f, 0.f });
 	}
 
-	mat4 PerspectiveCamera::getViewMatrix() const
+	scp::f32mat4x4 PerspectiveCamera::getViewMatrix() const
 	{
 		return getInverseTransformMatrix();
 	}
 
-	const mat4& PerspectiveCamera::getProjectionMatrix() const
+	const scp::f32mat4x4& PerspectiveCamera::getProjectionMatrix() const
 	{
 		computeProjectionMatrix();
 		return _projectionMatrix;

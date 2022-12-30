@@ -17,14 +17,14 @@ namespace spl
 	{
 	}
 
-	Transformable3D& Transformable3D::setTranslation(const vec3& translation)
+	Transformable3D& Transformable3D::setTranslation(const scp::f32vec3& translation)
 	{
 		_translation = translation;
 
 		return *this;
 	}
 
-	Transformable3D& Transformable3D::move(const vec3& offset)
+	Transformable3D& Transformable3D::move(const scp::f32vec3& offset)
 	{
 		return setTranslation(_translation + offset);
 	}
@@ -37,7 +37,7 @@ namespace spl
 		return *this;
 	}
 
-	Transformable3D& Transformable3D::setRotation(const vec3& axis, float angle)
+	Transformable3D& Transformable3D::setRotation(const scp::f32vec3& axis, float angle)
 	{
 		return setRotation(quaternionFromAxisAngle(axis, angle));
 	}
@@ -49,12 +49,12 @@ namespace spl
 		return setRotation(rotation * _rotation);
 	}
 
-	Transformable3D& Transformable3D::rotate(const vec3& axis, float angle)
+	Transformable3D& Transformable3D::rotate(const scp::f32vec3& axis, float angle)
 	{
 		return setRotation(quaternionFromAxisAngle(axis, angle) * _rotation);
 	}
 
-	Transformable3D& Transformable3D::setScale(const vec3& scale)
+	Transformable3D& Transformable3D::setScale(const scp::f32vec3& scale)
 	{
 		_scale = scale;
 
@@ -66,22 +66,22 @@ namespace spl
 		return setScale({ scale, scale, scale });
 	}
 
-	Transformable3D& Transformable3D::scale(const vec3& scale)
+	Transformable3D& Transformable3D::scale(const scp::f32vec3& scale)
 	{
 		return setScale(scale * _scale);
 	}
 
 	Transformable3D& Transformable3D::scale(float scale)
 	{
-		return setScale(vec3{scale, scale, scale} * _scale);
+		return setScale(scp::f32vec3{scale, scale, scale} * _scale);
 	}
 
-	vec3 Transformable3D::applyTranslationTo(const vec3& vector) const
+	scp::f32vec3 Transformable3D::applyTranslationTo(const scp::f32vec3& vector) const
 	{
 		return vector + _translation;
 	}
 
-	vec3 Transformable3D::applyRotationTo(const vec3& vector) const
+	scp::f32vec3 Transformable3D::applyRotationTo(const scp::f32vec3& vector) const
 	{
 		scp::Quat<float> v{ 0.f, vector.x, vector.y, vector.z };
 
@@ -90,25 +90,25 @@ namespace spl
 
 		v = _rotation * v * inv;
 
-		return vec3{ v.x, v.y, v.z };
+		return scp::f32vec3{ v.x, v.y, v.z };
 	}
 
-	vec3 Transformable3D::applyScaleTo(const vec3& vector) const
+	scp::f32vec3 Transformable3D::applyScaleTo(const scp::f32vec3& vector) const
 	{
 		return vector * _scale;
 	}
 
-	vec3 Transformable3D::applyTransformTo(const vec3& vector) const
+	scp::f32vec3 Transformable3D::applyTransformTo(const scp::f32vec3& vector) const
 	{
 		return applyTransformTo(applyRotationTo(applyScaleTo(vector)));
 	}
 
-	vec3 Transformable3D::applyInverseTranslationTo(const vec3& vector) const
+	scp::f32vec3 Transformable3D::applyInverseTranslationTo(const scp::f32vec3& vector) const
 	{
 		return vector - _translation;
 	}
 
-	vec3 Transformable3D::applyInverseRotationTo(const vec3& vector) const
+	scp::f32vec3 Transformable3D::applyInverseRotationTo(const scp::f32vec3& vector) const
 	{
 		scp::Quat<float> v{ 0.f, vector.x, vector.y, vector.z };
 
@@ -117,20 +117,20 @@ namespace spl
 
 		v = inv * v * _rotation;
 
-		return normalize(vec3{ v.x, v.y, v.z });
+		return scp::normalize(scp::f32vec3{ v.x, v.y, v.z });
 	}
 
-	vec3 Transformable3D::applyInverseScaleTo(const vec3& vector) const
+	scp::f32vec3 Transformable3D::applyInverseScaleTo(const scp::f32vec3& vector) const
 	{
 		return vector / _scale;
 	}
 
-	vec3 Transformable3D::applyInverseTransformTo(const vec3& vector) const
+	scp::f32vec3 Transformable3D::applyInverseTransformTo(const scp::f32vec3& vector) const
 	{
 		return applyInverseScaleTo(applyInverseRotationTo(applyInverseTranslationTo(vector)));
 	}
 
-	mat3 Transformable3D::getRotationMatrix() const
+	scp::f32mat3x3 Transformable3D::getRotationMatrix() const
 	{
 		const float aa = _rotation.w * _rotation.w;
 		const float bb = _rotation.x * _rotation.x;
@@ -163,7 +163,7 @@ namespace spl
 		};
 	}
 
-	mat4 Transformable3D::getTransformMatrix() const
+	scp::f32mat4x4 Transformable3D::getTransformMatrix() const
 	{
 		const float& tx = _translation.x;
 		const float& ty = _translation.y;
@@ -205,7 +205,7 @@ namespace spl
 		};
 	}
 
-	mat3 Transformable3D::getInverseRotationMatrix() const
+	scp::f32mat3x3 Transformable3D::getInverseRotationMatrix() const
 	{
 		scp::Quat<float> rot = _rotation;
 		rot.inverse();
@@ -241,7 +241,7 @@ namespace spl
 		};
 	}
 
-	mat4 Transformable3D::getInverseTransformMatrix() const
+	scp::f32mat4x4 Transformable3D::getInverseTransformMatrix() const
 	{
 		const float sx = 1.f / _scale.x;
 		const float sy = 1.f / _scale.y;
@@ -286,7 +286,7 @@ namespace spl
 		};
 	}
 
-	const vec3& Transformable3D::getTranslation() const
+	const scp::f32vec3& Transformable3D::getTranslation() const
 	{
 		return _translation;
 	}
@@ -296,19 +296,19 @@ namespace spl
 		return _rotation;
 	}
 
-	const vec3& Transformable3D::getScale() const
+	const scp::f32vec3& Transformable3D::getScale() const
 	{
 		return _scale;
 	}
 
-	scp::Quat<float> Transformable3D::quaternionFromAxisAngle(const vec3& axis, float angle)
+	scp::Quat<float> Transformable3D::quaternionFromAxisAngle(const scp::f32vec3& axis, float angle)
 	{
-		if (length(axis) == 0.f)
+		if (scp::length(axis) == 0.f)
 		{
 			return { 1.f, 0.f, 0.f, 0.f };
 		}
 
-		const vec3 axisNorm = normalize(axis);
+		const scp::f32vec3 axisNorm = scp::normalize(axis);
 		const float halfAngle = angle / 2.f;
 		const float sinHalfAngle = std::sin(halfAngle);
 

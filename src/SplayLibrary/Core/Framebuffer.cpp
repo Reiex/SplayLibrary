@@ -145,7 +145,7 @@ namespace spl
 		}
 	}
 
-	void Framebuffer::createNewRenderBufferAttachment(FramebufferAttachment attachment, TextureInternalFormat internalFormat, const uvec2& size, uint32_t samples)
+	void Framebuffer::createNewRenderBufferAttachment(FramebufferAttachment attachment, TextureInternalFormat internalFormat, const scp::u32vec2& size, uint32_t samples)
 	{
 		assert(_framebuffer != 0);
 		assert(framebufferAttachmentToGL(attachment) != 0);

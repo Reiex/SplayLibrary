@@ -10,7 +10,7 @@
 
 namespace spl
 {
-	DefaultVertex::DefaultVertex(const vec3& vPos, const vec3& vNormal, const vec2& vTexCoords) :
+	DefaultVertex::DefaultVertex(const scp::f32vec3& vPos, const scp::f32vec3& vNormal, const scp::f32vec2& vTexCoords) :
 		pos(vPos),
 		normal(vNormal),
 		texCoords(vTexCoords)
@@ -19,9 +19,9 @@ namespace spl
 
 	std::vector<spl::VertexAttribute> DefaultVertex::getVertexAttributes()
 	{
-		vec3 pos = { 0.f, 0.f, 0.f };
-		vec3 normal = { 0.f, 0.f, 0.f };
-		vec2 texCoords = { 0.f, 0.f };
+		scp::f32vec3 pos = { 0.f, 0.f, 0.f };
+		scp::f32vec3 normal = { 0.f, 0.f, 0.f };
+		scp::f32vec2 texCoords = { 0.f, 0.f };
 
 		return {
 			{0,	spl::VertexAttribute::Type::Vec3,	offsetof(DefaultVertex, pos),		sizeof(DefaultVertex)},
