@@ -29,7 +29,7 @@ namespace spl
 		bool loadSuccess = false;
 		if (path.extension() == ".obj")
 		{
-			loadSuccess = loadObj(path);
+			loadSuccess = _loadObj(path);
 		}
 
 		if (loadSuccess)
@@ -122,7 +122,7 @@ namespace spl
 	}
 
 	template<typename VertexType>
-	bool Mesh<VertexType>::loadObj(const std::filesystem::path& path)
+	bool Mesh<VertexType>::_loadObj(const std::filesystem::path& path)
 	{
 		dsk::fmt::ObjIStream objIStream;
 		objIStream.setSource(path);

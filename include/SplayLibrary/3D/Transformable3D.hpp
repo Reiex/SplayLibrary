@@ -61,7 +61,7 @@ namespace spl
 
 		protected:
 
-			static scp::Quat<float> quaternionFromAxisAngle(const scp::f32vec3& axis, float angle);
+			static scp::Quat<float> _quaternionFromAxisAngle(const scp::f32vec3& axis, float angle);
 
 		private:
 

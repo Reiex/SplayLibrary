@@ -39,7 +39,7 @@ namespace spl
 		params.offsetX = offset.x;
 		params.offsetY = offset.y;
 
-		TextureBase::createDejaVuImgBuffer(image, _texture.getCreationParams().internalFormat, (void*&) params.data, params.dataFormat, params.dataType);
+		TextureBase::_createDejaVuImgBuffer(image, _texture.getCreationParams().internalFormat, (void*&) params.data, params.dataFormat, params.dataType);
 
 		_texture.update(params);
 

@@ -84,12 +84,12 @@ namespace spl
 
 		private:
 
-			template<typename TFunc, typename... TArgs>
-			void setUniform(const TFunc& func, const std::string& location, const TArgs&... args);
-
 			Shader();
 
-			int32_t getUniformLocation(const std::string& location);
+			template<typename TFunc, typename... TArgs>
+			void _setUniform(const TFunc& func, const std::string& location, const TArgs&... args);
+
+			int32_t _getUniformLocation(const std::string& location);
 
 			uint32_t _program;
 			std::unordered_map<std::string, int32_t> _uniformLocations;

@@ -39,7 +39,7 @@ namespace spl
 
 	Transformable3D& Transformable3D::setRotation(const scp::f32vec3& axis, float angle)
 	{
-		return setRotation(quaternionFromAxisAngle(axis, angle));
+		return setRotation(_quaternionFromAxisAngle(axis, angle));
 	}
 
 	Transformable3D& Transformable3D::rotate(const scp::Quat<float>& rotation)
@@ -51,7 +51,7 @@ namespace spl
 
 	Transformable3D& Transformable3D::rotate(const scp::f32vec3& axis, float angle)
 	{
-		return setRotation(quaternionFromAxisAngle(axis, angle) * _rotation);
+		return setRotation(_quaternionFromAxisAngle(axis, angle) * _rotation);
 	}
 
 	Transformable3D& Transformable3D::setScale(const scp::f32vec3& scale)
@@ -301,7 +301,7 @@ namespace spl
 		return _scale;
 	}
 
-	scp::Quat<float> Transformable3D::quaternionFromAxisAngle(const scp::f32vec3& axis, float angle)
+	scp::Quat<float> Transformable3D::_quaternionFromAxisAngle(const scp::f32vec3& axis, float angle)
 	{
 		if (scp::length(axis) == 0.f)
 		{

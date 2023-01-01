@@ -10,103 +10,6 @@
 
 namespace spl
 {
-	namespace
-	{
-		GLenum framebufferTargetToGL(FramebufferTarget target)
-		{
-			switch (target)
-			{
-			case FramebufferTarget::DrawFramebuffer:
-				return GL_DRAW_FRAMEBUFFER;
-			case FramebufferTarget::ReadFramebuffer:
-				return GL_READ_FRAMEBUFFER;
-			default:
-				assert(false);
-				return 0;
-			}
-		}
-
-		GLenum framebufferAttachmentToGL(FramebufferAttachment attachment)
-		{
-			switch (attachment)
-			{
-			case FramebufferAttachment::DepthAttachment:
-				return GL_DEPTH_ATTACHMENT;
-			case FramebufferAttachment::StencilAttachment:
-				return GL_STENCIL_ATTACHMENT;
-			case FramebufferAttachment::DepthStencilAttachment:
-				return GL_DEPTH_STENCIL_ATTACHMENT;
-			case FramebufferAttachment::ColorAttachment0:
-				return GL_COLOR_ATTACHMENT0;
-			case FramebufferAttachment::ColorAttachment1:
-				return GL_COLOR_ATTACHMENT1;
-			case FramebufferAttachment::ColorAttachment2:
-				return GL_COLOR_ATTACHMENT2;
-			case FramebufferAttachment::ColorAttachment3:
-				return GL_COLOR_ATTACHMENT3;
-			case FramebufferAttachment::ColorAttachment4:
-				return GL_COLOR_ATTACHMENT4;
-			case FramebufferAttachment::ColorAttachment5:
-				return GL_COLOR_ATTACHMENT5;
-			case FramebufferAttachment::ColorAttachment6:
-				return GL_COLOR_ATTACHMENT6;
-			case FramebufferAttachment::ColorAttachment7:
-				return GL_COLOR_ATTACHMENT7;
-			case FramebufferAttachment::ColorAttachment8:
-				return GL_COLOR_ATTACHMENT8;
-			case FramebufferAttachment::ColorAttachment9:
-				return GL_COLOR_ATTACHMENT9;
-			case FramebufferAttachment::ColorAttachment10:
-				return GL_COLOR_ATTACHMENT10;
-			case FramebufferAttachment::ColorAttachment11:
-				return GL_COLOR_ATTACHMENT11;
-			case FramebufferAttachment::ColorAttachment12:
-				return GL_COLOR_ATTACHMENT12;
-			case FramebufferAttachment::ColorAttachment13:
-				return GL_COLOR_ATTACHMENT13;
-			case FramebufferAttachment::ColorAttachment14:
-				return GL_COLOR_ATTACHMENT14;
-			case FramebufferAttachment::ColorAttachment15:
-				return GL_COLOR_ATTACHMENT15;
-			case FramebufferAttachment::ColorAttachment16:
-				return GL_COLOR_ATTACHMENT16;
-			case FramebufferAttachment::ColorAttachment17:
-				return GL_COLOR_ATTACHMENT17;
-			case FramebufferAttachment::ColorAttachment18:
-				return GL_COLOR_ATTACHMENT18;
-			case FramebufferAttachment::ColorAttachment19:
-				return GL_COLOR_ATTACHMENT19;
-			case FramebufferAttachment::ColorAttachment20:
-				return GL_COLOR_ATTACHMENT20;
-			case FramebufferAttachment::ColorAttachment21:
-				return GL_COLOR_ATTACHMENT21;
-			case FramebufferAttachment::ColorAttachment22:
-				return GL_COLOR_ATTACHMENT22;
-			case FramebufferAttachment::ColorAttachment23:
-				return GL_COLOR_ATTACHMENT23;
-			case FramebufferAttachment::ColorAttachment24:
-				return GL_COLOR_ATTACHMENT24;
-			case FramebufferAttachment::ColorAttachment25:
-				return GL_COLOR_ATTACHMENT25;
-			case FramebufferAttachment::ColorAttachment26:
-				return GL_COLOR_ATTACHMENT26;
-			case FramebufferAttachment::ColorAttachment27:
-				return GL_COLOR_ATTACHMENT27;
-			case FramebufferAttachment::ColorAttachment28:
-				return GL_COLOR_ATTACHMENT28;
-			case FramebufferAttachment::ColorAttachment29:
-				return GL_COLOR_ATTACHMENT29;
-			case FramebufferAttachment::ColorAttachment30:
-				return GL_COLOR_ATTACHMENT30;
-			case FramebufferAttachment::ColorAttachment31:
-				return GL_COLOR_ATTACHMENT31;
-			default:
-				assert(false);
-				return 0;
-			}
-		}
-	}
-
 	Framebuffer::Framebuffer() :
 		_framebuffer(),
 		_textureAttachments(),
@@ -122,14 +25,6 @@ namespace spl
 	{
 	}
 
-	void Framebuffer::attachTexture(FramebufferAttachment attachment)
-	{
-		assert(framebufferAttachmentToGL(attachment) != 0);
-		// TODO: Choose level / layer (glNamedFramebufferTextureLayer ?)
-		// TODO: Check that the texture type and format correspond to the attachment
-		glNamedFramebufferTexture(_framebuffer, framebufferAttachmentToGL(attachment), _textureAttachments[attachment]->getRawTexture().getHandle(), 0);
-	}
-	
 	const TextureBase* Framebuffer::getTextureAttachment(FramebufferAttachment attachment) const
 	{
 		assert(_framebuffer != 0);
@@ -237,5 +132,13 @@ namespace spl
 		{
 			glDeleteFramebuffers(1, &_framebuffer);
 		}
+	}
+
+	void Framebuffer::_attachTexture(FramebufferAttachment attachment)
+	{
+		assert(framebufferAttachmentToGL(attachment) != 0);
+		// TODO: Choose level / layer (glNamedFramebufferTextureLayer ?)
+		// TODO: Check that the texture type and format correspond to the attachment
+		glNamedFramebufferTexture(_framebuffer, framebufferAttachmentToGL(attachment), _textureAttachments[attachment]->getRawTexture().getHandle(), 0);
 	}
 }

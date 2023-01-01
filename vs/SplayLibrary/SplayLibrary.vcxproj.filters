@@ -43,6 +43,9 @@
     <Filter Include="Source Files\Core\Texture">
       <UniqueIdentifier>{41564379-aa5e-49f9-a6c4-5b57d9c0d26c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Private\templates">
+      <UniqueIdentifier>{1fd2aed5-2f72-43b6-96cc-a2f76a0a3d5b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\SplayLibrary\Core\Drawable.cpp">
@@ -160,6 +163,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Texture\templates\TextureBase.hpp">
       <Filter>Header Files\Core\Texture\templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Private\templates\Private.hpp">
+      <Filter>Header Files\Private\templates</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

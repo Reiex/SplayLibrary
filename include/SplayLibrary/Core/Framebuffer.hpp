@@ -86,7 +86,7 @@ namespace spl
 
 		private:
 
-			void attachTexture(FramebufferAttachment attachment);
+			void _attachTexture(FramebufferAttachment attachment);
 
 			uint32_t _framebuffer;
 			std::unordered_map<FramebufferAttachment, TextureBase*> _textureAttachments;

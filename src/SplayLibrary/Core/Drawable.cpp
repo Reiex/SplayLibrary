@@ -10,66 +10,6 @@
 
 namespace spl
 {
-	namespace
-	{
-		BufferUsage drawableStorageToBufferUsage(DrawableStorage storage)
-		{
-			switch (storage)
-			{
-			case DrawableStorage::Immutable:
-				return BufferUsage::Undefined;
-			case DrawableStorage::Static:
-				return BufferUsage::StaticDraw;
-			case DrawableStorage::Dynamic:
-				return BufferUsage::DynamicDraw;
-			case DrawableStorage::Stream:
-				return BufferUsage::StreamDraw;
-			default:
-				assert(false);
-				return BufferUsage::Undefined;
-			}
-		}
-
-		BufferStorageFlags::Flags drawableStorageToBufferStorageFlags(DrawableStorage storage)
-		{
-			switch (storage)
-			{
-			case DrawableStorage::Immutable:
-			case DrawableStorage::Static:
-			case DrawableStorage::Dynamic:
-			case DrawableStorage::Stream:
-				return BufferStorageFlags::None;
-			default:
-				assert(false);
-				return BufferStorageFlags::None;
-			}
-		}
-	
-		GLenum primitiveTypeToGL(PrimitiveType primitiveType)
-		{
-			switch (primitiveType)
-			{
-				case PrimitiveType::Points:
-					return GL_POINTS;
-				case PrimitiveType::Lines:
-					return GL_LINES;
-				case PrimitiveType::LineStrip:
-					return GL_LINE_STRIP;
-				case PrimitiveType::LineLoop:
-					return GL_LINE_LOOP;
-				case PrimitiveType::Triangles:
-					return GL_TRIANGLES;
-				case PrimitiveType::TriangleStrip:
-					return GL_TRIANGLE_STRIP;
-				case PrimitiveType::TriangleFan:
-					return GL_TRIANGLE_FAN;
-				default:
-					assert(false);
-					return 0;
-			}
-		}
-	}
-
 	Drawable::Drawable() :
 		_vao(0),
 		_vbo(),

@@ -117,7 +117,7 @@ namespace spl
 		glDeleteShader(fragmentShader);
 	}
 
-	int32_t Shader::getUniformLocation(const std::string& location)
+	int32_t Shader::_getUniformLocation(const std::string& location)
 	{
 		assert(isValid());
 
@@ -134,218 +134,218 @@ namespace spl
 
 	void Shader::setUniform(const std::string& location, float value)
 	{
-		setUniform(glUniform1f, location, value);
+		_setUniform(glUniform1f, location, value);
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32vec2& value)
 	{
-		setUniform(glUniform2f, location, value.x, value.y);
+		_setUniform(glUniform2f, location, value.x, value.y);
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32vec3& value)
 	{
-		setUniform(glUniform3f, location, value.x, value.y, value.z);
+		_setUniform(glUniform3f, location, value.x, value.y, value.z);
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32vec4& value)
 	{
-		setUniform(glUniform4f, location, value.x, value.y, value.z, value.w);
+		_setUniform(glUniform4f, location, value.x, value.y, value.z, value.w);
 	}
 
 	void Shader::setUniform(const std::string& location, const float* values, uint32_t count)
 	{
-		setUniform(glUniform1fv, location, count, values);
+		_setUniform(glUniform1fv, location, count, values);
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32vec2* values, uint32_t count)
 	{
-		setUniform(glUniform2fv, location, count, reinterpret_cast<const float*>(values));
+		_setUniform(glUniform2fv, location, count, reinterpret_cast<const float*>(values));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32vec3* values, uint32_t count)
 	{
-		setUniform(glUniform3fv, location, count, reinterpret_cast<const float*>(values));
+		_setUniform(glUniform3fv, location, count, reinterpret_cast<const float*>(values));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32vec4* values, uint32_t count)
 	{
-		setUniform(glUniform4fv, location, count, reinterpret_cast<const float*>(values));
+		_setUniform(glUniform4fv, location, count, reinterpret_cast<const float*>(values));
 	}
 
 	void Shader::setUniform(const std::string& location, const int32_t value)
 	{
-		setUniform(glUniform1i, location, value);
+		_setUniform(glUniform1i, location, value);
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::i32vec2& value)
 	{
-		setUniform(glUniform2i, location, value.x, value.y);
+		_setUniform(glUniform2i, location, value.x, value.y);
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::i32vec3& value)
 	{
-		setUniform(glUniform3i, location, value.x, value.y, value.z);
+		_setUniform(glUniform3i, location, value.x, value.y, value.z);
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::i32vec4& value)
 	{
-		setUniform(glUniform4i, location, value.x, value.y, value.z, value.w);
+		_setUniform(glUniform4i, location, value.x, value.y, value.z, value.w);
 	}
 
 	void Shader::setUniform(const std::string& location, const int32_t* values, uint32_t count)
 	{
-		setUniform(glUniform1iv, location, count, values);
+		_setUniform(glUniform1iv, location, count, values);
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::i32vec2* values, uint32_t count)
 	{
-		setUniform(glUniform2iv, location, count, reinterpret_cast<const int32_t*>(values));
+		_setUniform(glUniform2iv, location, count, reinterpret_cast<const int32_t*>(values));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::i32vec3* values, uint32_t count)
 	{
-		setUniform(glUniform3iv, location, count, reinterpret_cast<const int32_t*>(values));
+		_setUniform(glUniform3iv, location, count, reinterpret_cast<const int32_t*>(values));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::i32vec4* values, uint32_t count)
 	{
-		setUniform(glUniform4iv, location, count, reinterpret_cast<const int32_t*>(values));
+		_setUniform(glUniform4iv, location, count, reinterpret_cast<const int32_t*>(values));
 	}
 
 	void Shader::setUniform(const std::string& location, uint32_t value)
 	{
-		setUniform(glUniform1ui, location, value);
+		_setUniform(glUniform1ui, location, value);
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::u32vec2& value)
 	{
-		setUniform(glUniform2ui, location, value.x, value.y);
+		_setUniform(glUniform2ui, location, value.x, value.y);
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::u32vec3& value)
 	{
-		setUniform(glUniform3ui, location, value.x, value.y, value.z);
+		_setUniform(glUniform3ui, location, value.x, value.y, value.z);
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::u32vec4& value)
 	{
-		setUniform(glUniform4ui, location, value.x, value.y, value.z, value.w);
+		_setUniform(glUniform4ui, location, value.x, value.y, value.z, value.w);
 	}
 
 	void Shader::setUniform(const std::string& location, const uint32_t* values, uint32_t count)
 	{
-		setUniform(glUniform1uiv, location, count, values);
+		_setUniform(glUniform1uiv, location, count, values);
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::u32vec2* values, uint32_t count)
 	{
-		setUniform(glUniform2uiv, location, count, reinterpret_cast<const uint32_t*>(values));
+		_setUniform(glUniform2uiv, location, count, reinterpret_cast<const uint32_t*>(values));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::u32vec3* values, uint32_t count)
 	{
-		setUniform(glUniform3uiv, location, count, reinterpret_cast<const uint32_t*>(values));
+		_setUniform(glUniform3uiv, location, count, reinterpret_cast<const uint32_t*>(values));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::u32vec4* values, uint32_t count)
 	{
-		setUniform(glUniform4uiv, location, count, reinterpret_cast<const uint32_t*>(values));
+		_setUniform(glUniform4uiv, location, count, reinterpret_cast<const uint32_t*>(values));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32mat2x2& value)
 	{
-		setUniform(glUniformMatrix2fv, location, 1, true, reinterpret_cast<const float*>(&value));
+		_setUniform(glUniformMatrix2fv, location, 1, true, reinterpret_cast<const float*>(&value));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32mat2x3& value)
 	{
-		setUniform(glUniformMatrix2x3fv, location, 1, true, reinterpret_cast<const float*>(&value));
+		_setUniform(glUniformMatrix2x3fv, location, 1, true, reinterpret_cast<const float*>(&value));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32mat2x4& value)
 	{
-		setUniform(glUniformMatrix2x4fv, location, 1, true, reinterpret_cast<const float*>(&value));
+		_setUniform(glUniformMatrix2x4fv, location, 1, true, reinterpret_cast<const float*>(&value));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32mat3x2& value)
 	{
-		setUniform(glUniformMatrix3x2fv, location, 1, true, reinterpret_cast<const float*>(&value));
+		_setUniform(glUniformMatrix3x2fv, location, 1, true, reinterpret_cast<const float*>(&value));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32mat3x3& value)
 	{
-		setUniform(glUniformMatrix3fv, location, 1, true, reinterpret_cast<const float*>(&value));
+		_setUniform(glUniformMatrix3fv, location, 1, true, reinterpret_cast<const float*>(&value));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32mat3x4& value)
 	{
-		setUniform(glUniformMatrix3x4fv, location, 1, true, reinterpret_cast<const float*>(&value));
+		_setUniform(glUniformMatrix3x4fv, location, 1, true, reinterpret_cast<const float*>(&value));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32mat4x2& value)
 	{
-		setUniform(glUniformMatrix4x2fv, location, 1, true, reinterpret_cast<const float*>(&value));
+		_setUniform(glUniformMatrix4x2fv, location, 1, true, reinterpret_cast<const float*>(&value));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32mat4x3& value)
 	{
-		setUniform(glUniformMatrix4x3fv, location, 1, true, reinterpret_cast<const float*>(&value));
+		_setUniform(glUniformMatrix4x3fv, location, 1, true, reinterpret_cast<const float*>(&value));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32mat4x4& value)
 	{
-		setUniform(glUniformMatrix4fv, location, 1, true, reinterpret_cast<const float*>(&value));
+		_setUniform(glUniformMatrix4fv, location, 1, true, reinterpret_cast<const float*>(&value));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32mat2x2* value, uint32_t count)
 	{
-		setUniform(glUniformMatrix2fv, location, count, true, reinterpret_cast<const float*>(value));
+		_setUniform(glUniformMatrix2fv, location, count, true, reinterpret_cast<const float*>(value));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32mat2x3* value, uint32_t count)
 	{
-		setUniform(glUniformMatrix2x3fv, location, count, true, reinterpret_cast<const float*>(value));
+		_setUniform(glUniformMatrix2x3fv, location, count, true, reinterpret_cast<const float*>(value));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32mat2x4* value, uint32_t count)
 	{
-		setUniform(glUniformMatrix2x4fv, location, count, true, reinterpret_cast<const float*>(value));
+		_setUniform(glUniformMatrix2x4fv, location, count, true, reinterpret_cast<const float*>(value));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32mat3x2* value, uint32_t count)
 	{
-		setUniform(glUniformMatrix3x2fv, location, count, true, reinterpret_cast<const float*>(value));
+		_setUniform(glUniformMatrix3x2fv, location, count, true, reinterpret_cast<const float*>(value));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32mat3x3* value, uint32_t count)
 	{
-		setUniform(glUniformMatrix3fv, location, count, true, reinterpret_cast<const float*>(value));
+		_setUniform(glUniformMatrix3fv, location, count, true, reinterpret_cast<const float*>(value));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32mat3x4* value, uint32_t count)
 	{
-		setUniform(glUniformMatrix3x4fv, location, count, true, reinterpret_cast<const float*>(value));
+		_setUniform(glUniformMatrix3x4fv, location, count, true, reinterpret_cast<const float*>(value));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32mat4x2* value, uint32_t count)
 	{
-		setUniform(glUniformMatrix4x2fv, location, count, true, reinterpret_cast<const float*>(value));
+		_setUniform(glUniformMatrix4x2fv, location, count, true, reinterpret_cast<const float*>(value));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32mat4x3* value, uint32_t count)
 	{
-		setUniform(glUniformMatrix4x3fv, location, count, true, reinterpret_cast<const float*>(value));
+		_setUniform(glUniformMatrix4x3fv, location, count, true, reinterpret_cast<const float*>(value));
 	}
 
 	void Shader::setUniform(const std::string& location, const scp::f32mat4x4* value, uint32_t count)
 	{
-		setUniform(glUniformMatrix4fv, location, count, true, reinterpret_cast<const float*>(value));
+		_setUniform(glUniformMatrix4fv, location, count, true, reinterpret_cast<const float*>(value));
 	}
 
 	void Shader::setUniform(const std::string& location, const RawTexture& texture, uint32_t textureUnit)
 	{
 		RawTexture::bind(texture, texture.getCreationParams().target, textureUnit);
-		setUniform(glUniform1i, location, textureUnit);
+		_setUniform(glUniform1i, location, textureUnit);
 	}
 
 	void Shader::setUniform(const std::string& location, const TextureBase& texture, uint32_t textureUnit)

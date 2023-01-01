@@ -58,6 +58,7 @@
     <ClInclude Include="..\..\include\SplayLibrary\Core\Window.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\DefaultFramebuffer.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Private\Private.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Private\templates\Private.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\SplayLibrary.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -87,8 +87,8 @@ namespace spl
 
 			Context();
 
-			void setWindow(Window* window);
-			void onFirstActivation();
+			void _setWindow(Window* window);
+			void _onFirstActivation();
 
 			Window* _window;
 			bool _debugContext;
@@ -126,8 +126,8 @@ namespace spl
 
 		private:
 
-			static Context* createContext();
-			static bool destroyContext(Context* context);
+			static Context* _createContext();
+			static bool _destroyContext(Context* context);
 
 
 			static std::mutex s_mutex;

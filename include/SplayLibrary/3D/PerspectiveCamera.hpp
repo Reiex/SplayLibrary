@@ -41,7 +41,7 @@ namespace spl
 
 		private:
 
-			void computeProjectionMatrix() const;
+			void _computeProjectionMatrix() const;
 
 			float _aspect;
 			float _near;

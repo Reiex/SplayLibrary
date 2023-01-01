@@ -58,7 +58,7 @@ namespace spl
 
 			Window();
 
-			bool processEvent(Event*& event);
+			bool _processEvent(Event*& event);
 
 			void* _window;
 			Context* _context;

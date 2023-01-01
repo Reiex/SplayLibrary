@@ -12,77 +12,6 @@ namespace spl
 {
 	namespace
 	{
-		DebugMessageSource glToDebugMessageSource(GLenum source)
-		{
-			switch (source)
-			{
-				case GL_DEBUG_SOURCE_API:
-					return DebugMessageSource::Api;
-				case GL_DEBUG_SOURCE_SHADER_COMPILER:
-					return DebugMessageSource::ShaderCompiler;
-				case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
-					return DebugMessageSource::WindowSystem;
-				case GL_DEBUG_SOURCE_THIRD_PARTY:
-					return DebugMessageSource::ThirdParty;
-				case GL_DEBUG_SOURCE_APPLICATION:
-					return DebugMessageSource::Application;
-				case GL_DEBUG_SOURCE_OTHER:
-					return DebugMessageSource::Other;
-				default:
-					assert(false);
-					return DebugMessageSource::Other;
-			}
-		}
-
-		DebugMessageType glToDebugMessageType(GLenum type)
-		{
-			switch (type)
-			{
-				case GL_DEBUG_TYPE_ERROR:
-					return DebugMessageType::Error;
-				case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
-					return DebugMessageType::DeprecatedBehavior;
-				case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
-					return DebugMessageType::UndefinedBehavior;
-				case GL_DEBUG_TYPE_PERFORMANCE:
-					return DebugMessageType::Performance;
-				case GL_DEBUG_TYPE_PORTABILITY:
-					return DebugMessageType::Portability;
-				case GL_DEBUG_TYPE_MARKER:
-					return DebugMessageType::Marker;
-				case GL_DEBUG_TYPE_PUSH_GROUP:
-					return DebugMessageType::PushGroup;
-				case GL_DEBUG_TYPE_POP_GROUP:
-					return DebugMessageType::PopGroup;
-				case GL_DEBUG_TYPE_OTHER:
-					return DebugMessageType::Other;
-				default:
-					assert(false);
-					return DebugMessageType::Other;
-			}
-		}
-		
-		DebugMessageSeverity glToDebugMessageSeverity(GLenum severity)
-		{
-			switch (severity)
-			{
-				case GL_DEBUG_SEVERITY_HIGH:
-					return DebugMessageSeverity::High;
-				case GL_DEBUG_SEVERITY_MEDIUM:
-					return DebugMessageSeverity::Medium;
-				case GL_DEBUG_SEVERITY_LOW:
-					return DebugMessageSeverity::Low;
-				case GL_DEBUG_SEVERITY_NOTIFICATION:
-					return DebugMessageSeverity::Notification;
-				default:
-					assert(false);
-					return DebugMessageSeverity::High;
-			}
-		}
-	}
-
-	namespace
-	{
 		GLvoid debugMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* rawMessage, const GLvoid* userParam)
 		{
 			DebugMessage* message = new DebugMessage();
@@ -245,14 +174,14 @@ namespace spl
 		}
 	}
 
-	void Context::setWindow(Window* window)
+	void Context::_setWindow(Window* window)
 	{
 		_window = window;
 		_currentFramebuffer = &window->getFramebuffer();
 		_viewportSize = window->getSize();
 	}
 
-	void Context::onFirstActivation()
+	void Context::_onFirstActivation()
 	{
 		if (_debugContext)
 		{
@@ -271,7 +200,7 @@ namespace spl
 	std::unordered_set<Context*> ContextManager::s_contexts;
 	std::unordered_map<std::thread::id, Context*> ContextManager::s_currentContexts;
 
-	Context* ContextManager::createContext()
+	Context* ContextManager::_createContext()
 	{
 		s_mutex.lock();
 
@@ -344,7 +273,7 @@ namespace spl
 			if (!context->_hasBeenActivated)
 			{
 				context->_hasBeenActivated = true;
-				context->onFirstActivation();
+				context->_onFirstActivation();
 			}
 		}
 		else
@@ -382,7 +311,7 @@ namespace spl
 		}
 	}
 
-	bool ContextManager::destroyContext(Context* context)
+	bool ContextManager::_destroyContext(Context* context)
 	{
 		s_mutex.lock();
 

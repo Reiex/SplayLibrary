@@ -30,7 +30,7 @@ namespace spl
 
 	namespace
 	{
-		KeyboardKey glfwKeyToSplKey(int key)
+		constexpr KeyboardKey glfwKeyToSplKey(int key)
 		{
 			switch (key)
 			{
@@ -282,7 +282,7 @@ namespace spl
 			}
 		}
 
-		int splKeyToGlfwKey(KeyboardKey key)
+		constexpr int splKeyToGlfwKey(KeyboardKey key)
 		{
 			switch (key)
 			{
@@ -534,7 +534,7 @@ namespace spl
 			}
 		}
 
-		ButtonAction glfwActionToButtonAction(int action)
+		constexpr ButtonAction glfwActionToButtonAction(int action)
 		{
 			switch (action)
 			{
@@ -550,7 +550,7 @@ namespace spl
 			}
 		}
 
-		KeyboardModifier::ModifierFlags glfwModifierToSplModifier(int mods)
+		constexpr KeyboardModifier::ModifierFlags glfwModifierToSplModifier(int mods)
 		{
 			int flags = KeyboardModifier::None;
 
@@ -582,7 +582,7 @@ namespace spl
 			return static_cast<KeyboardModifier::ModifierFlags>(flags);
 		}
 	
-		MouseButton glfwMouseButtonToSplMouseButton(int button)
+		constexpr MouseButton glfwMouseButtonToSplMouseButton(int button)
 		{
 			switch (button)
 			{
@@ -608,7 +608,7 @@ namespace spl
 			}
 		}
 	
-		int splMouseButtonToGlfwMouseButton(MouseButton button)
+		constexpr int splMouseButtonToGlfwMouseButton(MouseButton button)
 		{
 
 			switch (button)
@@ -638,7 +638,7 @@ namespace spl
 
 	namespace
 	{
-		int splCursorModeToGlfwCursorMode(CursorMode mode)
+		constexpr int splCursorModeToGlfwCursorMode(CursorMode mode)
 		{
 			switch (mode)
 			{
@@ -752,7 +752,7 @@ namespace spl
 	{
 		// Create window and OpenGL context
 
-		_context = ContextManager::createContext();
+		_context = ContextManager::_createContext();
 		if (!_context)
 		{
 			return;
@@ -775,11 +775,11 @@ namespace spl
 		_window = glfwCreateWindow(_size.x, _size.y, title.c_str(), nullptr, nullptr);
 		if (!_window)
 		{
-			ContextManager::destroyContext(_context);
+			ContextManager::_destroyContext(_context);
 			return;
 		}
 
-		_context->setWindow(this);
+		_context->_setWindow(this);
 
 		// Set input callbacks
 
@@ -813,7 +813,7 @@ namespace spl
 		assert(isValid());
 
 		glfwPollEvents();
-		return processEvent(event);
+		return _processEvent(event);
 	}
 
 	bool Window::waitEvent(Event*& event, double timeout)
@@ -829,7 +829,7 @@ namespace spl
 			glfwWaitEventsTimeout(timeout);
 		}
 
-		return processEvent(event);
+		return _processEvent(event);
 	}
 
 	void Window::display()
@@ -838,7 +838,7 @@ namespace spl
 		glfwSwapBuffers(glfwWindow);
 	}
 
-	bool Window::processEvent(Event*& event)
+	bool Window::_processEvent(Event*& event)
 	{
 		assert(isValid());
 
@@ -964,7 +964,7 @@ namespace spl
 		{
 			ContextManager::setCurrentContext(nullptr);
 		}
-		ContextManager::destroyContext(_context);
+		ContextManager::_destroyContext(_context);
 		_context = nullptr;
 
 		if (_window)

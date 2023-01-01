@@ -30,6 +30,6 @@ namespace spl
 		}
 
 		_textureAttachments[attachment] = new TextureType(args...);
-		attachTexture(attachment);
+		_attachTexture(attachment);
 	}
 }

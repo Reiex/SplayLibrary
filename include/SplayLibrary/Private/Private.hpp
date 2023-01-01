@@ -9,3 +9,29 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+namespace spl
+{
+	namespace
+	{
+		constexpr DebugMessageSource glToDebugMessageSource(GLenum source);
+		constexpr DebugMessageType glToDebugMessageType(GLenum type);
+		constexpr DebugMessageSeverity glToDebugMessageSeverity(GLenum severity);
+
+		constexpr BufferUsage drawableStorageToBufferUsage(DrawableStorage storage);
+		constexpr BufferStorageFlags::Flags drawableStorageToBufferStorageFlags(DrawableStorage storage);
+
+		constexpr GLenum bufferTargetToGL(BufferTarget target);
+		constexpr GLenum bufferUsageToGL(BufferUsage usage);
+		constexpr GLbitfield bufferStorageFlagsToGL(BufferStorageFlags::Flags flags);
+		constexpr GLenum primitiveTypeToGL(PrimitiveType primitiveType);
+		constexpr GLenum framebufferTargetToGL(FramebufferTarget target);
+		constexpr GLenum framebufferAttachmentToGL(FramebufferAttachment attachment);
+		constexpr GLenum textureTargetToGL(TextureTarget target);
+		constexpr GLenum textureFormatToGL(TextureFormat format);
+		constexpr GLenum textureDataTypeToGL(TextureDataType dataType);
+		constexpr GLenum textureInternalFormatToGL(TextureInternalFormat internalFormat);
+	}
+}
+
+#include <SplayLibrary/Private/templates/Private.hpp>

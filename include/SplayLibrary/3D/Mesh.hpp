@@ -60,7 +60,7 @@ namespace spl
 
 		protected:
 
-			bool loadObj(const std::filesystem::path& path);
+			bool _loadObj(const std::filesystem::path& path);
 
 			Mesh();
 

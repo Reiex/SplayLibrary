@@ -134,11 +134,11 @@ namespace spl
 
 	const scp::f32mat4x4& PerspectiveCamera::getProjectionMatrix() const
 	{
-		computeProjectionMatrix();
+		_computeProjectionMatrix();
 		return _projectionMatrix;
 	}
 
-	void PerspectiveCamera::computeProjectionMatrix() const
+	void PerspectiveCamera::_computeProjectionMatrix() const
 	{
 		if (_updateProjectionMatrix)
 		{
