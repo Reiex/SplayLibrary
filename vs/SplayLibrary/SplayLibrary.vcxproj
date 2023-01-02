@@ -46,6 +46,7 @@
     <ClInclude Include="..\..\include\SplayLibrary\Core\Drawable.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Event.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Framebuffer.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\templates\Buffer.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\templates\Framebuffer.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\templates\Shader.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Shader.hpp" />

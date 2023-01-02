@@ -10,6 +10,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <SplayLibrary/Core/types.hpp>
+
 namespace spl
 {
 	namespace

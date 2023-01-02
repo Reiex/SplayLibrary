@@ -2,7 +2,7 @@
 //! \file
 //! \author Reiex
 //! \copyright The MIT License (MIT)
-//! \date 2019-2022
+//! \date 2019-2023
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
@@ -12,6 +12,12 @@
 #define SCP_VEC(vecName, vecSize, eltType)						\
 struct vecName##vecSize											\
 {																\
+	using IsVec = bool;											\
+	using ValueType = eltType;									\
+																\
+	static constexpr uint8_t size = vecSize;					\
+																\
+																\
 	SCP_VEC##vecSize##_CONSTRUCTORS(vecName, vecSize, eltType)	\
 	SCP_##vecName##_INTERNAL_OP(vecName, vecSize, eltType)		\
 	SCP_VEC##vecSize##_INTERNAL_FUNC(vecName, vecSize, eltType)	\

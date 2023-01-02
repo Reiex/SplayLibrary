@@ -167,5 +167,8 @@
     <ClInclude Include="..\..\include\SplayLibrary\Private\templates\Private.hpp">
       <Filter>Header Files\Private\templates</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\templates\Buffer.hpp">
+      <Filter>Header Files\Core\templates</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

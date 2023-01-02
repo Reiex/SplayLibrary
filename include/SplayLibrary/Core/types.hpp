@@ -39,6 +39,7 @@ namespace spl
 
 	struct VertexAttribute;
 	enum class DrawableStorage;
+	enum class PrimitiveType;
 	class Drawable;
 
 
@@ -57,6 +58,8 @@ namespace spl
 	class Shader;
 
 
+	enum class FramebufferTarget;
+	enum class FramebufferAttachment;
 	class Framebuffer;
 	class DefaultFramebuffer;
 
@@ -73,9 +76,14 @@ namespace spl
 	struct MouseButtonEvent;
 	struct ScrollEvent;
 	struct ResizeEvent;
-
+	
+	enum class CursorMode;
 	class Window;
 
+	enum class DebugMessageSource;
+	enum class DebugMessageType;
+	enum class DebugMessageSeverity;
+	struct DebugMessage;
 	class Context;
 	class ContextManager;
 }

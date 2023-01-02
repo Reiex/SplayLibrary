@@ -93,7 +93,8 @@ namespace spl
 
 			void update(const void* data, uint32_t size, uint32_t dstOffset = 0);
 			void update(const Buffer& data, uint32_t size, uint32_t dstOffset = 0, uint32_t srcOffset = 0);
-			// TODO: clearing
+			template<scp::CNumber TNumber> void clear(const TNumber& value, uint32_t size, uint32_t dstOffset = 0);
+			template<scp::CVec TVec> void clear(const TVec& value, uint32_t size, uint32_t dstOffset = 0);
 			// TODO: mapping
 
 			void destroy();
@@ -115,9 +116,13 @@ namespace spl
 
 		private:
 
+			void _clear(TextureInternalFormat internalFormat, uint32_t dstOffset, uint32_t size, TextureFormat format, TextureDataType type, const void* data);
+
 			uint32_t _buffer;
 			uint32_t _size;
 			BufferUsage _usage;
 			BufferStorageFlags::Flags _flags;
 	};
 }
+
+#include <SplayLibrary/Core/templates/Buffer.hpp>

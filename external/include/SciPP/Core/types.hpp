@@ -2,7 +2,7 @@
 //! \file
 //! \author Reiex
 //! \copyright The MIT License (MIT)
-//! \date 2019-2022
+//! \date 2019-2023
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
@@ -111,6 +111,7 @@ namespace scp
 	struct i32vec2; struct i32vec3; struct i32vec4;
 	struct i64vec2; struct i64vec3; struct i64vec4;
 	struct bvec2; struct bvec3; struct bvec4;
+	template<typename T> concept CVec = requires { typename T::IsVec; };
 
 	namespace _scp { template<typename TValue, uint8_t Row, uint8_t Col, typename TRow> class Mat; }
 	using f32mat2x2 = _scp::Mat<float, 2, 2, f32vec2>; using f32mat2x3 = _scp::Mat<float, 2, 3, f32vec3>; using f32mat2x4 = _scp::Mat<float, 2, 4, f32vec4>;
@@ -119,7 +120,7 @@ namespace scp
 	using f64mat2x2 = _scp::Mat<double, 2, 2, f64vec2>; using f64mat2x3 = _scp::Mat<double, 2, 3, f64vec3>; using f64mat2x4 = _scp::Mat<double, 2, 4, f64vec4>;
 	using f64mat3x2 = _scp::Mat<double, 3, 2, f64vec2>; using f64mat3x3 = _scp::Mat<double, 3, 3, f64vec3>; using f64mat3x4 = _scp::Mat<double, 3, 4, f64vec4>;
 	using f64mat4x2 = _scp::Mat<double, 4, 2, f64vec2>; using f64mat4x3 = _scp::Mat<double, 4, 3, f64vec3>; using f64mat4x4 = _scp::Mat<double, 4, 4, f64vec4>;
-
+	template<typename T> concept CMat = requires { typename T::IsMat; };
 
 	template<typename TBase, typename TBuffer> class BigInt;
 	template<typename TValue> class Frac;
@@ -132,9 +133,9 @@ namespace scp
 	struct TensorShape;
 	enum class BorderBehaviour;
 	enum class InterpolationMethod;
-	template<typename T> concept CUntypedTensor = requires { typename T::ValueType; };	// TODO: Better than that
-	template<typename T> concept CUntypedMatrix = requires { typename T::Super; typename T::IsMatrix; }&& CUntypedTensor<typename T::Super>;
-	template<typename T> concept CUntypedVector = requires { typename T::Super; typename T::IsVector; }&& CUntypedTensor<typename T::Super>;
+	template<typename T> concept CUntypedTensor = requires { typename T::IsTensor; };
+	template<typename T> concept CUntypedMatrix = requires { typename T::Super; typename T::IsMatrix; } && CUntypedTensor<typename T::Super>;
+	template<typename T> concept CUntypedVector = requires { typename T::Super; typename T::IsVector; } && CUntypedTensor<typename T::Super>;
 	template<typename T, typename TValue> concept CTensor = CUntypedTensor<T> && std::same_as<TValue, typename T::ValueType>;
 	template<typename T, typename TValue> concept CMatrix = CUntypedMatrix<T> && std::same_as<TValue, typename T::Super::ValueType>;
 	template<typename T, typename TValue> concept CVector = CUntypedVector<T> && std::same_as<TValue, typename T::Super::ValueType>;

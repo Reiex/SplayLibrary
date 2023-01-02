@@ -219,4 +219,9 @@ namespace spl
 	{
 		destroy();
 	}
+
+	void Buffer::_clear(TextureInternalFormat internalFormat, uint32_t dstOffset, uint32_t size, TextureFormat format, TextureDataType type, const void* data)
+	{
+		glClearNamedBufferSubData(_buffer, textureInternalFormatToGL(internalFormat), dstOffset, size, textureFormatToGL(format), textureDataTypeToGL(type), data);
+	}
 }
