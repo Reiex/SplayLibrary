@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include <SciPP/Core/Tensor/Tensor.hpp>
-#include <SciPP/Core/misc.hpp>
+#include <SciPP/Core/CoreDecl.hpp>
 
 namespace scp
 {

@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include <SciPP/Core/types.hpp>
-#include <SciPP/Core/Tensor/TensorBase.hpp>
+#include <SciPP/Core/CoreTypes.hpp>
 
 namespace scp
 {
@@ -85,5 +84,3 @@ namespace scp
 	// template<typename TValue>
 	// SpVector<TValue> operator*(const SpVector<TValue>& vector, const SpMatrix<TValue>& matrix);
 }
-
-#include <SciPP/Core/Tensor/templates/SpTensor.hpp>

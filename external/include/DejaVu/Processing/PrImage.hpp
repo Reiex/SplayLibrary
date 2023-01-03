@@ -2,12 +2,12 @@
 //! \file
 //! \author Reiex
 //! \copyright The MIT License (MIT)
-//! \date 2019-2022
+//! \date 2020-2022
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
 
-#include <DejaVu/Processing/types.hpp>
+#include <DejaVu/Processing/ProcessingTypes.hpp>
 
 namespace djv
 {
@@ -107,5 +107,3 @@ namespace djv
 		using PrImage_rgba_f32 = PrImage<Pixel_rgba_f32>;
 	}
 }
-
-#include <DejaVu/Processing/templates/PrImage.hpp>

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <SplayLibrary/Core/types.hpp>
+#include <SplayLibrary/Core/CoreTypes.hpp>
 
 namespace spl
 {
@@ -124,5 +124,3 @@ namespace spl
 			BufferStorageFlags::Flags _flags;
 	};
 }
-
-#include <SplayLibrary/Core/templates/Buffer.hpp>

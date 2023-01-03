@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <SciPP/Core/types.hpp>
+#include <SciPP/Core/CoreTypes.hpp>
 
 #define SCP_VEC(vecName, vecSize, eltType)						\
 struct vecName##vecSize											\

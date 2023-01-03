@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <SplayLibrary/Core/types.hpp>
+#include <SplayLibrary/Core/CoreTypes.hpp>
 
 namespace spl
 {

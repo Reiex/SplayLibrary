@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include <SciPP/Core/types.hpp>
-#include <SciPP/Core/Tensor/TensorBase.hpp>
+#include <SciPP/Core/CoreTypes.hpp>
 
 namespace scp
 {
@@ -185,5 +184,3 @@ namespace scp
 		friend class Tensor<TValue>;
 	};
 }
-
-#include <SciPP/Core/Tensor/templates/Tensor.hpp>

@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include <SplayLibrary/Core/types.hpp>
-
+#include <SplayLibrary/Core/CoreTypes.hpp>
 #include <SplayLibrary/Core/RawTexture.hpp>
 
 namespace spl
@@ -45,5 +44,3 @@ namespace spl
 			RawTexture _texture;
 	};
 }
-
-#include <SplayLibrary/Core/Texture/templates/TextureBase.hpp>

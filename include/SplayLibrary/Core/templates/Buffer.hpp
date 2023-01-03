@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include <SplayLibrary/Core/Buffer.hpp>
+#include <SplayLibrary/Core/CoreDecl.hpp>
+#include <SplayLibrary/Private/PrivateIncluded.hpp>
 
 namespace spl
 {

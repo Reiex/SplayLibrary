@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include <SciPP/Core/types.hpp>
-#include <SciPP/Core/Tensor/TensorBase.hpp>
+#include <SciPP/Core/CoreTypes.hpp>
 
 namespace scp
 {
@@ -133,5 +132,3 @@ namespace scp
 	template<typename TValue>
 	constexpr Quat<TValue> conjugate(const Quat<TValue>& q);
 }
-
-#include <SciPP/Core/templates/Quat.hpp>

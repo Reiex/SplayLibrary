@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <SplayLibrary/Core/types.hpp>
+#include <SplayLibrary/Core/CoreTypes.hpp>
 
 namespace spl
 {
@@ -93,5 +93,3 @@ namespace spl
 			std::unordered_map<FramebufferAttachment, RenderBuffer*> _renderBufferAttachments;
 	};
 }
-
-#include <SplayLibrary/Core/templates/Framebuffer.hpp>

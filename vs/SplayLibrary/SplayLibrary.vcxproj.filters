@@ -110,7 +110,7 @@
     <ClInclude Include="..\..\include\SplayLibrary\3D\Mesh.hpp">
       <Filter>Header Files\3D</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\3D\types.hpp">
+    <ClInclude Include="..\..\include\SplayLibrary\3D\3DTypes.hpp">
       <Filter>Header Files\3D</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Buffer.hpp">
@@ -134,13 +134,13 @@
     <ClInclude Include="..\..\include\SplayLibrary\Core\Framebuffer.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Private\Private.hpp">
+    <ClInclude Include="..\..\include\SplayLibrary\Private\PrivateIncluded.hpp">
       <Filter>Header Files\Private</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\DefaultFramebuffer.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Core\types.hpp">
+    <ClInclude Include="..\..\include\SplayLibrary\Core\CoreTypes.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\3D\templates\Mesh.hpp">
@@ -164,11 +164,29 @@
     <ClInclude Include="..\..\include\SplayLibrary\Core\Texture\templates\TextureBase.hpp">
       <Filter>Header Files\Core\Texture\templates</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Private\templates\Private.hpp">
+    <ClInclude Include="..\..\include\SplayLibrary\Private\templates\PrivateNotIncluded.hpp">
       <Filter>Header Files\Private\templates</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\templates\Buffer.hpp">
       <Filter>Header Files\Core\templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\3D\3DDecl.hpp">
+      <Filter>Header Files\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\CoreDecl.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\SplayLibraryDecl.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\SplayLibraryTypes.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Private\PrivateNotIncluded.hpp">
+      <Filter>Header Files\Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Private\templates\PrivateIncluded.hpp">
+      <Filter>Header Files\Private\templates</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <SciPP/Core/Rational.hpp>
+#include <SciPP/Core/CoreDecl.hpp>
 
 namespace scp
 {

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <SciPP/Core/types.hpp>
+#include <SciPP/Core/CoreTypes.hpp>
 #include <SciPP/Core/Frac.hpp>
 #include <SciPP/Core/BigInt.hpp>
 
@@ -169,5 +169,3 @@ namespace scp
 	template<typename TInteger>
 	constexpr Rational<TInteger>&& operator+(Rational<TInteger>&& a);
 }
-
-#include <SciPP/Core/templates/Rational.hpp>

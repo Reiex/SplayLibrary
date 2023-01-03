@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include <SplayLibrary/Core/Texture/Texture2D.hpp>
+#include <SplayLibrary/Core/CoreDecl.hpp>
+#include <SplayLibrary/Private/PrivateIncluded.hpp>
 
 namespace spl
 {

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <SciPP/Core/types.hpp>
+#include <SciPP/Core/CoreTypes.hpp>
 
 namespace scp
 {
@@ -52,5 +52,3 @@ namespace scp
 	template<typename T>
 	constexpr std::vector<T> divisors(const T& n);
 }
-
-#include <SciPP/Core/templates/misc.hpp>

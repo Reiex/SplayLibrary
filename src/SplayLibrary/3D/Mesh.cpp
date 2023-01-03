@@ -5,8 +5,8 @@
 //! \date 2021-2023
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include <SplayLibrary/SplayLibrary.hpp>
-#include <SplayLibrary/Private/Private.hpp>
+#include <SplayLibrary/3D/3D.hpp>
+#include <SplayLibrary/Private/PrivateNotIncluded.hpp>
 
 namespace spl
 {

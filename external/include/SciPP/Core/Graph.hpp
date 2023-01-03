@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include <SciPP/Core/types.hpp>
-#include <SciPP/Core/Tensor/TensorBase.hpp>
+#include <SciPP/Core/CoreTypes.hpp>
 
 namespace scp
 {
@@ -74,5 +73,3 @@ namespace scp
 			std::unordered_map<uint64_t, std::unordered_map<uint64_t, std::vector<uint64_t>>> _edgeMap;
 	};
 }
-
-#include <SciPP/Core/templates/Graph.hpp>

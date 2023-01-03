@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include <SplayLibrary/3D/Mesh.hpp>
+#include <SplayLibrary/3D/3DDecl.hpp>
+#include <SplayLibrary/Private/PrivateIncluded.hpp>
 
 namespace spl
 {

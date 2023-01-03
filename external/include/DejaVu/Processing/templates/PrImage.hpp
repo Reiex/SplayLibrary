@@ -2,12 +2,12 @@
 //! \file
 //! \author Reiex
 //! \copyright The MIT License (MIT)
-//! \date 2019-2022
+//! \date 2020-2022
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
 
-#include <DejaVu/Processing/PrImage.hpp>
+#include <DejaVu/Processing/ProcessingDecl.hpp>
 
 namespace djv
 {

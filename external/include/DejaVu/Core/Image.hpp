@@ -2,12 +2,12 @@
 //! \file
 //! \author Reiex
 //! \copyright The MIT License (MIT)
-//! \date 2019-2022
+//! \date 2020-2022
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
 
-#include <DejaVu/Core/types.hpp>
+#include <DejaVu/Core/CoreTypes.hpp>
 
 namespace djv
 {
@@ -197,5 +197,3 @@ namespace djv
 	using Image_rgba_i16 = Image<Pixel_rgba_i16>;
 	using Image_rgba_f32 = Image<Pixel_rgba_f32>;
 }
-
-#include <DejaVu/Core/templates/Image.hpp>

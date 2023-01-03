@@ -26,8 +26,9 @@
 #include <unordered_set>
 #include <vector>
 
-#include <SciPP/SciPP.hpp>
-#include <DejaVu/DejaVu.hpp>
+#include <SciPP/SciPPTypes.hpp>
+#include <Diskon/DiskonTypes.hpp>
+#include <DejaVu/DejaVuTypes.hpp>
 
 
 namespace spl

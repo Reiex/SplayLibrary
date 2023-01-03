@@ -7,8 +7,10 @@
 
 #pragma once
 
-#include <SplayLibrary/3D/Transformable3D.hpp>
 
-#include <SplayLibrary/3D/PerspectiveCamera.hpp>
+#include <SplayLibrary/3D/3DDecl.hpp>
 
-#include <SplayLibrary/3D/Mesh.hpp>
+#include <SplayLibrary/Core/Core.hpp>
+
+
+#include <SplayLibrary/3D/templates/Mesh.hpp>

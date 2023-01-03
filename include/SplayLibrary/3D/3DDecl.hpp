@@ -7,17 +7,14 @@
 
 #pragma once
 
-#include <SplayLibrary/Core/Core.hpp>
 
-#include <Diskon/Diskon.hpp>
+#include <SplayLibrary/3D/3DTypes.hpp>
 
-namespace spl
-{
-	class Transformable3D;
+#include <SplayLibrary/Core/CoreDecl.hpp>
 
-	class PerspectiveCamera;
 
-	struct VertexBase;
-	struct DefaultVertex;
-	template<typename VertexType> class Mesh;
-}
+#include <SplayLibrary/3D/Transformable3D.hpp>
+
+#include <SplayLibrary/3D/PerspectiveCamera.hpp>
+
+#include <SplayLibrary/3D/Mesh.hpp>

@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include <SplayLibrary/Core/types.hpp>
-
+#include <SplayLibrary/Core/CoreTypes.hpp>
 #include <SplayLibrary/Core/Texture/TextureBase.hpp>
 
 namespace spl
@@ -55,5 +54,3 @@ namespace spl
 			scp::u32vec2 _size;
 	};
 }
-
-#include <SplayLibrary/Core/Texture/templates/Texture2D.hpp>

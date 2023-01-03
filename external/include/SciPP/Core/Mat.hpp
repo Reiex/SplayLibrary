@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <SciPP/Core/types.hpp>
+#include <SciPP/Core/CoreTypes.hpp>
 
 namespace scp
 {
@@ -53,5 +53,3 @@ namespace scp
 		// TODO: matrix-vector product, inverse, determinant, unary minus
 	}
 }
-
-#include <SciPP/Core/templates/Mat.hpp>

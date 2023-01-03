@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <SplayLibrary/3D/types.hpp>
+#include <SplayLibrary/3D/3DTypes.hpp>
 
 namespace spl
 {
@@ -68,5 +68,3 @@ namespace spl
 			std::vector<uint32_t> _indices;
 	};
 }
-
-#include <SplayLibrary/3D/templates/Mesh.hpp>

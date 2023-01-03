@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include <SciPP/Core/types.hpp>
-#include <SciPP/Core/Tensor/TensorShape.hpp>
+#include <SciPP/Core/CoreTypes.hpp>
 
 #pragma region scpTensorMacros
 
@@ -458,5 +457,3 @@ namespace scp
 	template<CUntypedMatrix TMatrix, CUntypedVector TVector>
 	TVector operator*(const TMatrix& matrix, const TVector& vector);
 }
-
-#include <SciPP/Core/Tensor/templates/TensorBase.hpp>

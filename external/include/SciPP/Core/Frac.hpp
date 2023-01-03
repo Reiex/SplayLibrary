@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include <SciPP/Core/types.hpp>
-#include <SciPP/Core/misc.hpp>
+#include <SciPP/Core/CoreTypes.hpp>
 
 namespace scp
 {
@@ -135,5 +134,3 @@ namespace scp
 	template<typename TValue>
 	constexpr Frac<TValue>&& operator-(Frac<TValue>&& a);
 }
-
-#include <SciPP/Core/templates/Frac.hpp>

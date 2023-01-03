@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <SciPP/Core/types.hpp>
+#include <SciPP/Core/CoreTypes.hpp>
 
 namespace scp
 {
@@ -259,5 +259,3 @@ namespace scp
 	template<typename TBase, typename TBuffer>
 	constexpr std::istream& operator>>(std::istream& stream, BigInt<TBase, TBuffer>& x);
 }
-
-#include <SciPP/Core/templates/BigInt.hpp>

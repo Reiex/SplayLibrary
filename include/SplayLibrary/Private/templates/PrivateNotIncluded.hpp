@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <SplayLibrary/Private/Private.hpp>
+#include <SplayLibrary/Private/PrivateNotIncluded.hpp>
 
 namespace spl
 {

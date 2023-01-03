@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <SplayLibrary/Core/types.hpp>
+#include <SplayLibrary/Core/CoreTypes.hpp>
 
 namespace spl
 {
@@ -95,5 +95,3 @@ namespace spl
 			std::unordered_map<std::string, int32_t> _uniformLocations;
 	};
 }
-
-#include <SplayLibrary/Core/templates/Shader.hpp>

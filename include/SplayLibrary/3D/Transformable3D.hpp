@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <SplayLibrary/3D/types.hpp>
+#include <SplayLibrary/3D/3DTypes.hpp>
 
 namespace spl
 {
