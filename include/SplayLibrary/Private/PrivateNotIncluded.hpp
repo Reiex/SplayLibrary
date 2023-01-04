@@ -20,9 +20,6 @@ namespace spl
 		constexpr DebugMessageType glToDebugMessageType(GLenum type);
 		constexpr DebugMessageSeverity glToDebugMessageSeverity(GLenum severity);
 
-		constexpr BufferUsage drawableStorageToBufferUsage(DrawableStorage storage);
-		constexpr BufferStorageFlags::Flags drawableStorageToBufferStorageFlags(DrawableStorage storage);
-
 		constexpr GLenum bufferTargetToGL(BufferTarget target);
 		constexpr GLenum bufferUsageToGL(BufferUsage usage);
 		constexpr GLbitfield bufferStorageFlagsToGL(BufferStorageFlags::Flags flags);

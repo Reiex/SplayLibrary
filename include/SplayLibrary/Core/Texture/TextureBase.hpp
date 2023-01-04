@@ -26,9 +26,6 @@ namespace spl
 			TextureBase& operator=(const TextureBase& texture) = delete;
 			TextureBase& operator=(TextureBase&& texture) = delete;
 
-			static TextureFormat getUsualTextureFormatOf(TextureInternalFormat internalFormat);
-			static TextureDataType getUsualTextureDataTypeOf(TextureInternalFormat internalFormat);
-
 			const RawTexture& getRawTexture() const;
 			RawTexture& getRawTexture();
 			bool isValid() const;

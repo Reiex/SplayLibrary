@@ -93,7 +93,7 @@ namespace spl
 	{
 		RawTexture::UpdateParams params;
 		params.data = data;
-		params.dataFormat = TextureBase::getUsualTextureFormatOf(_texture.getCreationParams().internalFormat);
+		params.dataFormat = _spl::textureInternalFormatToTextureFormat(_texture.getCreationParams().internalFormat);
 		params.dataType = TextureDataType::UnsignedByte;
 		params.width = size.x;
 		params.height = size.y;
@@ -107,7 +107,7 @@ namespace spl
 	{
 		RawTexture::UpdateParams params;
 		params.data = data;
-		params.dataFormat = TextureBase::getUsualTextureFormatOf(_texture.getCreationParams().internalFormat);
+		params.dataFormat = _spl::textureInternalFormatToTextureFormat(_texture.getCreationParams().internalFormat);
 		params.dataType = TextureDataType::UnsignedShort;
 		params.width = size.x;
 		params.height = size.y;
@@ -121,7 +121,7 @@ namespace spl
 	{
 		RawTexture::UpdateParams params;
 		params.data = data;
-		params.dataFormat = TextureBase::getUsualTextureFormatOf(_texture.getCreationParams().internalFormat);
+		params.dataFormat = _spl::textureInternalFormatToTextureFormat(_texture.getCreationParams().internalFormat);
 		params.dataType = TextureDataType::UnsignedInt;
 		params.width = size.x;
 		params.height = size.y;
@@ -135,7 +135,7 @@ namespace spl
 	{
 		RawTexture::UpdateParams params;
 		params.data = data;
-		params.dataFormat = TextureBase::getUsualTextureFormatOf(_texture.getCreationParams().internalFormat);
+		params.dataFormat = _spl::textureInternalFormatToTextureFormat(_texture.getCreationParams().internalFormat);
 		params.dataType = TextureDataType::Float;
 		params.width = size.x;
 		params.height = size.y;

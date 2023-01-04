@@ -9,7 +9,7 @@ int advancedLightingMain()
 
 	spl::Framebuffer framebuffer;
 	framebuffer.createNewTextureAttachment<spl::Texture2D>(spl::FramebufferAttachment::ColorAttachment0, scp::u32vec2{ 1000, 600 });
-	framebuffer.createNewRenderBufferAttachment(spl::FramebufferAttachment::DepthAttachment, spl::TextureInternalFormat::Depth24_Stencil8, scp::u32vec2{ 1000, 600 });
+	framebuffer.createNewRenderBufferAttachment(spl::FramebufferAttachment::DepthAttachment, spl::TextureInternalFormat::Depth_nu24_Stencil_u8, scp::u32vec2{ 1000, 600 });
 
 	spl::Shader shader1("examples/advancedLighting/resources/shaders/firstPass.vert", "examples/advancedLighting/resources/shaders/firstPass.frag");
 	spl::Shader shader2("examples/advancedLighting/resources/shaders/secondPass.vert", "examples/advancedLighting/resources/shaders/secondPass.frag");
@@ -49,7 +49,7 @@ int advancedLightingMain()
 					camera.setAspect(event.size);
 
 					framebuffer.createNewTextureAttachment<spl::Texture2D>(spl::FramebufferAttachment::ColorAttachment0, event.size);
-					framebuffer.createNewRenderBufferAttachment(spl::FramebufferAttachment::DepthAttachment, spl::TextureInternalFormat::Depth24_Stencil8, event.size);
+					framebuffer.createNewRenderBufferAttachment(spl::FramebufferAttachment::DepthAttachment, spl::TextureInternalFormat::Depth_nu24_Stencil_u8, event.size);
 
 					break;
 				}

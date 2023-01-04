@@ -33,6 +33,9 @@
 
 namespace spl
 {
+	template<typename T> concept CGenType = scp::CVec<T> || scp::CNumber<T>;
+
+
 	enum class BufferTarget;
 	enum class BufferUsage;
 	namespace BufferStorageFlags { enum Flags; }
@@ -45,10 +48,9 @@ namespace spl
 
 
 	enum class TextureTarget;
-	enum class TextureCubeMapTarget;
 	enum class TextureFormat;
 	enum class TextureDataType;
-	enum class TextureInternalFormat;
+	enum class TextureInternalFormat : uint64_t;
 	class RawTexture;
 	class RenderBuffer;
 

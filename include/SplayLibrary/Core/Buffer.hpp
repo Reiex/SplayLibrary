@@ -93,8 +93,7 @@ namespace spl
 
 			void update(const void* data, uint32_t size, uint32_t dstOffset = 0);
 			void update(const Buffer& data, uint32_t size, uint32_t dstOffset = 0, uint32_t srcOffset = 0);
-			template<scp::CNumber TNumber> void clear(const TNumber& value, uint32_t size, uint32_t dstOffset = 0);
-			template<scp::CVec TVec> void clear(const TVec& value, uint32_t size, uint32_t dstOffset = 0);
+			template<CGenType TClearValue> void clear(const TClearValue& clearValue, uint32_t size, uint32_t dstOffset = 0);
 			// TODO: mapping
 
 			void destroy();

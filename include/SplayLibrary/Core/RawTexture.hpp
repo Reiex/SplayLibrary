@@ -80,99 +80,114 @@ namespace spl
 		Float32_UnsignedInt_24_8_Rev
 	};
 
-	enum class TextureInternalFormat
+	enum class TextureInternalFormat : uint64_t
 	{
 		Undefined,
 
-		R,
-		RG,
-		RGB,
-		RGBA,
-		DepthComponent,
-		StencilIndex,
-		DepthStencil,
+		// Common formats
 
-		R8,
-		R8_SNORM,
-		R8I,
-		R8UI,
-		R16,
-		R16_SNORM,
-		R16I,
-		R16UI,
-		R16F,
-		R32I,
-		R32UI,
-		R32F,
+		R_u8,
+		R_i8,
+		R_nu8,
+		R_ni8,
 
-		RG8,
-		RG8_SNORM,
-		RG8I,
-		RG8UI,
-		RG16,
-		RG16_SNORM,
-		RG16I,
-		RG16UI,
-		RG16F,
-		RG32I,
-		RG32UI,
-		RG32F,
+		R_u16,
+		R_i16,
+		R_f16,
+		R_nu16,
+		R_ni16,
 
-		R3_G3_B2,
-		RGB4,
-		RGB5,
-		R5_G6_B5,
-		RGB8,
-		RGB8_SNORM,
-		RGB8I,
-		RGB8UI,
-		RGB9_E5,
-		RGB10,
-		R11F_G11F_B10F,
-		RGB12,
-		RGB16,
-		RGB16_SNORM,
-		RGB16I,
-		RGB16UI,
-		RGB16F,
-		RGB32I,
-		RGB32UI,
-		RGB32F,
+		R_u32,
+		R_i32,
+		R_f32,
 
-		RGBA2,
-		RGBA4,
-		RGB5_A1,
-		RGBA8,
-		RGBA8_SNORM,
-		RGBA8I,
-		RGBA8UI,
-		RGB10_A2,
-		RGB10UI_A2UI,
-		RGBA12,
-		RGBA16,
-		RGBA16_SNORM,
-		RGBA16I,
-		RGBA16UI,
-		RGBA16F,
-		RGBA32I,
-		RGBA32UI,
-		RGBA32F,
 
-		SRGB8,
-		SRGBA8,
+		RG_u8,
+		RG_i8,
+		RG_nu8,
+		RG_ni8,
 
-		DepthComponent16,
-		DepthComponent24,
-		DepthComponent32,
-		DepthComponent32F,
+		RG_u16,
+		RG_i16,
+		RG_f16,
+		RG_nu16,
+		RG_ni16,
 
-		StencilIndex1,
-		StencilIndex4,
-		StencilIndex8,
-		StencilIndex16,
+		RG_u32,
+		RG_i32,
+		RG_f32,
 
-		Depth24_Stencil8,
-		Depth32F_Stencil8,
+
+		RGB_u8,
+		RGB_i8,
+		RGB_nu8,
+		RGB_ni8,
+
+		RGB_u16,
+		RGB_i16,
+		RGB_f16,
+		RGB_nu16,
+		RGB_ni16,
+
+		RGB_u32,
+		RGB_i32,
+		RGB_f32,
+
+
+		RGBA_u8,
+		RGBA_i8,
+		RGBA_nu8,
+		RGBA_ni8,
+
+		RGBA_u16,
+		RGBA_i16,
+		RGBA_f16,
+		RGBA_nu16,
+		RGBA_ni16,
+
+		RGBA_u32,
+		RGBA_i32,
+		RGBA_f32,
+
+
+		Depth_nu16,
+		Depth_nu24,
+		Depth_nu32,
+		Depth_f32,
+
+		Stencil_u1,
+		Stencil_u4,
+		Stencil_u8,
+		Stencil_u16,
+
+		Depth_nu24_Stencil_u8,
+		Depth_f32_Stencil_u8,
+
+		// Common space optimized formats
+
+		RGB_nu4,
+		RGB_nu5,
+		RGB_nu10,
+		RGB_nu12,
+
+		R_nu3_G_nu3_B_nu2,
+		R_nu5_G_nu6_B_nu5,
+		R_f11_G_f11_B_f10,
+
+
+		RGBA_nu2,
+		RGBA_nu4,
+		RGBA_nu12,
+
+		RGB_nu5_A_nu1,
+		RGB_u10_A_u2,
+		RGB_nu10_A_nu2,
+
+		// Special formats
+
+		// RGB9_E5
+		// sRGB formats
+		// Compressed formats
 	};
 
 	class RawTexture

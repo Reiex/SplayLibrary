@@ -76,13 +76,13 @@ namespace spl
 
 	void Drawable::createNewVertices(const void* vertices, uint32_t size, DrawableStorage storage)
 	{
-		if (drawableStorageToBufferUsage(storage) != BufferUsage::Undefined)
+		if (_spl::drawableStorageToBufferUsage(storage) != BufferUsage::Undefined)
 		{
-			_vbo.createNew(size, drawableStorageToBufferUsage(storage), vertices);
+			_vbo.createNew(size, _spl::drawableStorageToBufferUsage(storage), vertices);
 		}
 		else
 		{
-			_vbo.createNew(size, drawableStorageToBufferStorageFlags(storage), vertices);
+			_vbo.createNew(size, _spl::drawableStorageToBufferStorageFlags(storage), vertices);
 		}
 
 		_vboStorage = storage;
@@ -109,13 +109,13 @@ namespace spl
 			const uint32_t newSize = std::max(_vbo.getSize(), offset + size);
 
 			Buffer newVbo;
-			if (drawableStorageToBufferUsage(_vboStorage) != BufferUsage::Undefined)
+			if (_spl::drawableStorageToBufferUsage(_vboStorage) != BufferUsage::Undefined)
 			{
-				newVbo.createNew(newSize, drawableStorageToBufferUsage(_vboStorage));
+				newVbo.createNew(newSize, _spl::drawableStorageToBufferUsage(_vboStorage));
 			}
 			else
 			{
-				newVbo.createNew(newSize, drawableStorageToBufferStorageFlags(_vboStorage));
+				newVbo.createNew(newSize, _spl::drawableStorageToBufferStorageFlags(_vboStorage));
 			}
 
 			newVbo.copyFrom(_vbo);
@@ -138,13 +138,13 @@ namespace spl
 	{
 		const uint32_t size = count * sizeof(uint32_t);
 
-		if (drawableStorageToBufferUsage(storage) != BufferUsage::Undefined)
+		if (_spl::drawableStorageToBufferUsage(storage) != BufferUsage::Undefined)
 		{
-			_ebo.createNew(size, drawableStorageToBufferUsage(storage), indices);
+			_ebo.createNew(size, _spl::drawableStorageToBufferUsage(storage), indices);
 		}
 		else
 		{
-			_ebo.createNew(size, drawableStorageToBufferStorageFlags(storage), indices);
+			_ebo.createNew(size, _spl::drawableStorageToBufferStorageFlags(storage), indices);
 		}
 
 		_eboStorage = storage;
@@ -175,13 +175,13 @@ namespace spl
 			const uint32_t newSize = std::max(_ebo.getSize(), offset + size);
 
 			Buffer newEbo;
-			if (drawableStorageToBufferUsage(_eboStorage) != BufferUsage::Undefined)
+			if (_spl::drawableStorageToBufferUsage(_eboStorage) != BufferUsage::Undefined)
 			{
-				newEbo.createNew(newSize, drawableStorageToBufferUsage(_eboStorage));
+				newEbo.createNew(newSize, _spl::drawableStorageToBufferUsage(_eboStorage));
 			}
 			else
 			{
-				newEbo.createNew(newSize, drawableStorageToBufferStorageFlags(_eboStorage));
+				newEbo.createNew(newSize, _spl::drawableStorageToBufferStorageFlags(_eboStorage));
 			}
 
 			newEbo.copyFrom(_ebo);

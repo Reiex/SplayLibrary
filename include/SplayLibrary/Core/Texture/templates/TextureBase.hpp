@@ -15,263 +15,69 @@ namespace spl
 	template<djv::CPixel TPixel>
 	void TextureBase::_createDejaVuImgBuffer(const djv::Image<TPixel>& image, TextureInternalFormat internalFormat, void*& buffer, TextureFormat& format, TextureDataType& dataType)
 	{
-		format = getUsualTextureFormatOf(internalFormat);
-		dataType = getUsualTextureDataTypeOf(internalFormat);
+		format = _spl::textureInternalFormatToTextureFormat(internalFormat);
+		dataType = _spl::textureInternalFormatToTextureDataType(internalFormat);
+		const uint8_t componentCount = _spl::textureInternalFormatToComponentCount(internalFormat);
 
 		const uint64_t width = image.getWidth();
 		const uint64_t height = image.getHeight();
 		const uint64_t elementCount = width * height;
 
-		switch (internalFormat)
+		switch (dataType)
 		{
-			case TextureInternalFormat::R:
+			case TextureDataType::UnsignedByte:
+				buffer = new uint8_t[elementCount * componentCount];
+				break;
+			case TextureDataType::Byte:
+				buffer = new int8_t[elementCount * componentCount];
+				break;
+			case TextureDataType::UnsignedShort:
+				buffer = new uint16_t[elementCount * componentCount];
+				break;
+			case TextureDataType::Short:
+				buffer = new int16_t[elementCount * componentCount];
+				break;
+			case TextureDataType::UnsignedInt:
+				buffer = new uint32_t[elementCount * componentCount];
+				break;
+			case TextureDataType::Int:
+				buffer = new int32_t[elementCount * componentCount];
+				break;
+			case TextureDataType::HalfFloat:
+				buffer = new float16_t[elementCount * componentCount];
+				break;
+			case TextureDataType::Float:
+				buffer = new float32_t[elementCount * componentCount];
+				break;
+			case TextureDataType::UnsignedByte_3_3_2:
+			case TextureDataType::UnsignedByte_2_3_3_Rev:
 				buffer = new uint8_t[elementCount];
 				break;
-			case TextureInternalFormat::RG:
-				buffer = new uint8_t[elementCount * 2];
-				break;
-			case TextureInternalFormat::RGB:
-				buffer = new uint8_t[elementCount * 3];
-				break;
-			case TextureInternalFormat::RGBA:
-				buffer = new uint8_t[elementCount * 4];
-				break;
-			case TextureInternalFormat::DepthComponent:
-				buffer = new float[elementCount];
-				break;
-			case TextureInternalFormat::StencilIndex:
-				buffer = new uint8_t[elementCount];
-				break;
-			case TextureInternalFormat::DepthStencil:
-				buffer = new float[elementCount * 2];
-				break;
-			case TextureInternalFormat::R8:
-				buffer = new uint8_t[elementCount];
-				break;
-			case TextureInternalFormat::R8_SNORM:
-				buffer = new int8_t[elementCount];
-				break;
-			case TextureInternalFormat::R8I:
-				buffer = new int8_t[elementCount];
-				break;
-			case TextureInternalFormat::R8UI:
-				buffer = new uint8_t[elementCount];
-				break;
-			case TextureInternalFormat::R16:
+			case TextureDataType::UnsignedShort_5_6_5:
+			case TextureDataType::UnsignedShort_5_6_5_Rev:
+			case TextureDataType::UnsignedShort_4_4_4_4:
+			case TextureDataType::UnsignedShort_4_4_4_4_Rev:
+			case TextureDataType::UnsignedShort_5_5_5_1:
+			case TextureDataType::UnsignedShort_1_5_5_5_Rev:
 				buffer = new uint16_t[elementCount];
 				break;
-			case TextureInternalFormat::R16_SNORM:
-				buffer = new int16_t[elementCount];
-				break;
-			case TextureInternalFormat::R16I:
-				buffer = new int16_t[elementCount];
-				break;
-			case TextureInternalFormat::R16UI:
-				buffer = new uint16_t[elementCount];
-				break;
-			case TextureInternalFormat::R16F:
-				buffer = new float[elementCount];
-				break;
-			case TextureInternalFormat::R32I:
-				buffer = new int32_t[elementCount];
-				break;
-			case TextureInternalFormat::R32UI:
+			case TextureDataType::UnsignedInt_8_8_8_8:
+			case TextureDataType::UnsignedInt_8_8_8_8_Rev:
+			case TextureDataType::UnsignedInt_10_10_10_2:
+			case TextureDataType::UnsignedInt_2_10_10_10_Rev:
+			case TextureDataType::UnsignedInt_24_8:
+			case TextureDataType::UnsignedInt_10F_11F_11F_Rev:
+			case TextureDataType::UnsignedInt_5_9_9_9_Rev:
 				buffer = new uint32_t[elementCount];
 				break;
-			case TextureInternalFormat::R32F:
-				buffer = new float[elementCount];
-				break;
-			case TextureInternalFormat::RG8:
-				buffer = new uint8_t[elementCount * 2];
-				break;
-			case TextureInternalFormat::RG8_SNORM:
-				buffer = new int8_t[elementCount * 2];
-				break;
-			case TextureInternalFormat::RG8I:
-				buffer = new int8_t[elementCount * 2];
-				break;
-			case TextureInternalFormat::RG8UI:
-				buffer = new uint8_t[elementCount * 2];
-				break;
-			case TextureInternalFormat::RG16:
-				buffer = new uint16_t[elementCount * 2];
-				break;
-			case TextureInternalFormat::RG16_SNORM:
-				buffer = new int16_t[elementCount * 2];
-				break;
-			case TextureInternalFormat::RG16I:
-				buffer = new int16_t[elementCount * 2];
-				break;
-			case TextureInternalFormat::RG16UI:
-				buffer = new uint16_t[elementCount * 2];
-				break;
-			case TextureInternalFormat::RG16F:
-				buffer = new float[elementCount * 2];
-				break;
-			case TextureInternalFormat::RG32I:
-				buffer = new int32_t[elementCount * 2];
-				break;
-			case TextureInternalFormat::RG32UI:
+			case TextureDataType::Float32_UnsignedInt_24_8_Rev:
 				buffer = new uint32_t[elementCount * 2];
-				break;
-			case TextureInternalFormat::RG32F:
-				buffer = new float[elementCount * 2];
-				break;
-			case TextureInternalFormat::R3_G3_B2:
-				buffer = new uint8_t[elementCount];
-				break;
-			case TextureInternalFormat::RGB4:
-				buffer = new uint8_t[elementCount * 3];
-				break;
-			case TextureInternalFormat::RGB5:
-				buffer = new uint8_t[elementCount * 3];
-				break;
-			case TextureInternalFormat::R5_G6_B5:
-				buffer = new uint16_t[elementCount];
-				break;
-			case TextureInternalFormat::RGB8:
-				buffer = new uint8_t[elementCount * 3];
-				break;
-			case TextureInternalFormat::RGB8_SNORM:
-				buffer = new int8_t[elementCount * 3];
-				break;
-			case TextureInternalFormat::RGB8I:
-				buffer = new int8_t[elementCount * 3];
-				break;
-			case TextureInternalFormat::RGB8UI:
-				buffer = new uint8_t[elementCount * 3];
-				break;
-			case TextureInternalFormat::RGB9_E5:
-				buffer = new uint16_t[elementCount * 3];
-				break;
-			case TextureInternalFormat::RGB10:
-				buffer = new uint16_t[elementCount * 3];
-				break;
-			case TextureInternalFormat::R11F_G11F_B10F:
-				buffer = new uint16_t[elementCount * 3];
-				break;
-			case TextureInternalFormat::RGB12:
-				buffer = new uint16_t[elementCount * 3];
-				break;
-			case TextureInternalFormat::RGB16:
-				buffer = new uint16_t[elementCount * 3];
-				break;
-			case TextureInternalFormat::RGB16_SNORM:
-				buffer = new int16_t[elementCount * 3];
-				break;
-			case TextureInternalFormat::RGB16I:
-				buffer = new int16_t[elementCount * 3];
-				break;
-			case TextureInternalFormat::RGB16UI:
-				buffer = new uint16_t[elementCount * 3];
-				break;
-			case TextureInternalFormat::RGB16F:
-				buffer = new float[elementCount * 3];
-				break;
-			case TextureInternalFormat::RGB32I:
-				buffer = new int32_t[elementCount * 3];
-				break;
-			case TextureInternalFormat::RGB32UI:
-				buffer = new uint32_t[elementCount * 3];
-				break;
-			case TextureInternalFormat::RGB32F:
-				buffer = new float[elementCount * 3];
-				break;
-			case TextureInternalFormat::RGBA2:
-				buffer = new uint8_t[elementCount * 4];
-				break;
-			case TextureInternalFormat::RGBA4:
-				buffer = new uint16_t[elementCount];
-				break;
-			case TextureInternalFormat::RGB5_A1:
-				buffer = new uint16_t[elementCount];
-				break;
-			case TextureInternalFormat::RGBA8:
-				buffer = new uint8_t[elementCount * 4];
-				break;
-			case TextureInternalFormat::RGBA8_SNORM:
-				buffer = new int8_t[elementCount * 4];
-				break;
-			case TextureInternalFormat::RGBA8I:
-				buffer = new int8_t[elementCount * 4];
-				break;
-			case TextureInternalFormat::RGBA8UI:
-				buffer = new uint8_t[elementCount * 4];
-				break;
-			case TextureInternalFormat::RGB10_A2:
-				buffer = new uint32_t[elementCount];
-				break;
-			case TextureInternalFormat::RGB10UI_A2UI:
-				buffer = new uint32_t[elementCount];
-				break;
-			case TextureInternalFormat::RGBA12:
-				buffer = new uint16_t[elementCount * 4];
-				break;
-			case TextureInternalFormat::RGBA16:
-				buffer = new uint16_t[elementCount * 4];
-				break;
-			case TextureInternalFormat::RGBA16_SNORM:
-				buffer = new int16_t[elementCount * 4];
-				break;
-			case TextureInternalFormat::RGBA16I:
-				buffer = new int16_t[elementCount * 4];
-				break;
-			case TextureInternalFormat::RGBA16UI:
-				buffer = new uint16_t[elementCount * 4];
-				break;
-			case TextureInternalFormat::RGBA16F:
-				buffer = new float[elementCount * 4];
-				break;
-			case TextureInternalFormat::RGBA32I:
-				buffer = new int32_t[elementCount * 4];
-				break;
-			case TextureInternalFormat::RGBA32UI:
-				buffer = new uint32_t[elementCount * 4];
-				break;
-			case TextureInternalFormat::RGBA32F:
-				buffer = new float[elementCount * 4];
-				break;
-			case TextureInternalFormat::SRGB8:
-				buffer = new uint8_t[elementCount * 3];
-				break;
-			case TextureInternalFormat::SRGBA8:
-				buffer = new uint8_t[elementCount * 4];
-				break;
-			case TextureInternalFormat::DepthComponent16:
-				buffer = new uint16_t[elementCount];
-				break;
-			case TextureInternalFormat::DepthComponent24:
-				buffer = new uint32_t[elementCount];
-				break;
-			case TextureInternalFormat::DepthComponent32:
-				buffer = new uint32_t[elementCount];
-				break;
-			case TextureInternalFormat::DepthComponent32F:
-				buffer = new float[elementCount];
-				break;
-			case TextureInternalFormat::StencilIndex1:
-				buffer = new uint8_t[elementCount];
-				break;
-			case TextureInternalFormat::StencilIndex4:
-				buffer = new uint8_t[elementCount];
-				break;
-			case TextureInternalFormat::StencilIndex8:
-				buffer = new uint8_t[elementCount];
-				break;
-			case TextureInternalFormat::StencilIndex16:
-				buffer = new uint16_t[elementCount];
-				break;
-			case TextureInternalFormat::Depth24_Stencil8:
-				buffer = new uint32_t[elementCount];
-				break;
-			case TextureInternalFormat::Depth32F_Stencil8:
-				buffer = new float[elementCount * 2];
 				break;
 			default:
 				assert(false);
 				return;
 		}
-		
+
 		const TPixel* it = image.getData();
 		uint64_t k = -1;
 		for (uint64_t i = 0; i < elementCount; ++i, ++it)
