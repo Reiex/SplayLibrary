@@ -15,10 +15,10 @@ namespace spl
 		GLvoid debugMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* rawMessage, const GLvoid* userParam)
 		{
 			DebugMessage* message = new DebugMessage();
-			message->source = glToDebugMessageSource(source);
-			message->type = glToDebugMessageType(type);
+			message->source = _spl::glToDebugMessageSource(source);
+			message->type = _spl::glToDebugMessageType(type);
 			message->id = id;
-			message->severity = glToDebugMessageSeverity(severity);
+			message->severity = _spl::glToDebugMessageSeverity(severity);
 			message->descr.assign(rawMessage, length);
 
 			Context* context = const_cast<Context*>(reinterpret_cast<const Context*>(userParam));

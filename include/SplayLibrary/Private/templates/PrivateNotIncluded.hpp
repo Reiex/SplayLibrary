@@ -11,7 +11,7 @@
 
 namespace spl
 {
-	namespace
+	namespace _spl
 	{
 		constexpr DebugMessageSource glToDebugMessageSource(GLenum source)
 		{

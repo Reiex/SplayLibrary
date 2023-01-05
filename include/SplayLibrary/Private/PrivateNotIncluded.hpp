@@ -14,7 +14,7 @@
 
 namespace spl
 {
-	namespace
+	namespace _spl
 	{
 		constexpr DebugMessageSource glToDebugMessageSource(GLenum source);
 		constexpr DebugMessageType glToDebugMessageType(GLenum type);
@@ -23,9 +23,12 @@ namespace spl
 		constexpr GLenum bufferTargetToGL(BufferTarget target);
 		constexpr GLenum bufferUsageToGL(BufferUsage usage);
 		constexpr GLbitfield bufferStorageFlagsToGL(BufferStorageFlags::Flags flags);
+
 		constexpr GLenum primitiveTypeToGL(PrimitiveType primitiveType);
+
 		constexpr GLenum framebufferTargetToGL(FramebufferTarget target);
 		constexpr GLenum framebufferAttachmentToGL(FramebufferAttachment attachment);
+
 		constexpr GLenum textureTargetToGL(TextureTarget target);
 		constexpr GLenum textureFormatToGL(TextureFormat format);
 		constexpr GLenum textureDataTypeToGL(TextureDataType dataType);

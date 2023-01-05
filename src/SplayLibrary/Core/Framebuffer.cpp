@@ -43,7 +43,7 @@ namespace spl
 	void Framebuffer::createNewRenderBufferAttachment(FramebufferAttachment attachment, TextureInternalFormat internalFormat, const scp::u32vec2& size, uint32_t samples)
 	{
 		assert(_framebuffer != 0);
-		assert(framebufferAttachmentToGL(attachment) != 0);
+		assert(_spl::framebufferAttachmentToGL(attachment) != 0);
 
 		auto textureIt = _textureAttachments.find(attachment);
 		auto renderBufferIt = _renderBufferAttachments.find(attachment);
@@ -60,7 +60,7 @@ namespace spl
 
 		// TODO: Check that the render buffer type and format correspond to the attachment
 		_renderBufferAttachments[attachment] = new RenderBuffer(internalFormat, size, samples);
-		glNamedFramebufferRenderbuffer(_framebuffer, framebufferAttachmentToGL(attachment), GL_RENDERBUFFER, _renderBufferAttachments[attachment]->getHandle());
+		glNamedFramebufferRenderbuffer(_framebuffer, _spl::framebufferAttachmentToGL(attachment), GL_RENDERBUFFER, _renderBufferAttachments[attachment]->getHandle());
 	}
 
 	const RenderBuffer* Framebuffer::getRenderBufferAttachment(FramebufferAttachment attachment) const
@@ -103,7 +103,7 @@ namespace spl
 
 	void Framebuffer::bind(const Framebuffer& framebuffer, FramebufferTarget target)
 	{
-		glBindFramebuffer(framebufferTargetToGL(target), framebuffer._framebuffer);
+		glBindFramebuffer(_spl::framebufferTargetToGL(target), framebuffer._framebuffer);
 	}
 
 	void Framebuffer::clear(bool color, bool depth, bool stencil)
@@ -136,9 +136,9 @@ namespace spl
 
 	void Framebuffer::_attachTexture(FramebufferAttachment attachment)
 	{
-		assert(framebufferAttachmentToGL(attachment) != 0);
+		assert(_spl::framebufferAttachmentToGL(attachment) != 0);
 		// TODO: Choose level / layer (glNamedFramebufferTextureLayer ?)
 		// TODO: Check that the texture type and format correspond to the attachment
-		glNamedFramebufferTexture(_framebuffer, framebufferAttachmentToGL(attachment), _textureAttachments[attachment]->getRawTexture().getHandle(), 0);
+		glNamedFramebufferTexture(_framebuffer, _spl::framebufferAttachmentToGL(attachment), _textureAttachments[attachment]->getRawTexture().getHandle(), 0);
 	}
 }

@@ -13,6 +13,34 @@ namespace spl
 {
 	namespace _spl
 	{
+		constexpr bool isIndexedBufferTarget(BufferTarget target)
+		{
+			switch (target)
+			{
+				case BufferTarget::Array:
+				case BufferTarget::CopyRead:
+				case BufferTarget::CopyWrite:
+				case BufferTarget::DispatchIndirect:
+				case BufferTarget::DrawIndirect:
+				case BufferTarget::ElementArray:
+				case BufferTarget::Parameter:
+				case BufferTarget::PixelPack:
+				case BufferTarget::PixelUnpack:
+				case BufferTarget::Query:
+				case BufferTarget::Texture:
+					return false;
+				case BufferTarget::AtomicCounter:
+				case BufferTarget::ShaderStorage:
+				case BufferTarget::TransformFeedback:
+				case BufferTarget::Uniform:
+					return true;
+				default:
+					assert(false);
+					return false;
+			}
+		}
+
+
 		template<CGenType TValue> constexpr TextureInternalFormat genTypeToTextureInternalFormat()
 		{
 			if constexpr (std::same_as<TValue, int8_t>)				{ return TextureInternalFormat::R_i8; }

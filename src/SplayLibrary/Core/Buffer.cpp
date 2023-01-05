@@ -53,7 +53,7 @@ namespace spl
 	void Buffer::createNew(uint32_t size, BufferUsage usage, const void* data)
 	{
 		assert(size > 0);
-		assert(bufferUsageToGL(usage) != 0);
+		assert(_spl::bufferUsageToGL(usage) != 0);
 
 		if (_usage == BufferUsage::Undefined)
 		{
@@ -61,7 +61,7 @@ namespace spl
 			glCreateBuffers(1, &_buffer);
 		}
 
-		glNamedBufferData(_buffer, size, data, bufferUsageToGL(usage));
+		glNamedBufferData(_buffer, size, data, _spl::bufferUsageToGL(usage));
 
 		_size = size;
 		_usage = usage;
@@ -81,7 +81,7 @@ namespace spl
 			glCreateBuffers(1, &_buffer);
 		}
 
-		glNamedBufferStorage(_buffer, size, data, bufferStorageFlagsToGL(flags));
+		glNamedBufferStorage(_buffer, size, data, _spl::bufferStorageFlagsToGL(flags));
 
 		_size = size;
 		_usage = BufferUsage::Undefined;
@@ -203,16 +203,18 @@ namespace spl
 	void Buffer::bind(const Buffer& buffer, BufferTarget target)
 	{
 		assert(buffer.isValid());
-		assert(bufferTargetToGL(target) != 0);
+		assert(_spl::bufferTargetToGL(target) != 0);
+		assert(!_spl::isIndexedBufferTarget(target));
 
-		glBindBuffer(bufferTargetToGL(target), buffer._buffer);
+		glBindBuffer(_spl::bufferTargetToGL(target), buffer._buffer);
 	}
 
 	void Buffer::unbind(BufferTarget target)
 	{
-		assert(bufferTargetToGL(target) != 0);
+		assert(_spl::bufferTargetToGL(target) != 0);
+		assert(!_spl::isIndexedBufferTarget(target));
 
-		glBindBuffer(bufferTargetToGL(target), 0);
+		glBindBuffer(_spl::bufferTargetToGL(target), 0);
 	}
 
 	Buffer::~Buffer()
@@ -222,6 +224,6 @@ namespace spl
 
 	void Buffer::_clear(TextureInternalFormat internalFormat, uint32_t dstOffset, uint32_t size, TextureFormat format, TextureDataType type, const void* data)
 	{
-		glClearNamedBufferSubData(_buffer, textureInternalFormatToGL(internalFormat), dstOffset, size, textureFormatToGL(format), textureDataTypeToGL(type), data);
+		glClearNamedBufferSubData(_buffer, _spl::textureInternalFormatToGL(internalFormat), dstOffset, size, _spl::textureFormatToGL(format), _spl::textureDataTypeToGL(type), data);
 	}
 }
