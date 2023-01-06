@@ -1,8 +1,8 @@
 #include "main.hpp"
 
-// TODO: make gl conversion constexpr and move them to Private.hpp/cpp
+// TODO: Search all "uint32_t" for sizes/offset... if it's GLintptr or GLsizeiptr, replace with uintptr_t
 // TODO: make accessors inline ?
-// TODO: Finish buffers (mapping, clearing)
+// TODO: Finish buffers (mapping)
 // TODO: Create all "texture" classes (and put them with TextureBase and Texture2D in a sub-file)
 // TODO: Rewrite 'Drawable'
 // TODO: Allow for better shader debugging ? Maybe... maybe not...

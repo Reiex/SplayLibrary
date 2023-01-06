@@ -18,12 +18,12 @@ namespace spl
 	{
 	}
 
-	Buffer::Buffer(uint32_t size, BufferUsage usage, const void* data) : Buffer()
+	Buffer::Buffer(uintptr_t size, BufferUsage usage, const void* data) : Buffer()
 	{
 		createNew(size, usage, data);
 	}
 
-	Buffer::Buffer(uint32_t size, BufferStorageFlags::Flags flags, const void* data) : Buffer()
+	Buffer::Buffer(uintptr_t size, BufferStorageFlags::Flags flags, const void* data) : Buffer()
 	{
 		createNew(size, flags, data);
 	}
@@ -50,9 +50,9 @@ namespace spl
 		return *this;
 	}
 
-	void Buffer::createNew(uint32_t size, BufferUsage usage, const void* data)
+	void Buffer::createNew(uintptr_t size, BufferUsage usage, const void* data)
 	{
-		assert(size > 0);
+		assert(size != 0);
 		assert(_spl::bufferUsageToGL(usage) != 0);
 
 		if (_usage == BufferUsage::Undefined)
@@ -68,9 +68,9 @@ namespace spl
 		_flags = BufferStorageFlags::None;
 	}
 
-	void Buffer::createNew(uint32_t size, BufferStorageFlags::Flags flags, const void* data)
+	void Buffer::createNew(uintptr_t size, BufferStorageFlags::Flags flags, const void* data)
 	{
-		assert(size > 0);
+		assert(size != 0);
 		// TODO: Is it legal to not have dynamic_storage_bit but map_write_bit ?
 		assert(!(flags & BufferStorageFlags::MapCoherent) || (flags & BufferStorageFlags::MapPersistent));
 		assert(!(flags & BufferStorageFlags::MapPersistent) || (flags & BufferStorageFlags::MapRead) || (flags & BufferStorageFlags::MapWrite));
@@ -133,11 +133,13 @@ namespace spl
 		buffer._flags = BufferStorageFlags::None;
 	}
 
-	void Buffer::update(const void* data, uint32_t size, uint32_t dstOffset)
+	void Buffer::update(const void* data, uintptr_t size, uintptr_t dstOffset)
 	{
 		assert(data);
 		assert(isValid());
-		assert(dstOffset + size <= _size);
+		assert(size == -1 || dstOffset + size <= _size);
+
+		size = std::min(size, _size - dstOffset);
 
 		// TODO: Check for mappings, cannot be updated that way for some kinds of mappings...
 
@@ -152,14 +154,13 @@ namespace spl
 		}
 	}
 
-	void Buffer::update(const Buffer& data, uint32_t size, uint32_t dstOffset, uint32_t srcOffset)
+	void Buffer::update(const Buffer& data, uintptr_t size, uintptr_t dstOffset, uintptr_t srcOffset)
 	{
 		assert(isValid());
-		assert(dstOffset + size <= _size);
 		assert(data.isValid());
-		assert(srcOffset + size <= data._size);
+		assert(size == -1 || (dstOffset + size <= _size && srcOffset + size <= data._size));
 
-		glCopyNamedBufferSubData(data._buffer, _buffer, srcOffset, dstOffset, size);
+		glCopyNamedBufferSubData(data._buffer, _buffer, srcOffset, dstOffset, std::min({ size, _size - dstOffset, _size - srcOffset }));
 	}
 
 	void Buffer::destroy()
@@ -180,7 +181,7 @@ namespace spl
 		return _buffer;
 	}
 
-	uint32_t Buffer::getSize() const
+	uintptr_t Buffer::getSize() const
 	{
 		return _size;
 	}
@@ -200,21 +201,44 @@ namespace spl
 		return _buffer != 0;
 	}
 
-	void Buffer::bind(const Buffer& buffer, BufferTarget target)
+	void Buffer::bind(const Buffer& buffer, BufferTarget target, uint32_t index, uintptr_t size, uintptr_t offset)
 	{
 		assert(buffer.isValid());
 		assert(_spl::bufferTargetToGL(target) != 0);
-		assert(!_spl::isIndexedBufferTarget(target));
 
-		glBindBuffer(_spl::bufferTargetToGL(target), buffer._buffer);
+		if (_spl::isIndexedBufferTarget(target))
+		{
+			assert(index != -1);
+			assert(size == -1 || offset + size <= buffer._size);
+
+			glBindBufferRange(_spl::bufferTargetToGL(target), index, buffer._buffer, offset, std::min(size, buffer._size - offset));
+		}
+		else
+		{
+			assert(index == -1);
+			assert(size == -1);
+			assert(offset == 0);
+
+			glBindBuffer(_spl::bufferTargetToGL(target), buffer._buffer);
+		}
 	}
 
-	void Buffer::unbind(BufferTarget target)
+	void Buffer::unbind(BufferTarget target, uint32_t index)
 	{
 		assert(_spl::bufferTargetToGL(target) != 0);
-		assert(!_spl::isIndexedBufferTarget(target));
 
-		glBindBuffer(_spl::bufferTargetToGL(target), 0);
+		if (_spl::isIndexedBufferTarget(target))
+		{
+			assert(index != -1);
+
+			glBindBufferBase(_spl::bufferTargetToGL(target), index, 0);
+		}
+		else
+		{
+			assert(index == -1);
+
+			glBindBuffer(_spl::bufferTargetToGL(target), 0);
+		}
 	}
 
 	Buffer::~Buffer()
@@ -222,8 +246,8 @@ namespace spl
 		destroy();
 	}
 
-	void Buffer::_clear(TextureInternalFormat internalFormat, uint32_t dstOffset, uint32_t size, TextureFormat format, TextureDataType type, const void* data)
+	void Buffer::_clear(TextureInternalFormat internalFormat, uintptr_t offset, uintptr_t size, TextureFormat format, TextureDataType type, const void* data)
 	{
-		glClearNamedBufferSubData(_buffer, _spl::textureInternalFormatToGL(internalFormat), dstOffset, size, _spl::textureFormatToGL(format), _spl::textureDataTypeToGL(type), data);
+		glClearNamedBufferSubData(_buffer, _spl::textureInternalFormatToGL(internalFormat), offset, std::min(size, _size), _spl::textureFormatToGL(format), _spl::textureDataTypeToGL(type), data);
 	}
 }

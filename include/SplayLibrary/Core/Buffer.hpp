@@ -77,8 +77,8 @@ namespace spl
 		public:
 
 			Buffer();
-			Buffer(uint32_t size, BufferUsage usage, const void* data = nullptr);
-			Buffer(uint32_t size, BufferStorageFlags::Flags flags, const void* data = nullptr);
+			Buffer(uintptr_t size, BufferUsage usage, const void* data = nullptr);
+			Buffer(uintptr_t size, BufferStorageFlags::Flags flags, const void* data = nullptr);
 			Buffer(const Buffer& buffer);
 			Buffer(Buffer&& buffer);
 
@@ -86,28 +86,28 @@ namespace spl
 			Buffer& operator=(Buffer&& buffer);
 
 
-			void createNew(uint32_t size, BufferUsage usage, const void* data = nullptr);
-			void createNew(uint32_t size, BufferStorageFlags::Flags flags, const void* data = nullptr);
+			void createNew(uintptr_t size, BufferUsage usage, const void* data = nullptr);
+			void createNew(uintptr_t size, BufferStorageFlags::Flags flags, const void* data = nullptr);
 			void copyFrom(const Buffer& buffer);	// Destroy/Recreate the buffer iff (this is invalid) or (sizes are different)
 			void moveFrom(Buffer&& buffer);
 
-			void update(const void* data, uint32_t size, uint32_t dstOffset = 0);
-			void update(const Buffer& data, uint32_t size, uint32_t dstOffset = 0, uint32_t srcOffset = 0);
-			template<CGenType TClearValue> void clear(const TClearValue& clearValue, uint32_t size, uint32_t dstOffset = 0);
+			void update(const void* data, uintptr_t size = -1, uintptr_t dstOffset = 0);
+			void update(const Buffer& data, uintptr_t size = -1, uintptr_t dstOffset = 0, uintptr_t srcOffset = 0);
+			template<CGenType TClearValue> void clear(const TClearValue& clearValue, uintptr_t size = -1, uintptr_t offset = 0);
 			// TODO: mapping
 
 			void destroy();
 
 
 			uint32_t getHandle() const;
-			uint32_t getSize() const;
+			uintptr_t getSize() const;
 			BufferUsage getUsage() const;
 			BufferStorageFlags::Flags getStorageFlags() const;
 			bool isValid() const;
 
 
-			static void bind(const Buffer& buffer, BufferTarget target);
-			static void unbind(BufferTarget target);
+			static void bind(const Buffer& buffer, BufferTarget target, uint32_t index = -1, uintptr_t size = -1, uintptr_t offset = 0);
+			static void unbind(BufferTarget target, uint32_t index = -1);
 
 			// TODO : Binding to indexed targets
 
@@ -115,10 +115,10 @@ namespace spl
 
 		private:
 
-			void _clear(TextureInternalFormat internalFormat, uint32_t dstOffset, uint32_t size, TextureFormat format, TextureDataType type, const void* data);
+			void _clear(TextureInternalFormat internalFormat, uintptr_t offset, uintptr_t size, TextureFormat format, TextureDataType type, const void* data);
 
 			uint32_t _buffer;
-			uint32_t _size;
+			uintptr_t _size;
 			BufferUsage _usage;
 			BufferStorageFlags::Flags _flags;
 	};
