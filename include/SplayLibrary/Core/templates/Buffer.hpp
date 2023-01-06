@@ -15,8 +15,10 @@ namespace spl
 	template<CGenType TClearValue>
 	void Buffer::clear(const TClearValue& clearValue, uintptr_t size, uintptr_t offset)
 	{
+		size = size == -1 ? _size : size;
+
 		assert(isValid());
-		assert(size == -1 || offset + size <= _size);
+		assert(offset + size <= _size);
 		assert(offset % sizeof(TClearValue) == 0);
 		assert(size % sizeof(TClearValue) == 0);
 

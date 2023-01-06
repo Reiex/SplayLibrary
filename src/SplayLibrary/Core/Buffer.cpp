@@ -135,11 +135,11 @@ namespace spl
 
 	void Buffer::update(const void* data, uintptr_t size, uintptr_t dstOffset)
 	{
+		size = size == -1 ? _size : size;
+
 		assert(data);
 		assert(isValid());
-		assert(size == -1 || dstOffset + size <= _size);
-
-		size = std::min(size, _size - dstOffset);
+		assert(dstOffset + size <= _size);
 
 		// TODO: Check for mappings, cannot be updated that way for some kinds of mappings...
 
@@ -156,11 +156,14 @@ namespace spl
 
 	void Buffer::update(const Buffer& data, uintptr_t size, uintptr_t dstOffset, uintptr_t srcOffset)
 	{
+		size = size == -1 ? _size : size;
+
 		assert(isValid());
 		assert(data.isValid());
-		assert(size == -1 || (dstOffset + size <= _size && srcOffset + size <= data._size));
+		assert(dstOffset + size <= _size);
+		assert(srcOffset + size <= data._size);
 
-		glCopyNamedBufferSubData(data._buffer, _buffer, srcOffset, dstOffset, std::min({ size, _size - dstOffset, _size - srcOffset }));
+		glCopyNamedBufferSubData(data._buffer, _buffer, srcOffset, dstOffset, size);
 	}
 
 	void Buffer::destroy()
@@ -208,10 +211,12 @@ namespace spl
 
 		if (_spl::isIndexedBufferTarget(target))
 		{
-			assert(index != -1);
-			assert(size == -1 || offset + size <= buffer._size);
+			size = size == -1 ? buffer._size : size;
 
-			glBindBufferRange(_spl::bufferTargetToGL(target), index, buffer._buffer, offset, std::min(size, buffer._size - offset));
+			assert(index != -1);
+			assert(offset + size <= buffer._size);
+
+			glBindBufferRange(_spl::bufferTargetToGL(target), index, buffer._buffer, offset, size);
 		}
 		else
 		{
@@ -248,6 +253,6 @@ namespace spl
 
 	void Buffer::_clear(TextureInternalFormat internalFormat, uintptr_t offset, uintptr_t size, TextureFormat format, TextureDataType type, const void* data)
 	{
-		glClearNamedBufferSubData(_buffer, _spl::textureInternalFormatToGL(internalFormat), offset, std::min(size, _size), _spl::textureFormatToGL(format), _spl::textureDataTypeToGL(type), data);
+		glClearNamedBufferSubData(_buffer, _spl::textureInternalFormatToGL(internalFormat), offset, size, _spl::textureFormatToGL(format), _spl::textureDataTypeToGL(type), data);
 	}
 }

@@ -108,8 +108,7 @@ namespace spl
 
 			static void bind(const Buffer& buffer, BufferTarget target, uint32_t index = -1, uintptr_t size = -1, uintptr_t offset = 0);
 			static void unbind(BufferTarget target, uint32_t index = -1);
-
-			// TODO : Binding to indexed targets
+			// TODO : Binding of multiple buffers at the same time to indexed targets (glBindBuffersRange)
 
 			~Buffer();
 
