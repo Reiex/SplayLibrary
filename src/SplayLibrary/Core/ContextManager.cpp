@@ -12,7 +12,7 @@ namespace spl
 {
 	namespace
 	{
-		GLvoid debugMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* rawMessage, const GLvoid* userParam)
+		void APIENTRY debugMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* rawMessage, const void* userParam)
 		{
 			DebugMessage* message = new DebugMessage();
 			message->source = _spl::glToDebugMessageSource(source);
@@ -186,7 +186,7 @@ namespace spl
 		if (_debugContext)
 		{
 			glEnable(GL_DEBUG_OUTPUT);
-			glDebugMessageCallback((GLDEBUGPROC)(&debugMessageCallback), this);
+			glDebugMessageCallback(&debugMessageCallback, this);
 			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, true);
 		}
 		else

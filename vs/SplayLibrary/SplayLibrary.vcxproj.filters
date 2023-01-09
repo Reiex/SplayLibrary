@@ -46,6 +46,12 @@
     <Filter Include="Header Files\Private\templates">
       <UniqueIdentifier>{1fd2aed5-2f72-43b6-96cc-a2f76a0a3d5b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Core\glad">
+      <UniqueIdentifier>{b02a82ee-e8c1-4d1e-a2b6-239a7a3e570c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\glad">
+      <UniqueIdentifier>{3df9efdf-d4de-4685-87e1-870d9cca81ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\SplayLibrary\Core\Drawable.cpp">
@@ -86,6 +92,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\SplayLibrary\Core\Texture\TextureBase.cpp">
       <Filter>Source Files\Core\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\SplayLibrary\Core\glad\glad.cpp">
+      <Filter>Source Files\Core\glad</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -187,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Private\templates\PrivateIncluded.hpp">
       <Filter>Header Files\Private\templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\glad\glad.hpp">
+      <Filter>Header Files\Core\glad</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

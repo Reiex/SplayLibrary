@@ -26,6 +26,7 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\ContextManager.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Drawable.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Framebuffer.cpp" />
+    <ClCompile Include="..\..\src\SplayLibrary\Core\glad\glad.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Shader.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\RawTexture.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Texture\Texture2D.cpp" />
@@ -48,6 +49,7 @@
     <ClInclude Include="..\..\include\SplayLibrary\Core\Drawable.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Event.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Framebuffer.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\glad\glad.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\templates\Buffer.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\templates\Framebuffer.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\templates\Shader.hpp" />
@@ -163,7 +165,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)external\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>DejaVu-$(Configuration)-$(Platform).lib;glfw3-$(Platform).lib;glad-$(Configuration)-$(Platform).lib</AdditionalDependencies>
+      <AdditionalDependencies>DejaVu-$(Configuration)-$(Platform).lib;glfw3-$(Platform).lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -189,7 +191,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)external\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>DejaVu-$(Configuration)-$(Platform).lib;glfw3-$(Platform).lib;glad-$(Configuration)-$(Platform).lib</AdditionalDependencies>
+      <AdditionalDependencies>DejaVu-$(Configuration)-$(Platform).lib;glfw3-$(Platform).lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -211,7 +213,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)external\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>DejaVu-$(Configuration)-$(Platform).lib;glfw3-$(Platform).lib;glad-$(Configuration)-$(Platform).lib</AdditionalDependencies>
+      <AdditionalDependencies>DejaVu-$(Configuration)-$(Platform).lib;glfw3-$(Platform).lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -237,7 +239,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)external\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>DejaVu-$(Configuration)-$(Platform).lib;glfw3-$(Platform).lib;glad-$(Configuration)-$(Platform).lib</AdditionalDependencies>
+      <AdditionalDependencies>DejaVu-$(Configuration)-$(Platform).lib;glfw3-$(Platform).lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
