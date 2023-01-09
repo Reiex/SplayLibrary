@@ -22,7 +22,7 @@ namespace spl
 		glCreateVertexArrays(1, &_vao);
 	}
 
-	void Drawable::draw(PrimitiveType primitiveType, uint32_t indicesCount) const
+	void Drawable::draw(PrimitiveType primitiveType, uintptr_t indicesCount) const
 	{
 		assert((0 < indicesCount && indicesCount <= _indicesCount) || indicesCount == -1);
 
@@ -74,7 +74,7 @@ namespace spl
 		_needsAttributesUpdate = false;
 	}
 
-	void Drawable::createNewVertices(const void* vertices, uint32_t size, DrawableStorage storage)
+	void Drawable::createNewVertices(const void* vertices, uintptr_t size, DrawableStorage storage)
 	{
 		if (_spl::drawableStorageToBufferUsage(storage) != BufferUsage::Undefined)
 		{
@@ -94,19 +94,19 @@ namespace spl
 		updateVertices(nullptr, 0, storage, 0);
 	}
 
-	void Drawable::updateVertices(const void* vertices, uint32_t size, uint32_t offset)
+	void Drawable::updateVertices(const void* vertices, uintptr_t size, uintptr_t offset)
 	{
 		updateVertices(vertices, size, _vboStorage, offset);
 	}
 
-	void Drawable::updateVertices(const void* vertices, uint32_t size, DrawableStorage storage, uint32_t offset)
+	void Drawable::updateVertices(const void* vertices, uintptr_t size, DrawableStorage storage, uintptr_t offset)
 	{
 		assert(_vbo.isValid());
 
 		if (offset + size > _vbo.getSize() || storage != _vboStorage)
 		{
 			_vboStorage = storage;
-			const uint32_t newSize = std::max(_vbo.getSize(), offset + size);
+			const uintptr_t newSize = std::max(_vbo.getSize(), offset + size);
 
 			Buffer newVbo;
 			if (_spl::drawableStorageToBufferUsage(_vboStorage) != BufferUsage::Undefined)
@@ -134,9 +134,9 @@ namespace spl
 		_vbo.destroy();
 	}
 
-	void Drawable::createNewIndices(const uint32_t* indices, uint32_t count, DrawableStorage storage)
+	void Drawable::createNewIndices(const uint32_t* indices, uintptr_t count, DrawableStorage storage)
 	{
-		const uint32_t size = count * sizeof(uint32_t);
+		const uintptr_t size = count * sizeof(uint32_t);
 
 		if (_spl::drawableStorageToBufferUsage(storage) != BufferUsage::Undefined)
 		{
@@ -157,22 +157,22 @@ namespace spl
 		updateIndices(nullptr, 0, storage, 0);
 	}
 
-	void Drawable::updateIndices(const uint32_t* indices, uint32_t count, uint32_t startIndex)
+	void Drawable::updateIndices(const uint32_t* indices, uintptr_t count, uintptr_t startIndex)
 	{
 		updateIndices(indices, count, _eboStorage, startIndex);
 	}
 
-	void Drawable::updateIndices(const uint32_t* indices, uint32_t count, DrawableStorage storage, uint32_t startIndex)
+	void Drawable::updateIndices(const uint32_t* indices, uintptr_t count, DrawableStorage storage, uintptr_t startIndex)
 	{
 		assert(_ebo.isValid());
 
-		const uint32_t offset = startIndex * sizeof(uint32_t);
-		const uint32_t size = count * sizeof(uint32_t);
+		const uintptr_t offset = startIndex * sizeof(uint32_t);
+		const uintptr_t size = count * sizeof(uint32_t);
 
 		if (offset + size > _ebo.getSize() || storage != _eboStorage)
 		{
 			_eboStorage = storage;
-			const uint32_t newSize = std::max(_ebo.getSize(), offset + size);
+			const uintptr_t newSize = std::max(_ebo.getSize(), offset + size);
 
 			Buffer newEbo;
 			if (_spl::drawableStorageToBufferUsage(_eboStorage) != BufferUsage::Undefined)

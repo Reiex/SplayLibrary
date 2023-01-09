@@ -110,7 +110,7 @@ namespace spl
 			///						index buffer. This param specifies how many indices the draw command must read. If
 			///						-1, all the indices are read.
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
-			virtual void draw(PrimitiveType primitiveType = PrimitiveType::Triangles, uint32_t indicesCount = -1) const;
+			virtual void draw(PrimitiveType primitiveType = PrimitiveType::Triangles, uintptr_t indicesCount = -1) const;
 
 			~Drawable();
 
@@ -132,19 +132,19 @@ namespace spl
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
 			/// \brief Create vertex buffer and fill it with `vertices` if not `nullptr`.
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
-			void createNewVertices(const void* vertices, uint32_t size, DrawableStorage storage);
+			void createNewVertices(const void* vertices, uintptr_t size, DrawableStorage storage);
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
 			/// \brief Updates the type of vertex data storage.
 			///
-			/// See `updateVertices(const void*, uint32_t, DrawableStorage, uint32_t)` for more information.
+			/// See `updateVertices(const void*, uintptr_t, DrawableStorage, uintptr_t)` for more information.
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
 			void updateVertices(DrawableStorage storage);
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
 			/// \brief Updates vertex data.
 			///
-			/// See `updateVertices(const void*, uint32_t, DrawableStorage, uint32_t)` for more information.
+			/// See `updateVertices(const void*, uintptr_t, DrawableStorage, uintptr_t)` for more information.
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
-			void updateVertices(const void* vertices, uint32_t size, uint32_t offset = 0);
+			void updateVertices(const void* vertices, uintptr_t size, uintptr_t offset = 0);
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
 			/// \brief Updates the vertices of the drawable.
 			///
@@ -160,7 +160,7 @@ namespace spl
 			///					most of the time.
 			/// \param offset	Offset for vertex data to be copied in.
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
-			void updateVertices(const void* vertices, uint32_t size, DrawableStorage storage, uint32_t offset = 0);
+			void updateVertices(const void* vertices, uintptr_t size, DrawableStorage storage, uintptr_t offset = 0);
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
 			/// \brief Destroyes the underlying OpenGL vertex buffer.
 			/// 
@@ -171,19 +171,19 @@ namespace spl
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
 			/// \brief Create indices buffer and fill it with `indices` if not `nullptr`.
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
-			void createNewIndices(const uint32_t* indices, uint32_t count, DrawableStorage storage);
+			void createNewIndices(const uint32_t* indices, uintptr_t count, DrawableStorage storage);
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
 			/// \brief Updates the type of index storage.
 			///
-			/// See `updateIndices(const void*, uint32_t, DrawableStorage, uint32_t)` for more information.
+			/// See `updateIndices(const uint32_t*, uint32_t, DrawableStorage, uintptr_t)` for more information.
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
 			void updateIndices(DrawableStorage storage);
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
 			/// \brief Updates indices.
 			///
-			/// See `updateIndices(const void*, uint32_t, DrawableStorage, uint32_t)` for more information.
+			/// See `updateIndices(const uint32_t*, uint32_t, DrawableStorage, uint32_t)` for more information.
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
-			void updateIndices(const uint32_t* indices, uint32_t count, uint32_t startIndex = 0);
+			void updateIndices(const uint32_t* indices, uintptr_t count, uintptr_t startIndex = 0);
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
 			/// \brief Updates the indices of the drawable.
 			///
@@ -198,7 +198,7 @@ namespace spl
 			///						most of the time.
 			/// \param startIndex	First index to be modified by the method.
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			void updateIndices(const uint32_t* indices, uint32_t count, DrawableStorage storage, uint32_t startIndex = 0);
+			void updateIndices(const uint32_t* indices, uintptr_t count, DrawableStorage storage, uintptr_t startIndex = 0);
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
 			/// \brief Destroyes the underlying OpenGL index buffer.
 			/// 
@@ -218,7 +218,7 @@ namespace spl
 			DrawableStorage _vboStorage;	///< Vertex buffer storage.
 			Buffer _ebo;					///< Element (indices) Buffer Object.
 			DrawableStorage _eboStorage;	///< Element (indices) buffer storage.
-			uint32_t _indicesCount;			///< Number of indices in the EBO. Always equal to `_ebo.getSize() / sizeof(uint32_t)`
+			uintptr_t _indicesCount;		///< Number of indices in the EBO. Always equal to `_ebo.getSize() / sizeof(uint32_t)`
 
 			bool _needsAttributesUpdate;	///< If a new vertex buffer has been created and the VAO has not been updated.
 	};
