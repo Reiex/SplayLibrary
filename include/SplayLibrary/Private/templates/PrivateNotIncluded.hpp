@@ -159,6 +159,20 @@ namespace spl
 					| (-((flags & BufferStorageFlags::ClientStorage)	>> 5) & GL_CLIENT_STORAGE_BIT)
 				);
 		}
+
+		constexpr GLbitfield bufferMapAccessFlagsToGL(BufferMapAccessFlags::Flags flags)
+		{
+			return (
+					( -((flags & BufferMapAccessFlags::Read)				>> 0) & GL_MAP_READ_BIT)
+					| ( -((flags & BufferMapAccessFlags::Write)				>> 1) & GL_MAP_WRITE_BIT)
+					| ( -((flags & BufferMapAccessFlags::Persistent)		>> 2) & GL_MAP_PERSISTENT_BIT)
+					| ( -((flags & BufferMapAccessFlags::Coherent)			>> 3) & GL_MAP_COHERENT_BIT)
+					| ( -((flags & BufferMapAccessFlags::InvalidateRange)	>> 4) & GL_MAP_INVALIDATE_RANGE_BIT)
+					| ( -((flags & BufferMapAccessFlags::InvalidateBuffer)	>> 5) & GL_MAP_INVALIDATE_BUFFER_BIT)
+					| ( -((flags & BufferMapAccessFlags::FlushExplicit)		>> 6) & GL_MAP_FLUSH_EXPLICIT_BIT)
+					| ( -((flags & BufferMapAccessFlags::Unsynchronized)	>> 7) & GL_MAP_UNSYNCHRONIZED_BIT)
+				);
+		}
 	
 		constexpr GLenum primitiveTypeToGL(PrimitiveType primitiveType)
 		{

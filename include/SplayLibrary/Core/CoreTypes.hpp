@@ -39,6 +39,7 @@ namespace spl
 	enum class BufferTarget;
 	enum class BufferUsage;
 	namespace BufferStorageFlags { enum Flags; }
+	namespace BufferMapAccessFlags { enum Flags; }
 	class Buffer;
 
 	struct VertexAttribute;

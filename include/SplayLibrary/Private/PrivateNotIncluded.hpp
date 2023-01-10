@@ -23,6 +23,7 @@ namespace spl
 		constexpr GLenum bufferTargetToGL(BufferTarget target);
 		constexpr GLenum bufferUsageToGL(BufferUsage usage);
 		constexpr GLbitfield bufferStorageFlagsToGL(BufferStorageFlags::Flags flags);
+		constexpr GLbitfield bufferMapAccessFlagsToGL(BufferMapAccessFlags::Flags flags);
 
 		constexpr GLenum primitiveTypeToGL(PrimitiveType primitiveType);
 

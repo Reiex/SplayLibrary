@@ -14,7 +14,11 @@ namespace spl
 		_buffer(0),
 		_size(0),
 		_usage(BufferUsage::Undefined),
-		_flags(BufferStorageFlags::None)
+		_storageFlags(BufferStorageFlags::None),
+		_mapPtr(nullptr),
+		_mapAccess(BufferMapAccessFlags::None),
+		_mapSize(0),
+		_mapOffset(0)
 	{
 	}
 
@@ -55,7 +59,7 @@ namespace spl
 		assert(size != 0);
 		assert(_spl::bufferUsageToGL(usage) != 0);
 
-		if (_usage == BufferUsage::Undefined)
+		if (hasImmutableStorage())
 		{
 			destroy();
 			glCreateBuffers(1, &_buffer);
@@ -65,17 +69,15 @@ namespace spl
 
 		_size = size;
 		_usage = usage;
-		_flags = BufferStorageFlags::None;
 	}
 
 	void Buffer::createNew(uintptr_t size, BufferStorageFlags::Flags flags, const void* data)
 	{
 		assert(size != 0);
-		// TODO: Is it legal to not have dynamic_storage_bit but map_write_bit ?
-		assert(!(flags & BufferStorageFlags::MapCoherent) || (flags & BufferStorageFlags::MapPersistent));
 		assert(!(flags & BufferStorageFlags::MapPersistent) || (flags & BufferStorageFlags::MapRead) || (flags & BufferStorageFlags::MapWrite));
+		assert(!(flags & BufferStorageFlags::MapCoherent) || (flags & BufferStorageFlags::MapPersistent));
 
-		if (_usage == BufferUsage::Undefined)
+		if (hasImmutableStorage())
 		{
 			destroy();
 			glCreateBuffers(1, &_buffer);
@@ -84,8 +86,7 @@ namespace spl
 		glNamedBufferStorage(_buffer, size, data, _spl::bufferStorageFlagsToGL(flags));
 
 		_size = size;
-		_usage = BufferUsage::Undefined;
-		_flags = flags;
+		_storageFlags = flags;
 	}
 
 	void Buffer::copyFrom(const Buffer& buffer)
@@ -100,7 +101,7 @@ namespace spl
 			}
 			else
 			{
-				createNew(buffer._size, buffer._flags);
+				createNew(buffer._size, buffer._storageFlags);
 			}
 		}
 		else if (_size != buffer._size)
@@ -111,7 +112,7 @@ namespace spl
 			}
 			else
 			{
-				createNew(buffer._size, _flags);
+				createNew(buffer._size, _storageFlags);
 			}
 		}
 
@@ -125,25 +126,35 @@ namespace spl
 		_buffer = buffer._buffer;
 		_size = buffer._size;
 		_usage = buffer._usage;
-		_flags = buffer._flags;
+		_storageFlags = buffer._storageFlags;
+
+		_mapPtr = buffer._mapPtr;
+		_mapAccess = buffer._mapAccess;
+		_mapSize = buffer._mapSize;
+		_mapOffset = buffer._mapOffset;
+
 
 		buffer._buffer = 0;
 		buffer._size = 0;
 		buffer._usage = BufferUsage::Undefined;
-		buffer._flags = BufferStorageFlags::None;
+		buffer._storageFlags = BufferStorageFlags::None;
+
+		buffer._mapPtr = nullptr;
+		buffer._mapAccess = BufferMapAccessFlags::None;
+		buffer._mapSize = 0;
+		buffer._mapOffset = 0;
 	}
 
 	void Buffer::update(const void* data, uintptr_t size, uintptr_t dstOffset)
 	{
 		size = size == -1 ? _size : size;
 
-		assert(data);
 		assert(isValid());
+		assert(data);
 		assert(dstOffset + size <= _size);
+		assert(!isMapped() || (_mapAccess & BufferMapAccessFlags::Persistent));
 
-		// TODO: Check for mappings, cannot be updated that way for some kinds of mappings...
-
-		if (_usage != BufferUsage::Undefined || (_flags & BufferStorageFlags::DynamicStorage))
+		if (_usage != BufferUsage::Undefined || (_storageFlags & BufferStorageFlags::DynamicStorage))
 		{
 			glNamedBufferSubData(_buffer, dstOffset, size, data);
 		}
@@ -162,8 +173,90 @@ namespace spl
 		assert(data.isValid());
 		assert(dstOffset + size <= _size);
 		assert(srcOffset + size <= data._size);
+		assert(&data != this || srcOffset + size <= dstOffset || dstOffset + size <= srcOffset);
+		assert(!isMapped() || (_mapAccess & BufferMapAccessFlags::Persistent));
 
 		glCopyNamedBufferSubData(data._buffer, _buffer, srcOffset, dstOffset, size);
+	}
+
+	void Buffer::map(BufferMapAccessFlags::Flags flags, uintptr_t size, uintptr_t offset)
+	{
+		assert(isValid());
+		assert(!isMapped());
+		assert((_storageFlags & BufferStorageFlags::MapRead) || !(flags & BufferMapAccessFlags::Read));
+		assert((_storageFlags & BufferStorageFlags::MapWrite) || !(flags & BufferMapAccessFlags::Write));
+		assert((_storageFlags & BufferStorageFlags::MapPersistent) || !(flags & BufferMapAccessFlags::Persistent));
+		assert((_storageFlags & BufferStorageFlags::MapCoherent) || !(flags & BufferMapAccessFlags::Coherent));
+		assert((flags & BufferMapAccessFlags::Read) || (flags & BufferMapAccessFlags::Write));
+		assert(!(flags & BufferMapAccessFlags::Coherent) || (flags & BufferMapAccessFlags::Persistent));
+		assert(!(flags & BufferMapAccessFlags::InvalidateRange) || !(flags & BufferMapAccessFlags::Read));
+		assert(!(flags & BufferMapAccessFlags::InvalidateBuffer) || !(flags & BufferMapAccessFlags::Read));
+		assert(!(flags & BufferMapAccessFlags::FlushExplicit) || (flags & BufferMapAccessFlags::Write));
+		assert(!(flags & BufferMapAccessFlags::Unsynchronized) || !(flags & BufferMapAccessFlags::Read));
+
+		if (size == -1)
+		{
+			assert(offset == 0);
+
+			_mapPtr = glMapNamedBufferRange(_buffer, 0, _size, _spl::bufferMapAccessFlagsToGL(flags));
+			_mapAccess = flags;
+			_mapSize = _size;
+			_mapOffset = 0;
+		}
+		else
+		{
+			assert(offset + size <= _size);
+
+			_mapPtr = glMapNamedBufferRange(_buffer, offset, size, _spl::bufferMapAccessFlagsToGL(flags));
+			_mapAccess = flags;
+			_mapSize = size;
+			_mapOffset = offset;
+		}
+	}
+
+	void Buffer::flush(uintptr_t size, uintptr_t offset)
+	{
+		size = size == -1 ? _mapSize : size;
+
+		assert(isValid());
+		assert(isMapped());
+		assert(_mapAccess & BufferMapAccessFlags::FlushExplicit);
+		assert(offset + size <= _mapSize);
+
+		glFlushMappedNamedBufferRange(_buffer, offset, size);
+	}
+
+	bool Buffer::unmap()
+	{
+		assert(isValid());
+		assert(isMapped());
+
+		_mapPtr = nullptr;
+		_mapAccess = BufferMapAccessFlags::None;
+		_mapSize = 0;
+		_mapOffset = 0;
+
+		return glUnmapNamedBuffer(_buffer);
+	}
+
+	void Buffer::invalidate(uintptr_t size, uintptr_t offset)
+	{
+		assert(isValid());
+
+		if (size == -1)
+		{
+			assert(offset == 0);
+			assert(!isMapped() || (_mapAccess & BufferMapAccessFlags::Persistent));
+
+			glInvalidateBufferData(_buffer);
+		}
+		else
+		{
+			assert(!isMapped() || (_mapAccess & BufferMapAccessFlags::Persistent) || offset >= _mapOffset + _mapSize || offset + size <= _mapOffset);
+
+			glInvalidateBufferSubData(_buffer, offset, size);
+		}
+
 	}
 
 	void Buffer::destroy()
@@ -176,7 +269,12 @@ namespace spl
 		_buffer = 0;
 		_size = 0;
 		_usage = BufferUsage::Undefined;
-		_flags = BufferStorageFlags::None;
+		_storageFlags = BufferStorageFlags::None;
+
+		_mapPtr = nullptr;
+		_mapAccess = BufferMapAccessFlags::None;
+		_mapSize = 0;
+		_mapOffset = 0;
 	}
 
 	uint32_t Buffer::getHandle() const
@@ -196,12 +294,47 @@ namespace spl
 
 	BufferStorageFlags::Flags Buffer::getStorageFlags() const
 	{
-		return _flags;
+		return _storageFlags;
+	}
+
+	const void* Buffer::getMapPointer() const
+	{
+		return _mapPtr;
+	}
+
+	void* Buffer::getMapPointer()
+	{
+		return _mapPtr;
+	}
+
+	BufferMapAccessFlags::Flags Buffer::getMapAccessFlags() const
+	{
+		return _mapAccess;
+	}
+
+	uintptr_t Buffer::getMapOffset() const
+	{
+		return _mapOffset;
+	}
+
+	uintptr_t Buffer::getMapSize() const
+	{
+		return _mapSize;
 	}
 
 	bool Buffer::isValid() const
 	{
 		return _buffer != 0;
+	}
+
+	bool Buffer::hasImmutableStorage() const
+	{
+		return _usage == BufferUsage::Undefined;
+	}
+
+	bool Buffer::isMapped() const
+	{
+		return _mapPtr != nullptr;
 	}
 
 	void Buffer::bind(const Buffer& buffer, BufferTarget target, uint32_t index, uintptr_t size, uintptr_t offset)
@@ -211,12 +344,20 @@ namespace spl
 
 		if (_spl::isIndexedBufferTarget(target))
 		{
-			size = size == -1 ? buffer._size : size;
+			assert(index != -1);	// TODO: Check index is valid (not just -1 but the glGetInteger thing)
 
-			assert(index != -1);
-			assert(offset + size <= buffer._size);
+			if (size == -1)
+			{
+				assert(offset == 0);
 
-			glBindBufferRange(_spl::bufferTargetToGL(target), index, buffer._buffer, offset, size);
+				glBindBufferBase(_spl::bufferTargetToGL(target), index, buffer._buffer);
+			}
+			else
+			{
+				assert(offset + size <= buffer._size);
+
+				glBindBufferRange(_spl::bufferTargetToGL(target), index, buffer._buffer, offset, size);
+			}
 		}
 		else
 		{
@@ -228,7 +369,47 @@ namespace spl
 		}
 	}
 
-	void Buffer::unbind(BufferTarget target, uint32_t index)
+	void Buffer::bind(const Buffer* const* buffers, uint32_t count, BufferTarget target, uint32_t firstIndex, const uintptr_t* sizes, const uintptr_t* offsets)
+	{
+		assert(_spl::bufferTargetToGL(target) != 0);
+		assert(_spl::isIndexedBufferTarget(target));
+		assert(firstIndex != -1);	// TODO: Check index is valid (not just -1 but the glGetInteger thing)
+
+		uint32_t* names = reinterpret_cast<uint32_t*>(alloca(sizeof(uint32_t) * count));
+		for (uint32_t i = 0; i < count; ++i)
+		{
+			if (buffers[i] == nullptr)
+			{
+				names[i] = 0;
+			}
+			else
+			{
+				assert(buffers[i]->isValid());
+				names[i] = buffers[i]->_buffer;
+			}
+		}
+
+		if (sizes == nullptr)
+		{
+			assert(offsets == nullptr);
+
+			glBindBuffersBase(_spl::bufferTargetToGL(target), firstIndex, count, names);
+		}
+		else
+		{
+			for (uint32_t i = 0; i < count; ++i)
+			{
+				if (buffers[i] != nullptr)
+				{
+					assert(offsets[i] + sizes[i] <= buffers[i]->_size);
+				}
+			}
+
+			glBindBuffersRange(_spl::bufferTargetToGL(target), firstIndex, count, names, reinterpret_cast<const GLintptr*>(offsets), reinterpret_cast<const GLsizeiptr*>(sizes));
+		}
+	}
+
+	void Buffer::unbind(BufferTarget target, uint32_t index, uint32_t count)
 	{
 		assert(_spl::bufferTargetToGL(target) != 0);
 
@@ -236,7 +417,14 @@ namespace spl
 		{
 			assert(index != -1);
 
-			glBindBufferBase(_spl::bufferTargetToGL(target), index, 0);
+			if (count == 1)
+			{
+				glBindBufferBase(_spl::bufferTargetToGL(target), index, 0);
+			}
+			else
+			{
+				glBindBuffersBase(_spl::bufferTargetToGL(target), index, count, nullptr);
+			}
 		}
 		else
 		{
@@ -251,8 +439,25 @@ namespace spl
 		destroy();
 	}
 
-	void Buffer::_clear(TextureInternalFormat internalFormat, uintptr_t offset, uintptr_t size, TextureFormat format, TextureDataType type, const void* data)
+	void Buffer::_clear(TextureInternalFormat internalFormat, uintptr_t offset, uintptr_t size, TextureFormat format, TextureDataType type, const void* data, uint32_t granularity)
 	{
-		glClearNamedBufferSubData(_buffer, _spl::textureInternalFormatToGL(internalFormat), offset, size, _spl::textureFormatToGL(format), _spl::textureDataTypeToGL(type), data);
+		assert(isValid());
+		assert(!isMapped() || (_mapAccess & BufferMapAccessFlags::Persistent));
+
+		if (size == -1)
+		{
+			assert(offset == 0);
+			assert(_size % granularity == 0);
+
+			glClearNamedBufferData(_buffer, _spl::textureInternalFormatToGL(internalFormat), _spl::textureFormatToGL(format), _spl::textureDataTypeToGL(type), data);
+		}
+		else
+		{
+			assert(offset + size <= _size);
+			assert(offset % granularity == 0);
+			assert(size % granularity == 0);
+
+			glClearNamedBufferSubData(_buffer, _spl::textureInternalFormatToGL(internalFormat), offset, size, _spl::textureFormatToGL(format), _spl::textureDataTypeToGL(type), data);
+		}
 	}
 }

@@ -15,19 +15,12 @@ namespace spl
 	template<CGenType TClearValue>
 	void Buffer::clear(const TClearValue& clearValue, uintptr_t size, uintptr_t offset)
 	{
-		size = size == -1 ? _size : size;
-
-		assert(isValid());
-		assert(offset + size <= _size);
-		assert(offset % sizeof(TClearValue) == 0);
-		assert(size % sizeof(TClearValue) == 0);
-
 		static_assert(_spl::genTypeToTextureInternalFormat<TClearValue>() != TextureInternalFormat::Undefined);
 
 		constexpr TextureInternalFormat internalFormat = _spl::genTypeToTextureInternalFormat<TClearValue>();
 		constexpr TextureFormat format = _spl::textureInternalFormatToTextureFormat(internalFormat);
 		constexpr TextureDataType dataType = _spl::textureInternalFormatToTextureDataType(internalFormat);
 
-		_clear(internalFormat, offset, size, format, dataType, &clearValue);
+		_clear(internalFormat, offset, size, format, dataType, &clearValue, sizeof(TClearValue));
 	}
 }
