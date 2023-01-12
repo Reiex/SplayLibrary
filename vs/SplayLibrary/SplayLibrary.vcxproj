@@ -29,6 +29,9 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\glad\glad.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Shader.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\RawTexture.cpp" />
+    <ClCompile Include="..\..\src\SplayLibrary\Core\ShaderModule.cpp" />
+    <ClCompile Include="..\..\src\SplayLibrary\Core\ShaderPipeline.cpp" />
+    <ClCompile Include="..\..\src\SplayLibrary\Core\ShaderProgram.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Texture\Texture2D.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Texture\TextureBase.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Window.cpp" />
@@ -50,6 +53,9 @@
     <ClInclude Include="..\..\include\SplayLibrary\Core\Event.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Framebuffer.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\glad\glad.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\ShaderPipeline.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\ShaderProgram.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\ShaderModule.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\templates\Buffer.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\templates\Framebuffer.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\templates\Shader.hpp" />

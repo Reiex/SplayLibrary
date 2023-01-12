@@ -69,6 +69,11 @@ namespace spl
 
 		_size = size;
 		_usage = usage;
+
+		_mapPtr = nullptr;
+		_mapAccess = BufferMapAccessFlags::None;
+		_mapSize = 0;
+		_mapOffset = 0;
 	}
 
 	void Buffer::createNew(uintptr_t size, BufferStorageFlags::Flags flags, const void* data)
@@ -87,6 +92,11 @@ namespace spl
 
 		_size = size;
 		_storageFlags = flags;
+
+		_mapPtr = nullptr;
+		_mapAccess = BufferMapAccessFlags::None;
+		_mapSize = 0;
+		_mapOffset = 0;
 	}
 
 	void Buffer::copyFrom(const Buffer& buffer)
@@ -337,6 +347,11 @@ namespace spl
 		return _mapPtr != nullptr;
 	}
 
+	Buffer::~Buffer()
+	{
+		destroy();
+	}
+
 	void Buffer::bind(const Buffer& buffer, BufferTarget target, uint32_t index, uintptr_t size, uintptr_t offset)
 	{
 		assert(buffer.isValid());
@@ -432,11 +447,6 @@ namespace spl
 
 			glBindBuffer(_spl::bufferTargetToGL(target), 0);
 		}
-	}
-
-	Buffer::~Buffer()
-	{
-		destroy();
 	}
 
 	void Buffer::_clear(TextureInternalFormat internalFormat, uintptr_t offset, uintptr_t size, TextureFormat format, TextureDataType type, const void* data, uint32_t granularity)

@@ -25,15 +25,17 @@ namespace spl
 		constexpr GLbitfield bufferStorageFlagsToGL(BufferStorageFlags::Flags flags);
 		constexpr GLbitfield bufferMapAccessFlagsToGL(BufferMapAccessFlags::Flags flags);
 
-		constexpr GLenum primitiveTypeToGL(PrimitiveType primitiveType);
-
-		constexpr GLenum framebufferTargetToGL(FramebufferTarget target);
-		constexpr GLenum framebufferAttachmentToGL(FramebufferAttachment attachment);
+		constexpr GLenum shaderStageToGL(ShaderStage stage);
 
 		constexpr GLenum textureTargetToGL(TextureTarget target);
 		constexpr GLenum textureFormatToGL(TextureFormat format);
 		constexpr GLenum textureDataTypeToGL(TextureDataType dataType);
 		constexpr GLenum textureInternalFormatToGL(TextureInternalFormat internalFormat);
+
+		constexpr GLenum framebufferTargetToGL(FramebufferTarget target);
+		constexpr GLenum framebufferAttachmentToGL(FramebufferAttachment attachment);
+
+		constexpr GLenum primitiveTypeToGL(PrimitiveType primitiveType);
 	}
 }
 

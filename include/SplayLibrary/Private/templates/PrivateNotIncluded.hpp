@@ -174,124 +174,30 @@ namespace spl
 				);
 		}
 	
-		constexpr GLenum primitiveTypeToGL(PrimitiveType primitiveType)
+
+		constexpr GLenum shaderStageToGL(ShaderStage stage)
 		{
-			switch (primitiveType)
+			switch (stage)
 			{
-				case PrimitiveType::Points:
-					return GL_POINTS;
-				case PrimitiveType::Lines:
-					return GL_LINES;
-				case PrimitiveType::LineStrip:
-					return GL_LINE_STRIP;
-				case PrimitiveType::LineLoop:
-					return GL_LINE_LOOP;
-				case PrimitiveType::Triangles:
-					return GL_TRIANGLES;
-				case PrimitiveType::TriangleStrip:
-					return GL_TRIANGLE_STRIP;
-				case PrimitiveType::TriangleFan:
-					return GL_TRIANGLE_FAN;
-				default:
-					assert(false);
-					return 0;
-			}
-		}
-	
-		constexpr GLenum framebufferTargetToGL(FramebufferTarget target)
-		{
-			switch (target)
-			{
-				case FramebufferTarget::DrawFramebuffer:
-					return GL_DRAW_FRAMEBUFFER;
-				case FramebufferTarget::ReadFramebuffer:
-					return GL_READ_FRAMEBUFFER;
+				case ShaderStage::Vertex:
+					return GL_VERTEX_SHADER;
+				case ShaderStage::TessellationControl:
+					return GL_TESS_CONTROL_SHADER;
+				case ShaderStage::TessellationEvaluation:
+					return GL_TESS_EVALUATION_SHADER;
+				case ShaderStage::Geometry:
+					return GL_GEOMETRY_SHADER;
+				case ShaderStage::Fragment:
+					return GL_FRAGMENT_SHADER;
+				case ShaderStage::Compute:
+					return GL_COMPUTE_SHADER;
 				default:
 					assert(false);
 					return 0;
 			}
 		}
 
-		constexpr GLenum framebufferAttachmentToGL(FramebufferAttachment attachment)
-		{
-			switch (attachment)
-			{
-				case FramebufferAttachment::DepthAttachment:
-					return GL_DEPTH_ATTACHMENT;
-				case FramebufferAttachment::StencilAttachment:
-					return GL_STENCIL_ATTACHMENT;
-				case FramebufferAttachment::DepthStencilAttachment:
-					return GL_DEPTH_STENCIL_ATTACHMENT;
-				case FramebufferAttachment::ColorAttachment0:
-					return GL_COLOR_ATTACHMENT0;
-				case FramebufferAttachment::ColorAttachment1:
-					return GL_COLOR_ATTACHMENT1;
-				case FramebufferAttachment::ColorAttachment2:
-					return GL_COLOR_ATTACHMENT2;
-				case FramebufferAttachment::ColorAttachment3:
-					return GL_COLOR_ATTACHMENT3;
-				case FramebufferAttachment::ColorAttachment4:
-					return GL_COLOR_ATTACHMENT4;
-				case FramebufferAttachment::ColorAttachment5:
-					return GL_COLOR_ATTACHMENT5;
-				case FramebufferAttachment::ColorAttachment6:
-					return GL_COLOR_ATTACHMENT6;
-				case FramebufferAttachment::ColorAttachment7:
-					return GL_COLOR_ATTACHMENT7;
-				case FramebufferAttachment::ColorAttachment8:
-					return GL_COLOR_ATTACHMENT8;
-				case FramebufferAttachment::ColorAttachment9:
-					return GL_COLOR_ATTACHMENT9;
-				case FramebufferAttachment::ColorAttachment10:
-					return GL_COLOR_ATTACHMENT10;
-				case FramebufferAttachment::ColorAttachment11:
-					return GL_COLOR_ATTACHMENT11;
-				case FramebufferAttachment::ColorAttachment12:
-					return GL_COLOR_ATTACHMENT12;
-				case FramebufferAttachment::ColorAttachment13:
-					return GL_COLOR_ATTACHMENT13;
-				case FramebufferAttachment::ColorAttachment14:
-					return GL_COLOR_ATTACHMENT14;
-				case FramebufferAttachment::ColorAttachment15:
-					return GL_COLOR_ATTACHMENT15;
-				case FramebufferAttachment::ColorAttachment16:
-					return GL_COLOR_ATTACHMENT16;
-				case FramebufferAttachment::ColorAttachment17:
-					return GL_COLOR_ATTACHMENT17;
-				case FramebufferAttachment::ColorAttachment18:
-					return GL_COLOR_ATTACHMENT18;
-				case FramebufferAttachment::ColorAttachment19:
-					return GL_COLOR_ATTACHMENT19;
-				case FramebufferAttachment::ColorAttachment20:
-					return GL_COLOR_ATTACHMENT20;
-				case FramebufferAttachment::ColorAttachment21:
-					return GL_COLOR_ATTACHMENT21;
-				case FramebufferAttachment::ColorAttachment22:
-					return GL_COLOR_ATTACHMENT22;
-				case FramebufferAttachment::ColorAttachment23:
-					return GL_COLOR_ATTACHMENT23;
-				case FramebufferAttachment::ColorAttachment24:
-					return GL_COLOR_ATTACHMENT24;
-				case FramebufferAttachment::ColorAttachment25:
-					return GL_COLOR_ATTACHMENT25;
-				case FramebufferAttachment::ColorAttachment26:
-					return GL_COLOR_ATTACHMENT26;
-				case FramebufferAttachment::ColorAttachment27:
-					return GL_COLOR_ATTACHMENT27;
-				case FramebufferAttachment::ColorAttachment28:
-					return GL_COLOR_ATTACHMENT28;
-				case FramebufferAttachment::ColorAttachment29:
-					return GL_COLOR_ATTACHMENT29;
-				case FramebufferAttachment::ColorAttachment30:
-					return GL_COLOR_ATTACHMENT30;
-				case FramebufferAttachment::ColorAttachment31:
-					return GL_COLOR_ATTACHMENT31;
-				default:
-					assert(false);
-					return 0;
-			}
-		}
-	
+
 		constexpr GLenum textureTargetToGL(TextureTarget target)
 		{
 			switch (target)
@@ -579,6 +485,126 @@ namespace spl
 				default:
 					assert(false);
 					return 0;
+			}
+		}
+
+
+		constexpr GLenum framebufferTargetToGL(FramebufferTarget target)
+		{
+			switch (target)
+			{
+			case FramebufferTarget::DrawFramebuffer:
+				return GL_DRAW_FRAMEBUFFER;
+			case FramebufferTarget::ReadFramebuffer:
+				return GL_READ_FRAMEBUFFER;
+			default:
+				assert(false);
+				return 0;
+			}
+		}
+
+		constexpr GLenum framebufferAttachmentToGL(FramebufferAttachment attachment)
+		{
+			switch (attachment)
+			{
+			case FramebufferAttachment::DepthAttachment:
+				return GL_DEPTH_ATTACHMENT;
+			case FramebufferAttachment::StencilAttachment:
+				return GL_STENCIL_ATTACHMENT;
+			case FramebufferAttachment::DepthStencilAttachment:
+				return GL_DEPTH_STENCIL_ATTACHMENT;
+			case FramebufferAttachment::ColorAttachment0:
+				return GL_COLOR_ATTACHMENT0;
+			case FramebufferAttachment::ColorAttachment1:
+				return GL_COLOR_ATTACHMENT1;
+			case FramebufferAttachment::ColorAttachment2:
+				return GL_COLOR_ATTACHMENT2;
+			case FramebufferAttachment::ColorAttachment3:
+				return GL_COLOR_ATTACHMENT3;
+			case FramebufferAttachment::ColorAttachment4:
+				return GL_COLOR_ATTACHMENT4;
+			case FramebufferAttachment::ColorAttachment5:
+				return GL_COLOR_ATTACHMENT5;
+			case FramebufferAttachment::ColorAttachment6:
+				return GL_COLOR_ATTACHMENT6;
+			case FramebufferAttachment::ColorAttachment7:
+				return GL_COLOR_ATTACHMENT7;
+			case FramebufferAttachment::ColorAttachment8:
+				return GL_COLOR_ATTACHMENT8;
+			case FramebufferAttachment::ColorAttachment9:
+				return GL_COLOR_ATTACHMENT9;
+			case FramebufferAttachment::ColorAttachment10:
+				return GL_COLOR_ATTACHMENT10;
+			case FramebufferAttachment::ColorAttachment11:
+				return GL_COLOR_ATTACHMENT11;
+			case FramebufferAttachment::ColorAttachment12:
+				return GL_COLOR_ATTACHMENT12;
+			case FramebufferAttachment::ColorAttachment13:
+				return GL_COLOR_ATTACHMENT13;
+			case FramebufferAttachment::ColorAttachment14:
+				return GL_COLOR_ATTACHMENT14;
+			case FramebufferAttachment::ColorAttachment15:
+				return GL_COLOR_ATTACHMENT15;
+			case FramebufferAttachment::ColorAttachment16:
+				return GL_COLOR_ATTACHMENT16;
+			case FramebufferAttachment::ColorAttachment17:
+				return GL_COLOR_ATTACHMENT17;
+			case FramebufferAttachment::ColorAttachment18:
+				return GL_COLOR_ATTACHMENT18;
+			case FramebufferAttachment::ColorAttachment19:
+				return GL_COLOR_ATTACHMENT19;
+			case FramebufferAttachment::ColorAttachment20:
+				return GL_COLOR_ATTACHMENT20;
+			case FramebufferAttachment::ColorAttachment21:
+				return GL_COLOR_ATTACHMENT21;
+			case FramebufferAttachment::ColorAttachment22:
+				return GL_COLOR_ATTACHMENT22;
+			case FramebufferAttachment::ColorAttachment23:
+				return GL_COLOR_ATTACHMENT23;
+			case FramebufferAttachment::ColorAttachment24:
+				return GL_COLOR_ATTACHMENT24;
+			case FramebufferAttachment::ColorAttachment25:
+				return GL_COLOR_ATTACHMENT25;
+			case FramebufferAttachment::ColorAttachment26:
+				return GL_COLOR_ATTACHMENT26;
+			case FramebufferAttachment::ColorAttachment27:
+				return GL_COLOR_ATTACHMENT27;
+			case FramebufferAttachment::ColorAttachment28:
+				return GL_COLOR_ATTACHMENT28;
+			case FramebufferAttachment::ColorAttachment29:
+				return GL_COLOR_ATTACHMENT29;
+			case FramebufferAttachment::ColorAttachment30:
+				return GL_COLOR_ATTACHMENT30;
+			case FramebufferAttachment::ColorAttachment31:
+				return GL_COLOR_ATTACHMENT31;
+			default:
+				assert(false);
+				return 0;
+			}
+		}
+
+
+		constexpr GLenum primitiveTypeToGL(PrimitiveType primitiveType)
+		{
+			switch (primitiveType)
+			{
+			case PrimitiveType::Points:
+				return GL_POINTS;
+			case PrimitiveType::Lines:
+				return GL_LINES;
+			case PrimitiveType::LineStrip:
+				return GL_LINE_STRIP;
+			case PrimitiveType::LineLoop:
+				return GL_LINE_LOOP;
+			case PrimitiveType::Triangles:
+				return GL_TRIANGLES;
+			case PrimitiveType::TriangleStrip:
+				return GL_TRIANGLE_STRIP;
+			case PrimitiveType::TriangleFan:
+				return GL_TRIANGLE_FAN;
+			default:
+				assert(false);
+				return 0;
 			}
 		}
 	}

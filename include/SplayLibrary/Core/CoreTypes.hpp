@@ -42,6 +42,7 @@ namespace spl
 	namespace BufferMapAccessFlags { enum Flags; }
 	class Buffer;
 
+
 	struct VertexAttribute;
 	enum class DrawableStorage;
 	enum class PrimitiveType;
@@ -60,6 +61,10 @@ namespace spl
 
 
 	class Shader;
+	enum class ShaderStage;
+	class ShaderModule;
+	class ShaderProgram;
+	class ShaderPipeline;
 
 
 	enum class FramebufferTarget;
