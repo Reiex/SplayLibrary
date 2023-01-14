@@ -18,15 +18,15 @@ namespace spl
 
 	void RawTexture::createNew(const CreationParams& params)
 	{
-		assert(_spl::textureTargetToGL(params.target) != 0);
-		assert(_spl::textureInternalFormatToGL(params.internalFormat) != 0);
+		assert(_spl::textureTargetToGLenum(params.target) != 0);
+		assert(_spl::textureInternalFormatToGLenum(params.internalFormat) != 0);
 
 		destroy();
 
-		const uint32_t internalFormatGL = _spl::textureInternalFormatToGL(params.internalFormat);
+		const uint32_t internalFormatGL = _spl::textureInternalFormatToGLenum(params.internalFormat);
 
 		_creationParams = params;
-		glCreateTextures(_spl::textureTargetToGL(params.target), 1, &_texture);
+		glCreateTextures(_spl::textureTargetToGLenum(params.target), 1, &_texture);
 
 		switch (params.target)
 		{
@@ -143,11 +143,11 @@ namespace spl
 	{
 		assert(isValid());
 		assert((params.data == nullptr) != (params.buffer == nullptr));
-		assert(_spl::textureFormatToGL(params.dataFormat) != 0);
-		assert(_spl::textureDataTypeToGL(params.dataType) != 0);
+		assert(_spl::textureFormatToGLenum(params.dataFormat) != 0);
+		assert(_spl::textureDataTypeToGLenum(params.dataType) != 0);
 
-		const uint32_t formatGL = _spl::textureFormatToGL(params.dataFormat);
-		const uint32_t dataTypeGL = _spl::textureDataTypeToGL(params.dataType);
+		const uint32_t formatGL = _spl::textureFormatToGLenum(params.dataFormat);
+		const uint32_t dataTypeGL = _spl::textureDataTypeToGLenum(params.dataType);
 
 		const void* data = params.data;
 		if (params.buffer)
@@ -249,16 +249,16 @@ namespace spl
 		// TODO: Verifier textureUnit valide
 
 		glActiveTexture(GL_TEXTURE0 + textureUnit);
-		glBindTexture(_spl::textureTargetToGL(target), texture._texture);
+		glBindTexture(_spl::textureTargetToGLenum(target), texture._texture);
 	}
 
 	void RawTexture::unbind(TextureTarget target, uint32_t textureUnit)
 	{
-		assert(_spl::textureTargetToGL(target) != 0);
+		assert(_spl::textureTargetToGLenum(target) != 0);
 		// TODO: Verifier textureUnit valide
 
 		glActiveTexture(GL_TEXTURE0 + textureUnit);
-		glBindTexture(_spl::textureTargetToGL(target), 0);
+		glBindTexture(_spl::textureTargetToGLenum(target), 0);
 	}
 
 	RawTexture::~RawTexture()
@@ -272,10 +272,10 @@ namespace spl
 		_internalFormat(internalFormat),
 		_size(size)
 	{
-		assert(_spl::textureInternalFormatToGL(internalFormat) != 0);
+		assert(_spl::textureInternalFormatToGLenum(internalFormat) != 0);
 
 		glCreateRenderbuffers(1, &_renderBuffer);
-		glNamedRenderbufferStorageMultisample(_renderBuffer, samples, _spl::textureInternalFormatToGL(internalFormat), size.x, size.y);
+		glNamedRenderbufferStorageMultisample(_renderBuffer, samples, _spl::textureInternalFormatToGLenum(internalFormat), size.x, size.y);
 	}
 
 	uint32_t RenderBuffer::getHandle() const

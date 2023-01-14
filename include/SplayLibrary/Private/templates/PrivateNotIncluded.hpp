@@ -82,7 +82,7 @@ namespace spl
 		}
 
 
-		constexpr GLenum bufferTargetToGL(BufferTarget target)
+		constexpr GLenum bufferTargetToGLenum(BufferTarget target)
 		{
 			switch (target)
 			{
@@ -120,7 +120,7 @@ namespace spl
 			}
 		}
 
-		constexpr GLenum bufferUsageToGL(BufferUsage usage)
+		constexpr GLenum bufferUsageToGLenum(BufferUsage usage)
 		{
 			switch (usage)
 			{
@@ -148,7 +148,7 @@ namespace spl
 			}
 		}
 
-		constexpr GLbitfield bufferStorageFlagsToGL(BufferStorageFlags::Flags flags)
+		constexpr GLbitfield bufferStorageFlagsToGLbitfield(BufferStorageFlags::Flags flags)
 		{
 			return (
 					(  -((flags & BufferStorageFlags::DynamicStorage)	>> 0) & GL_DYNAMIC_STORAGE_BIT)
@@ -160,7 +160,7 @@ namespace spl
 				);
 		}
 
-		constexpr GLbitfield bufferMapAccessFlagsToGL(BufferMapAccessFlags::Flags flags)
+		constexpr GLbitfield bufferMapAccessFlagsToGLbitfield(BufferMapAccessFlags::Flags flags)
 		{
 			return (
 					( -((flags & BufferMapAccessFlags::Read)				>> 0) & GL_MAP_READ_BIT)
@@ -175,10 +175,12 @@ namespace spl
 		}
 	
 
-		constexpr GLenum shaderStageToGL(ShaderStage stage)
+		constexpr GLenum shaderStageToGLenum(ShaderStage::Stage stage)
 		{
 			switch (stage)
 			{
+				case ShaderStage::Compute:
+					return GL_COMPUTE_SHADER;
 				case ShaderStage::Vertex:
 					return GL_VERTEX_SHADER;
 				case ShaderStage::TessellationControl:
@@ -189,8 +191,70 @@ namespace spl
 					return GL_GEOMETRY_SHADER;
 				case ShaderStage::Fragment:
 					return GL_FRAGMENT_SHADER;
-				case ShaderStage::Compute:
-					return GL_COMPUTE_SHADER;
+				default:
+					assert(false);
+					return 0;
+			}
+		}
+
+		constexpr GLbitfield shaderStageToGLbitfield(ShaderStage::Stage stage)
+		{
+			return (
+					( -((stage & ShaderStage::Compute)					>> 0) & GL_COMPUTE_SHADER_BIT)
+					| ( -((stage & ShaderStage::Vertex)					>> 1) & GL_VERTEX_SHADER_BIT)
+					| ( -((stage & ShaderStage::TessellationControl)	>> 2) & GL_TESS_CONTROL_SHADER_BIT)
+					| ( -((stage & ShaderStage::TessellationEvaluation)	>> 3) & GL_TESS_EVALUATION_SHADER_BIT)
+					| ( -((stage & ShaderStage::Geometry)				>> 4) & GL_GEOMETRY_SHADER_BIT)
+					| ( -((stage & ShaderStage::Fragment)				>> 5) & GL_FRAGMENT_SHADER_BIT)
+				);
+		}
+
+		constexpr GLenum shaderProgramInterfaceToGLenum(ShaderProgramInterface programInterface)
+		{
+			switch (programInterface)
+			{
+				case ShaderProgramInterface::Uniform:
+					return GL_UNIFORM;
+				case ShaderProgramInterface::UniformBlock:
+					return GL_UNIFORM_BLOCK;
+				case ShaderProgramInterface::AtomicCounterBuffer:
+					return GL_ATOMIC_COUNTER_BUFFER;
+				case ShaderProgramInterface::ProgramInput:
+					return GL_PROGRAM_INPUT;
+				case ShaderProgramInterface::ProgramOutput:
+					return GL_PROGRAM_OUTPUT;
+				case ShaderProgramInterface::TransformFeedbackVarying:
+					return GL_TRANSFORM_FEEDBACK_VARYING;
+				case ShaderProgramInterface::TransformFeedbackBuffer:
+					return GL_TRANSFORM_FEEDBACK_BUFFER;
+				case ShaderProgramInterface::BufferVariable:
+					return GL_BUFFER_VARIABLE;
+				case ShaderProgramInterface::ShaderStorageBlock:
+					return GL_SHADER_STORAGE_BLOCK;
+				case ShaderProgramInterface::ComputeSubroutine:
+					return GL_COMPUTE_SUBROUTINE;
+				case ShaderProgramInterface::VertexSubroutine:
+					return GL_VERTEX_SUBROUTINE;
+				case ShaderProgramInterface::TessControlSubroutine:
+					return GL_TESS_CONTROL_SUBROUTINE;
+				case ShaderProgramInterface::TessEvalSubroutine:
+					return GL_TESS_EVALUATION_SUBROUTINE;
+				case ShaderProgramInterface::GeometrySubroutine:
+					return GL_GEOMETRY_SUBROUTINE;
+				case ShaderProgramInterface::FragmentSubroutine:
+					return GL_FRAGMENT_SUBROUTINE;
+				case ShaderProgramInterface::ComputeSubroutineUniform:
+					return GL_COMPUTE_SUBROUTINE_UNIFORM;
+				case ShaderProgramInterface::VertexSubroutineUniform:
+					return GL_VERTEX_SUBROUTINE_UNIFORM;
+				case ShaderProgramInterface::TessControlSubroutineUniform:
+					return GL_TESS_CONTROL_SUBROUTINE_UNIFORM;
+				case ShaderProgramInterface::TessEvalSubroutineUniform:
+					return GL_TESS_EVALUATION_SUBROUTINE_UNIFORM;
+				case ShaderProgramInterface::GeometrySubroutineUniform:
+					return GL_GEOMETRY_SUBROUTINE_UNIFORM;
+				case ShaderProgramInterface::FragmentSubroutineUniform:
+					return GL_FRAGMENT_SUBROUTINE_UNIFORM;
 				default:
 					assert(false);
 					return 0;
@@ -198,7 +262,7 @@ namespace spl
 		}
 
 
-		constexpr GLenum textureTargetToGL(TextureTarget target)
+		constexpr GLenum textureTargetToGLenum(TextureTarget target)
 		{
 			switch (target)
 			{
@@ -230,7 +294,7 @@ namespace spl
 			}
 		}
 
-		constexpr GLenum textureFormatToGL(TextureFormat format)
+		constexpr GLenum textureFormatToGLenum(TextureFormat format)
 		{
 			switch (format)
 			{
@@ -278,7 +342,7 @@ namespace spl
 			}
 		}
 
-		constexpr GLenum textureDataTypeToGL(TextureDataType dataType)
+		constexpr GLenum textureDataTypeToGLenum(TextureDataType dataType)
 		{
 			switch (dataType)
 			{
@@ -336,7 +400,7 @@ namespace spl
 			}
 		}
 
-		constexpr GLenum textureInternalFormatToGL(TextureInternalFormat internalFormat)
+		constexpr GLenum textureInternalFormatToGLenum(TextureInternalFormat internalFormat)
 		{
 			switch (internalFormat)
 			{
@@ -489,7 +553,7 @@ namespace spl
 		}
 
 
-		constexpr GLenum framebufferTargetToGL(FramebufferTarget target)
+		constexpr GLenum framebufferTargetToGLenum(FramebufferTarget target)
 		{
 			switch (target)
 			{
@@ -503,7 +567,7 @@ namespace spl
 			}
 		}
 
-		constexpr GLenum framebufferAttachmentToGL(FramebufferAttachment attachment)
+		constexpr GLenum framebufferAttachmentToGLenum(FramebufferAttachment attachment)
 		{
 			switch (attachment)
 			{
@@ -584,7 +648,7 @@ namespace spl
 		}
 
 
-		constexpr GLenum primitiveTypeToGL(PrimitiveType primitiveType)
+		constexpr GLenum primitiveTypeToGLenum(PrimitiveType primitiveType)
 		{
 			switch (primitiveType)
 			{

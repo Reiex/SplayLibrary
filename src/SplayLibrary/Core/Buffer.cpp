@@ -57,7 +57,7 @@ namespace spl
 	void Buffer::createNew(uintptr_t size, BufferUsage usage, const void* data)
 	{
 		assert(size != 0);
-		assert(_spl::bufferUsageToGL(usage) != 0);
+		assert(_spl::bufferUsageToGLenum(usage) != 0);
 
 		if (hasImmutableStorage())
 		{
@@ -65,7 +65,7 @@ namespace spl
 			glCreateBuffers(1, &_buffer);
 		}
 
-		glNamedBufferData(_buffer, size, data, _spl::bufferUsageToGL(usage));
+		glNamedBufferData(_buffer, size, data, _spl::bufferUsageToGLenum(usage));
 
 		_size = size;
 		_usage = usage;
@@ -88,7 +88,7 @@ namespace spl
 			glCreateBuffers(1, &_buffer);
 		}
 
-		glNamedBufferStorage(_buffer, size, data, _spl::bufferStorageFlagsToGL(flags));
+		glNamedBufferStorage(_buffer, size, data, _spl::bufferStorageFlagsToGLbitfield(flags));
 
 		_size = size;
 		_storageFlags = flags;
@@ -208,7 +208,7 @@ namespace spl
 		{
 			assert(offset == 0);
 
-			_mapPtr = glMapNamedBufferRange(_buffer, 0, _size, _spl::bufferMapAccessFlagsToGL(flags));
+			_mapPtr = glMapNamedBufferRange(_buffer, 0, _size, _spl::bufferMapAccessFlagsToGLbitfield(flags));
 			_mapAccess = flags;
 			_mapSize = _size;
 			_mapOffset = 0;
@@ -217,7 +217,7 @@ namespace spl
 		{
 			assert(offset + size <= _size);
 
-			_mapPtr = glMapNamedBufferRange(_buffer, offset, size, _spl::bufferMapAccessFlagsToGL(flags));
+			_mapPtr = glMapNamedBufferRange(_buffer, offset, size, _spl::bufferMapAccessFlagsToGLbitfield(flags));
 			_mapAccess = flags;
 			_mapSize = size;
 			_mapOffset = offset;
@@ -355,7 +355,7 @@ namespace spl
 	void Buffer::bind(const Buffer& buffer, BufferTarget target, uint32_t index, uintptr_t size, uintptr_t offset)
 	{
 		assert(buffer.isValid());
-		assert(_spl::bufferTargetToGL(target) != 0);
+		assert(_spl::bufferTargetToGLenum(target) != 0);
 
 		if (_spl::isIndexedBufferTarget(target))
 		{
@@ -365,13 +365,13 @@ namespace spl
 			{
 				assert(offset == 0);
 
-				glBindBufferBase(_spl::bufferTargetToGL(target), index, buffer._buffer);
+				glBindBufferBase(_spl::bufferTargetToGLenum(target), index, buffer._buffer);
 			}
 			else
 			{
 				assert(offset + size <= buffer._size);
 
-				glBindBufferRange(_spl::bufferTargetToGL(target), index, buffer._buffer, offset, size);
+				glBindBufferRange(_spl::bufferTargetToGLenum(target), index, buffer._buffer, offset, size);
 			}
 		}
 		else
@@ -380,13 +380,13 @@ namespace spl
 			assert(size == -1);
 			assert(offset == 0);
 
-			glBindBuffer(_spl::bufferTargetToGL(target), buffer._buffer);
+			glBindBuffer(_spl::bufferTargetToGLenum(target), buffer._buffer);
 		}
 	}
 
 	void Buffer::bind(const Buffer* const* buffers, uint32_t count, BufferTarget target, uint32_t firstIndex, const uintptr_t* sizes, const uintptr_t* offsets)
 	{
-		assert(_spl::bufferTargetToGL(target) != 0);
+		assert(_spl::bufferTargetToGLenum(target) != 0);
 		assert(_spl::isIndexedBufferTarget(target));
 		assert(firstIndex != -1);	// TODO: Check index is valid (not just -1 but the glGetInteger thing)
 
@@ -408,7 +408,7 @@ namespace spl
 		{
 			assert(offsets == nullptr);
 
-			glBindBuffersBase(_spl::bufferTargetToGL(target), firstIndex, count, names);
+			glBindBuffersBase(_spl::bufferTargetToGLenum(target), firstIndex, count, names);
 		}
 		else
 		{
@@ -420,13 +420,13 @@ namespace spl
 				}
 			}
 
-			glBindBuffersRange(_spl::bufferTargetToGL(target), firstIndex, count, names, reinterpret_cast<const GLintptr*>(offsets), reinterpret_cast<const GLsizeiptr*>(sizes));
+			glBindBuffersRange(_spl::bufferTargetToGLenum(target), firstIndex, count, names, reinterpret_cast<const GLintptr*>(offsets), reinterpret_cast<const GLsizeiptr*>(sizes));
 		}
 	}
 
 	void Buffer::unbind(BufferTarget target, uint32_t index, uint32_t count)
 	{
-		assert(_spl::bufferTargetToGL(target) != 0);
+		assert(_spl::bufferTargetToGLenum(target) != 0);
 
 		if (_spl::isIndexedBufferTarget(target))
 		{
@@ -434,18 +434,18 @@ namespace spl
 
 			if (count == 1)
 			{
-				glBindBufferBase(_spl::bufferTargetToGL(target), index, 0);
+				glBindBufferBase(_spl::bufferTargetToGLenum(target), index, 0);
 			}
 			else
 			{
-				glBindBuffersBase(_spl::bufferTargetToGL(target), index, count, nullptr);
+				glBindBuffersBase(_spl::bufferTargetToGLenum(target), index, count, nullptr);
 			}
 		}
 		else
 		{
 			assert(index == -1);
 
-			glBindBuffer(_spl::bufferTargetToGL(target), 0);
+			glBindBuffer(_spl::bufferTargetToGLenum(target), 0);
 		}
 	}
 
@@ -459,7 +459,7 @@ namespace spl
 			assert(offset == 0);
 			assert(_size % granularity == 0);
 
-			glClearNamedBufferData(_buffer, _spl::textureInternalFormatToGL(internalFormat), _spl::textureFormatToGL(format), _spl::textureDataTypeToGL(type), data);
+			glClearNamedBufferData(_buffer, _spl::textureInternalFormatToGLenum(internalFormat), _spl::textureFormatToGLenum(format), _spl::textureDataTypeToGLenum(type), data);
 		}
 		else
 		{
@@ -467,7 +467,7 @@ namespace spl
 			assert(offset % granularity == 0);
 			assert(size % granularity == 0);
 
-			glClearNamedBufferSubData(_buffer, _spl::textureInternalFormatToGL(internalFormat), offset, size, _spl::textureFormatToGL(format), _spl::textureDataTypeToGL(type), data);
+			glClearNamedBufferSubData(_buffer, _spl::textureInternalFormatToGLenum(internalFormat), offset, size, _spl::textureFormatToGLenum(format), _spl::textureDataTypeToGLenum(type), data);
 		}
 	}
 }

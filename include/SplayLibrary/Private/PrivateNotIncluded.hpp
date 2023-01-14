@@ -20,22 +20,24 @@ namespace spl
 		constexpr DebugMessageType glToDebugMessageType(GLenum type);
 		constexpr DebugMessageSeverity glToDebugMessageSeverity(GLenum severity);
 
-		constexpr GLenum bufferTargetToGL(BufferTarget target);
-		constexpr GLenum bufferUsageToGL(BufferUsage usage);
-		constexpr GLbitfield bufferStorageFlagsToGL(BufferStorageFlags::Flags flags);
-		constexpr GLbitfield bufferMapAccessFlagsToGL(BufferMapAccessFlags::Flags flags);
+		constexpr GLenum bufferTargetToGLenum(BufferTarget target);
+		constexpr GLenum bufferUsageToGLenum(BufferUsage usage);
+		constexpr GLbitfield bufferStorageFlagsToGLbitfield(BufferStorageFlags::Flags flags);
+		constexpr GLbitfield bufferMapAccessFlagsToGLbitfield(BufferMapAccessFlags::Flags flags);
 
-		constexpr GLenum shaderStageToGL(ShaderStage stage);
+		constexpr GLenum shaderStageToGLenum(ShaderStage::Stage stage);
+		constexpr GLbitfield shaderStageToGLbitfield(ShaderStage::Stage stage);
+		constexpr GLenum shaderProgramInterfaceToGLenum(ShaderProgramInterface programInterface);
 
-		constexpr GLenum textureTargetToGL(TextureTarget target);
-		constexpr GLenum textureFormatToGL(TextureFormat format);
-		constexpr GLenum textureDataTypeToGL(TextureDataType dataType);
-		constexpr GLenum textureInternalFormatToGL(TextureInternalFormat internalFormat);
+		constexpr GLenum textureTargetToGLenum(TextureTarget target);
+		constexpr GLenum textureFormatToGLenum(TextureFormat format);
+		constexpr GLenum textureDataTypeToGLenum(TextureDataType dataType);
+		constexpr GLenum textureInternalFormatToGLenum(TextureInternalFormat internalFormat);
 
-		constexpr GLenum framebufferTargetToGL(FramebufferTarget target);
-		constexpr GLenum framebufferAttachmentToGL(FramebufferAttachment attachment);
+		constexpr GLenum framebufferTargetToGLenum(FramebufferTarget target);
+		constexpr GLenum framebufferAttachmentToGLenum(FramebufferAttachment attachment);
 
-		constexpr GLenum primitiveTypeToGL(PrimitiveType primitiveType);
+		constexpr GLenum primitiveTypeToGLenum(PrimitiveType primitiveType);
 	}
 }
 

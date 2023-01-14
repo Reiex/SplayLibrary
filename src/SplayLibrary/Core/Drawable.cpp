@@ -27,7 +27,7 @@ namespace spl
 		assert((0 < indicesCount && indicesCount <= _indicesCount) || indicesCount == -1);
 
 		glBindVertexArray(_vao);
-		glDrawElements(_spl::primitiveTypeToGL(primitiveType), std::min(indicesCount, _indicesCount), GL_UNSIGNED_INT, nullptr);
+		glDrawElements(_spl::primitiveTypeToGLenum(primitiveType), std::min(indicesCount, _indicesCount), GL_UNSIGNED_INT, nullptr);
 		glBindVertexArray(0);
 	}
 

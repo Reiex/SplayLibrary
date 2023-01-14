@@ -61,8 +61,10 @@ namespace spl
 
 
 	class Shader;
-	enum class ShaderStage;
+
+	namespace ShaderStage { enum Stage; }
 	class ShaderModule;
+	namespace ShaderProgramFlags { enum Flags; }
 	class ShaderProgram;
 	class ShaderPipeline;
 

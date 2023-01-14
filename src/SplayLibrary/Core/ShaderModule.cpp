@@ -12,59 +12,69 @@ namespace spl
 {
 	ShaderModule::ShaderModule() :
 		_shader(0),
-		_stage(ShaderStage::Undefined),
+		_stage(ShaderStage::None),
 		_compileStatus(0)
 	{
 	}
 
-	ShaderModule::ShaderModule(ShaderStage stage, const std::filesystem::path& glslFile) : ShaderModule()
+	ShaderModule::ShaderModule(ShaderStage::Stage stage, const std::filesystem::path& glslFile) : ShaderModule()
 	{
-		compileGlsl(stage, glslFile);
+		createFromGlsl(stage, glslFile);
 	}
 
-	ShaderModule::ShaderModule(ShaderStage stage, const char* source, uint32_t size) : ShaderModule()
+	ShaderModule::ShaderModule(ShaderStage::Stage stage, const char* source, uint32_t size) : ShaderModule()
 	{
-		compileGlsl(stage, source, size);
+		createFromGlsl(stage, source, size);
 	}
 
-	ShaderModule::ShaderModule(ShaderStage stage, const char* const* sources, const uint32_t* sizes, uint32_t count) : ShaderModule()
+	ShaderModule::ShaderModule(ShaderStage::Stage stage, const char* const* sources, const uint32_t* sizes, uint32_t count) : ShaderModule()
 	{
-		compileGlsl(stage, sources, sizes, count);
+		createFromGlsl(stage, sources, sizes, count);
 	}
 
-	ShaderModule::ShaderModule(ShaderStage stage, const std::filesystem::path& spirvFile, const char* entryPoint, const uint32_t* constantIndices, const void* constantValues, uint32_t specializationConstantsCount) : ShaderModule()
+	ShaderModule::ShaderModule(ShaderStage::Stage stage, const std::filesystem::path& spirvFile, const char* entryPoint, const uint32_t* constantIndices, const void* constantValues, uint32_t specializationConstantsCount) : ShaderModule()
 	{
-		compileSpirV(stage, spirvFile, entryPoint, constantIndices, constantValues, specializationConstantsCount);
+		createFromSpirV(stage, spirvFile, entryPoint, constantIndices, constantValues, specializationConstantsCount);
 	}
 
-	ShaderModule::ShaderModule(ShaderStage stage, const void* binary, uint32_t size, const char* entryPoint, const uint32_t* constantIndices, const void* constantValues, uint32_t specializationConstantsCount) : ShaderModule()
+	ShaderModule::ShaderModule(ShaderStage::Stage stage, const void* binary, uint32_t size, const char* entryPoint, const uint32_t* constantIndices, const void* constantValues, uint32_t specializationConstantsCount) : ShaderModule()
 	{
-		compileSpirV(stage, binary, size, entryPoint, constantIndices, constantValues, specializationConstantsCount);
+		createFromSpirV(stage, binary, size, entryPoint, constantIndices, constantValues, specializationConstantsCount);
 	}
 
-	bool ShaderModule::compileGlsl(ShaderStage stage, const std::filesystem::path& glslFile)
+	bool ShaderModule::createFromGlsl(ShaderStage::Stage stage, const std::filesystem::path& glslFile)
 	{
-		return false;
+		bool success = false;
+
+		char* data = nullptr;
+		uint32_t size = 0;
+		if (_loadFile(glslFile, data, size))
+		{
+			success = createFromGlsl(stage, data, size);
+			delete[] data;
+		}
+
+		return success;
 	}
 
-	bool ShaderModule::compileGlsl(ShaderStage stage, const char* source, uint32_t size)
+	bool ShaderModule::createFromGlsl(ShaderStage::Stage stage, const char* source, uint32_t size)
 	{
-		return compileGlsl(stage, &source, &size, 1);
+		return createFromGlsl(stage, &source, &size, 1);
 	}
 
-	bool ShaderModule::compileGlsl(ShaderStage stage, const char* const* sources, const uint32_t* sizes, uint32_t count)
+	bool ShaderModule::createFromGlsl(ShaderStage::Stage stage, const char* const* sources, const uint32_t* sizes, uint32_t count)
 	{
-		assert(_spl::shaderStageToGL(stage) != 0);
+		assert(_spl::shaderStageToGLenum(stage) != 0);
 		assert(count != 0);
 
 		if (_shader != 0 && _stage != stage)
 		{
-			_destroy();
+			destroy();
 		}
 
 		if (_shader == 0)
 		{
-			_shader = glCreateShader(_spl::shaderStageToGL(stage));
+			_shader = glCreateShader(_spl::shaderStageToGLenum(stage));
 			_stage = stage;
 		}
 
@@ -75,18 +85,33 @@ namespace spl
 		return _compileStatus;
 	}
 
-	bool ShaderModule::compileSpirV(ShaderStage stage, const void* binary, uint32_t size, const char* entryPoint, const uint32_t* constantIndices, const void* constantValues, uint32_t specializationConstantsCount)
+	bool ShaderModule::createFromSpirV(ShaderStage::Stage stage, const std::filesystem::path& spirvFile, const char* entryPoint, const uint32_t* constantIndices, const void* constantValues, uint32_t specializationConstantsCount)
 	{
-		assert(_spl::shaderStageToGL(stage) != 0);
+		bool success = false;
+
+		char* data = nullptr;
+		uint32_t size = 0;
+		if (_loadFile(spirvFile, data, size))
+		{
+			success = createFromSpirV(stage, data, size, entryPoint, constantIndices, constantValues, specializationConstantsCount);
+			delete[] data;
+		}
+
+		return success;
+	}
+
+	bool ShaderModule::createFromSpirV(ShaderStage::Stage stage, const void* binary, uint32_t size, const char* entryPoint, const uint32_t* constantIndices, const void* constantValues, uint32_t specializationConstantsCount)
+	{
+		assert(_spl::shaderStageToGLenum(stage) != 0);
 
 		if (_shader != 0 && _stage != stage)
 		{
-			_destroy();
+			destroy();
 		}
 
 		if (_shader == 0)
 		{
-			_shader = glCreateShader(_spl::shaderStageToGL(stage));
+			_shader = glCreateShader(_spl::shaderStageToGLenum(stage));
 			_stage = stage;
 		}
 
@@ -97,9 +122,16 @@ namespace spl
 		return _compileStatus;
 	}
 
-	bool ShaderModule::compileSpirV(ShaderStage stage, const std::filesystem::path& spirvFile, const char* entryPoint, const uint32_t* constantIndices, const void* constantValues, uint32_t specializationConstantsCount)
+	void ShaderModule::destroy()
 	{
-		return false;
+		if (_shader != 0)
+		{
+			glDeleteShader(_shader);
+		}
+
+		_shader = 0;
+		_stage = ShaderStage::None;
+		_compileStatus = 0;
 	}
 
 	uint32_t ShaderModule::getHandle() const
@@ -114,7 +146,7 @@ namespace spl
 
 	ShaderModule::~ShaderModule()
 	{
-		_destroy();
+		destroy();
 	}
 
 	void ShaderModule::releaseShaderCompiler()
@@ -122,15 +154,27 @@ namespace spl
 		glReleaseShaderCompiler();
 	}
 
-	void ShaderModule::_destroy()
+	bool ShaderModule::_loadFile(const std::filesystem::path& filename, char*& data, uint32_t& size)
 	{
-		if (_shader != 0)
+		if (!std::filesystem::exists(filename))
 		{
-			glDeleteShader(_shader);
+			return false;
 		}
 
-		_shader = 0;
-		_stage = ShaderStage::Undefined;
-		_compileStatus = 0;
+		std::ifstream file(filename, std::ios::ate | std::ios::binary);
+		if (!file)
+		{
+			return false;
+		}
+
+		size = file.tellg();
+		file.seekg(0);
+
+		data = new char[size];
+		file.read(data, size);
+
+		file.close();
+
+		return true;
 	}
 }

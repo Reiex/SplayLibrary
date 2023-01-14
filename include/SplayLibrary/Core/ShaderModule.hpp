@@ -11,38 +11,43 @@
 
 namespace spl
 {
-	enum class ShaderStage
+	namespace ShaderStage
 	{
-		Undefined,
-		Vertex,
-		TessellationControl,
-		TessellationEvaluation,
-		Geometry,
-		Fragment,
-		Compute
-	};
+		enum Stage
+		{
+			None					= 0,
+			Compute					= 1 << 0,
+			Vertex					= 1 << 1,
+			TessellationControl		= 1 << 2,
+			TessellationEvaluation	= 1 << 3,
+			Geometry				= 1 << 4,
+			Fragment				= 1 << 5
+		};
+	}
 
 	class ShaderModule
 	{
 		public:
 
 			ShaderModule();
-			ShaderModule(ShaderStage stage, const std::filesystem::path& glslFile);
-			ShaderModule(ShaderStage stage, const char* source, uint32_t size);
-			ShaderModule(ShaderStage stage, const char* const* sources, const uint32_t* sizes, uint32_t count);
-			ShaderModule(ShaderStage stage, const std::filesystem::path& spirvFile, const char* entryPoint, const uint32_t* constantIndices, const void* constantValues, uint32_t specializationConstantsCount);
-			ShaderModule(ShaderStage stage, const void* binary, uint32_t size, const char* entryPoint, const uint32_t* constantIndices, const void* constantValues, uint32_t specializationConstantsCount);
+			ShaderModule(ShaderStage::Stage stage, const std::filesystem::path& glslFile);
+			ShaderModule(ShaderStage::Stage stage, const char* source, uint32_t size);
+			ShaderModule(ShaderStage::Stage stage, const char* const* sources, const uint32_t* sizes, uint32_t count);
+			ShaderModule(ShaderStage::Stage stage, const std::filesystem::path& spirvFile, const char* entryPoint, const uint32_t* constantIndices, const void* constantValues, uint32_t specializationConstantsCount);
+			ShaderModule(ShaderStage::Stage stage, const void* binary, uint32_t size, const char* entryPoint, const uint32_t* constantIndices, const void* constantValues, uint32_t specializationConstantsCount);
 			ShaderModule(const ShaderModule& shader) = delete;
 			ShaderModule(ShaderModule&& shader) = delete;
 
 			ShaderModule& operator=(const ShaderModule& shader) = delete;
 			ShaderModule& operator=(ShaderModule&& shader) = delete;
 
-			bool compileGlsl(ShaderStage stage, const std::filesystem::path& glslFile);
-			bool compileGlsl(ShaderStage stage, const char* source, uint32_t size);
-			bool compileGlsl(ShaderStage stage, const char* const* sources, const uint32_t* sizes, uint32_t count);
-			bool compileSpirV(ShaderStage stage, const std::filesystem::path& spirvFile, const char* entryPoint, const uint32_t* constantIndices, const void* constantValues, uint32_t specializationConstantsCount);
-			bool compileSpirV(ShaderStage stage, const void* binary, uint32_t size, const char* entryPoint, const uint32_t* constantIndices, const void* constantValues, uint32_t specializationConstantsCount);
+			bool createFromGlsl(ShaderStage::Stage stage, const std::filesystem::path& glslFile);
+			bool createFromGlsl(ShaderStage::Stage stage, const char* source, uint32_t size);
+			bool createFromGlsl(ShaderStage::Stage stage, const char* const* sources, const uint32_t* sizes, uint32_t count);
+			bool createFromSpirV(ShaderStage::Stage stage, const std::filesystem::path& spirvFile, const char* entryPoint, const uint32_t* constantIndices, const void* constantValues, uint32_t specializationConstantsCount);
+			bool createFromSpirV(ShaderStage::Stage stage, const void* binary, uint32_t size, const char* entryPoint, const uint32_t* constantIndices, const void* constantValues, uint32_t specializationConstantsCount);
+
+			void destroy();
 
 			uint32_t getHandle() const;
 			bool isValid() const;
@@ -53,10 +58,10 @@ namespace spl
 
 		private:
 
-			void _destroy();
+			static bool _loadFile(const std::filesystem::path& filename, char*& data, uint32_t& size);
 
 			uint32_t _shader;
-			ShaderStage _stage;
+			ShaderStage::Stage _stage;
 			int32_t _compileStatus;
 	};
 }
