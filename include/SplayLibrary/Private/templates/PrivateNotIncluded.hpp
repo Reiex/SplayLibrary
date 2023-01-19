@@ -261,6 +261,24 @@ namespace spl
 			}
 		}
 
+		constexpr GLenum shaderProgramInterfaceInfoToGLenum(ShaderProgramInterfaceInfo info)
+		{
+			switch (info)
+			{
+				case ShaderProgramInterfaceInfo::ActiveResources:
+					return GL_ACTIVE_RESOURCES;
+				case ShaderProgramInterfaceInfo::MaxNameLength:
+					return GL_MAX_NAME_LENGTH;
+				case ShaderProgramInterfaceInfo::MaxNumActiveVariables:
+					return GL_MAX_NUM_ACTIVE_VARIABLES;
+				case ShaderProgramInterfaceInfo::MaxNumCompatibleSubroutines:
+					return GL_MAX_NUM_COMPATIBLE_SUBROUTINES;
+				default:
+					assert(false);
+					return 0;
+			}
+		}
+
 
 		constexpr GLenum textureTargetToGLenum(TextureTarget target)
 		{

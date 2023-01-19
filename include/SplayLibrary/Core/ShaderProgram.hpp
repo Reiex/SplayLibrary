@@ -48,6 +48,14 @@ namespace spl
 		FragmentSubroutineUniform
 	};
 
+	enum class ShaderProgramInterfaceInfo
+	{
+		ActiveResources,
+		MaxNameLength,
+		MaxNumActiveVariables,
+		MaxNumCompatibleSubroutines
+	};
+
 	class ShaderProgram
 	{
 		public:
@@ -65,20 +73,34 @@ namespace spl
 			ShaderProgram& operator=(const ShaderProgram& program) = delete;
 			ShaderProgram& operator=(ShaderProgram&& program) = delete;
 
-			bool createFromGlslFiles(const std::filesystem::path& glslCompute, ShaderProgramFlags::Flags flags = ShaderProgramFlags::None);
-			bool createFromGlslFiles(const std::filesystem::path& glslVertex, const std::filesystem::path& glslFragment, ShaderProgramFlags::Flags flags = ShaderProgramFlags::None);
-			bool createFromGlslFiles(const std::filesystem::path& glslVertex, const std::filesystem::path& glslGeometry, const std::filesystem::path& glslFragment, ShaderProgramFlags::Flags flags = ShaderProgramFlags::None);
-			bool createFromGlslFiles(const std::filesystem::path& glslVertex, const std::filesystem::path& glslTessControl, const std::filesystem::path& glslTessEval, const std::filesystem::path& glslFragment, ShaderProgramFlags::Flags flags = ShaderProgramFlags::None);
-			bool createFromGlslFiles(const std::filesystem::path& glslVertex, const std::filesystem::path& glslTessControl, const std::filesystem::path& glslTessEval, const std::filesystem::path& glslGeometry, const std::filesystem::path& glslFragment, ShaderProgramFlags::Flags flags = ShaderProgramFlags::None);
+
+			bool createFromGlsl(const std::filesystem::path& glslCompute, ShaderProgramFlags::Flags flags = ShaderProgramFlags::None);
+			bool createFromGlsl(const std::filesystem::path& glslVertex, const std::filesystem::path& glslFragment, ShaderProgramFlags::Flags flags = ShaderProgramFlags::None);
+			bool createFromGlsl(const std::filesystem::path& glslVertex, const std::filesystem::path& glslGeometry, const std::filesystem::path& glslFragment, ShaderProgramFlags::Flags flags = ShaderProgramFlags::None);
+			bool createFromGlsl(const std::filesystem::path& glslVertex, const std::filesystem::path& glslTessControl, const std::filesystem::path& glslTessEval, const std::filesystem::path& glslFragment, ShaderProgramFlags::Flags flags = ShaderProgramFlags::None);
+			bool createFromGlsl(const std::filesystem::path& glslVertex, const std::filesystem::path& glslTessControl, const std::filesystem::path& glslTessEval, const std::filesystem::path& glslGeometry, const std::filesystem::path& glslFragment, ShaderProgramFlags::Flags flags = ShaderProgramFlags::None);
 			bool createFromShaderModules(const ShaderModule* shaders, uint8_t count, ShaderProgramFlags::Flags = ShaderProgramFlags::None);
+			
+			// TODO: Handle binary with a new class "ShaderBinary"
+
+			uint32_t getInterfaceInfo(ShaderProgramInterface programInterface, ShaderProgramInterfaceInfo info) const;
+
+			uint32_t getResourceIndex(ShaderProgramInterface programInterface, const std::string& name) const;
+			void getResourceName(ShaderProgramInterface programInterface, uint32_t index, std::string& name, uint32_t nameBufferSize = 256) const;
+			// glGetProgramResourceiv
+			uint32_t getResourceLocation(ShaderProgramInterface programInterface, const std::string& name) const;
+			uint32_t getResourceFragmentColorIndex(const std::string& name) const;
 
 			void destroy();
+
 
 			uint32_t getHandle() const;
 			ShaderProgramFlags::Flags getFlags() const;
 			bool isValid() const;
 
+
 			~ShaderProgram();
+
 
 			static void bind(const ShaderProgram& program);
 			static void unbind();
