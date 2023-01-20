@@ -48,17 +48,171 @@ namespace spl
 		FragmentSubroutineUniform
 	};
 
-	enum class ShaderProgramInterfaceInfo
+	enum class GlslType
 	{
-		ActiveResources,
-		MaxNameLength,
-		MaxNumActiveVariables,
-		MaxNumCompatibleSubroutines
+		Undefined,
+
+		Float,
+		FloatVec2,
+		FloatVec3,
+		FloatVec4,
+		Double,
+		DoubleVec2,
+		DoubleVec3,
+		DoubleVec4,
+		Int,
+		IntVec2,
+		IntVec3,
+		IntVec4,
+		UnsignedInt,
+		UnsignedIntVec2,
+		UnsignedIntVec3,
+		UnsignedIntVec4,
+		Bool,
+		BoolVec2,
+		BoolVec3,
+		BoolVec4,
+
+		FloatMat2x2,
+		FloatMat2x3,
+		FloatMat2x4,
+		FloatMat3x2,
+		FloatMat3x3,
+		FloatMat3x4,
+		FloatMat4x2,
+		FloatMat4x3,
+		FloatMat4x4,
+		DoubleMat2x2,
+		DoubleMat2x3,
+		DoubleMat2x4,
+		DoubleMat3x2,
+		DoubleMat3x3,
+		DoubleMat3x4,
+		DoubleMat4x2,
+		DoubleMat4x3,
+		DoubleMat4x4,
+
+		Sampler1d,
+		Sampler2d,
+		Sampler3d,
+		SamplerCube,
+		Sampler1dShadow,
+		Sampler2dShadow,
+		SamplerCubeShadow,
+		Sampler1dArray,
+		Sampler2dArray,
+		SamplerCubeArray,
+		Sampler1dArrayShadow,
+		Sampler2dArrayShadow,
+		SamplerCubeArrayShadow,
+		Sampler2dMultisample,
+		Sampler2dMultisampleArray,
+		SamplerBuffer,
+		Sampler2dRect,
+		Sampler2dRectShadow,
+		IntSampler1d,
+		IntSampler2d,
+		IntSampler3d,
+		IntSamplerCube,
+		IntSampler1dArray,
+		IntSampler2dArray,
+		IntSamplerCubeArray,
+		IntSampler2dMultisample,
+		IntSampler2dMultisampleArray,
+		IntSamplerBuffer,
+		IntSampler2dRect,
+		UnsignedIntSampler1d,
+		UnsignedIntSampler2d,
+		UnsignedIntSampler3d,
+		UnsignedIntSamplerCube,
+		UnsignedIntSampler1dArray,
+		UnsignedIntSampler2dArray,
+		UnsignedIntSamplerCubeArray,
+		UnsignedIntSampler2dMultisample,
+		UnsignedIntSampler2dMultisampleArray,
+		UnsignedIntSamplerBuffer,
+		UnsignedIntSampler2dRect,
+		
+		Image1d,
+		Image2d,
+		Image3d,
+		Image2dRect,
+		ImageCube,
+		ImageBuffer,
+		Image1dArray,
+		Image2dArray,
+		ImageCubeArray,
+		Image2dMultisample,
+		Image2dMultisampleArray,
+		IntImage1d,
+		IntImage2d,
+		IntImage3d,
+		IntImage2dRect,
+		IntImageCube,
+		IntImageBuffer,
+		IntImage1dArray,
+		IntImage2dArray,
+		IntImageCubeArray,
+		IntImage2dMultisample,
+		IntImage2dMultisampleArray,
+		UnsignedIntImage1d,
+		UnsignedIntImage2d,
+		UnsignedIntImage3d,
+		UnsignedIntImage2dRect,
+		UnsignedIntImageCube,
+		UnsignedIntImageBuffer,
+		UnsignedIntImage1dArray,
+		UnsignedIntImage2dArray,
+		UnsignedIntImageCubeArray,
+		UnsignedIntImage2dMultisample,
+		UnsignedIntImage2dMultisampleArray,
+
+		UnsignedIntAtomicCounter
+	};
+
+	struct ShaderProgramInterfaceInfo
+	{
+		uint32_t activeResources = 0;
+		uint32_t maxNameLength = 0;
+		uint32_t maxNumActiveVariables = 0;
+		uint32_t maxNumCompatibleSubroutines = 0;
+	};
+
+	struct ShaderProgramResourceInfo
+	{
+		std::string name = "";
+		GlslType type = GlslType::Undefined;
+		ShaderStage::Stage referencedBy = ShaderStage::None;
+
+		uint32_t arraySize = 0;
+		uint32_t arrayStride = -1;
+
+		bool isRowMajor = false;
+		uint32_t matrixStride = -1;
+
+		uint32_t bufferBinding = -1;
+		uint32_t blockIndex = -1;
+		uint32_t atomicCounterBufferIndex = -1;
+		uint32_t offset = -1;
+
+		uint32_t topLevelArraySize = 0;
+		uint32_t topLevelArrayStride = -1;
+
+		uint32_t transformFeedbackBufferIndex = -1;
+		uint32_t transformFeedbackBufferStride = -1;
+
+		std::vector<uint32_t> activeVariables = {};
+		std::vector<uint32_t> compatibleSubroutines = {};
+		uint32_t bufferDataSize = 0;
+		uint32_t locationComponent = 0;
+		bool isPerPatch = false;
 	};
 
 	class ShaderProgram
 	{
 		public:
+
+			// TODO: Give the possibility to not retrieve all the shader resource/interface informations directly !
 
 			ShaderProgram();
 			ShaderProgram(const std::filesystem::path& glslCompute, ShaderProgramFlags::Flags flags = ShaderProgramFlags::None);
@@ -79,17 +233,8 @@ namespace spl
 			bool createFromGlsl(const std::filesystem::path& glslVertex, const std::filesystem::path& glslGeometry, const std::filesystem::path& glslFragment, ShaderProgramFlags::Flags flags = ShaderProgramFlags::None);
 			bool createFromGlsl(const std::filesystem::path& glslVertex, const std::filesystem::path& glslTessControl, const std::filesystem::path& glslTessEval, const std::filesystem::path& glslFragment, ShaderProgramFlags::Flags flags = ShaderProgramFlags::None);
 			bool createFromGlsl(const std::filesystem::path& glslVertex, const std::filesystem::path& glslTessControl, const std::filesystem::path& glslTessEval, const std::filesystem::path& glslGeometry, const std::filesystem::path& glslFragment, ShaderProgramFlags::Flags flags = ShaderProgramFlags::None);
-			bool createFromShaderModules(const ShaderModule* shaders, uint8_t count, ShaderProgramFlags::Flags = ShaderProgramFlags::None);
-			
+			bool createFromShaderModules(const ShaderModule* shaders, uint16_t count, ShaderProgramFlags::Flags = ShaderProgramFlags::None);
 			// TODO: Handle binary with a new class "ShaderBinary"
-
-			uint32_t getInterfaceInfo(ShaderProgramInterface programInterface, ShaderProgramInterfaceInfo info) const;
-
-			uint32_t getResourceIndex(ShaderProgramInterface programInterface, const std::string& name) const;
-			void getResourceName(ShaderProgramInterface programInterface, uint32_t index, std::string& name, uint32_t nameBufferSize = 256) const;
-			// glGetProgramResourceiv
-			uint32_t getResourceLocation(ShaderProgramInterface programInterface, const std::string& name) const;
-			uint32_t getResourceFragmentColorIndex(const std::string& name) const;
 
 			void destroy();
 
@@ -107,8 +252,15 @@ namespace spl
 
 		private:
 
+			static constexpr uint32_t _interfaceCount = 21;
+
 			uint32_t _program;
 			ShaderProgramFlags::Flags _flags;
 			int32_t _linkStatus;
+
+			std::array<ShaderProgramInterfaceInfo, _interfaceCount> _interfaceInfos;
+			std::array<std::vector<ShaderProgramResourceInfo>, _interfaceCount> _resourceInfos;
+
+			std::array<std::unordered_map<std::string, uint32_t>, _interfaceCount> _locations;
 	};
 }

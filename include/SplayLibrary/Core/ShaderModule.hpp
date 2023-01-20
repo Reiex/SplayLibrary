@@ -18,8 +18,8 @@ namespace spl
 			None					= 0,
 			Compute					= 1 << 0,
 			Vertex					= 1 << 1,
-			TessellationControl		= 1 << 2,
-			TessellationEvaluation	= 1 << 3,
+			TessControl		= 1 << 2,
+			TessEvaluation	= 1 << 3,
 			Geometry				= 1 << 4,
 			Fragment				= 1 << 5
 		};
@@ -47,7 +47,6 @@ namespace spl
 			bool createFromGlsl(ShaderStage::Stage stage, const char* const* sources, const uint32_t* sizes, uint32_t count);
 			bool createFromSpirV(ShaderStage::Stage stage, const std::filesystem::path& spirvFile, const char* entryPoint, const uint32_t* constantIndices, const void* constantValues, uint32_t specializationConstantsCount);
 			bool createFromSpirV(ShaderStage::Stage stage, const void* binary, uint32_t size, const char* entryPoint, const uint32_t* constantIndices, const void* constantValues, uint32_t specializationConstantsCount);
-
 			// TODO: Handle binary with a new class "ShaderBinary"
 
 			void destroy();

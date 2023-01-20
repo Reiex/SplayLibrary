@@ -183,9 +183,9 @@ namespace spl
 					return GL_COMPUTE_SHADER;
 				case ShaderStage::Vertex:
 					return GL_VERTEX_SHADER;
-				case ShaderStage::TessellationControl:
+				case ShaderStage::TessControl:
 					return GL_TESS_CONTROL_SHADER;
-				case ShaderStage::TessellationEvaluation:
+				case ShaderStage::TessEvaluation:
 					return GL_TESS_EVALUATION_SHADER;
 				case ShaderStage::Geometry:
 					return GL_GEOMETRY_SHADER;
@@ -200,12 +200,12 @@ namespace spl
 		constexpr GLbitfield shaderStageToGLbitfield(ShaderStage::Stage stage)
 		{
 			return (
-					( -((stage & ShaderStage::Compute)					>> 0) & GL_COMPUTE_SHADER_BIT)
-					| ( -((stage & ShaderStage::Vertex)					>> 1) & GL_VERTEX_SHADER_BIT)
-					| ( -((stage & ShaderStage::TessellationControl)	>> 2) & GL_TESS_CONTROL_SHADER_BIT)
-					| ( -((stage & ShaderStage::TessellationEvaluation)	>> 3) & GL_TESS_EVALUATION_SHADER_BIT)
-					| ( -((stage & ShaderStage::Geometry)				>> 4) & GL_GEOMETRY_SHADER_BIT)
-					| ( -((stage & ShaderStage::Fragment)				>> 5) & GL_FRAGMENT_SHADER_BIT)
+					( -((stage & ShaderStage::Compute)			>> 0) & GL_COMPUTE_SHADER_BIT)
+					| ( -((stage & ShaderStage::Vertex)			>> 1) & GL_VERTEX_SHADER_BIT)
+					| ( -((stage & ShaderStage::TessControl)	>> 2) & GL_TESS_CONTROL_SHADER_BIT)
+					| ( -((stage & ShaderStage::TessEvaluation)	>> 3) & GL_TESS_EVALUATION_SHADER_BIT)
+					| ( -((stage & ShaderStage::Geometry)		>> 4) & GL_GEOMETRY_SHADER_BIT)
+					| ( -((stage & ShaderStage::Fragment)		>> 5) & GL_FRAGMENT_SHADER_BIT)
 				);
 		}
 
@@ -255,24 +255,6 @@ namespace spl
 					return GL_GEOMETRY_SUBROUTINE_UNIFORM;
 				case ShaderProgramInterface::FragmentSubroutineUniform:
 					return GL_FRAGMENT_SUBROUTINE_UNIFORM;
-				default:
-					assert(false);
-					return 0;
-			}
-		}
-
-		constexpr GLenum shaderProgramInterfaceInfoToGLenum(ShaderProgramInterfaceInfo info)
-		{
-			switch (info)
-			{
-				case ShaderProgramInterfaceInfo::ActiveResources:
-					return GL_ACTIVE_RESOURCES;
-				case ShaderProgramInterfaceInfo::MaxNameLength:
-					return GL_MAX_NAME_LENGTH;
-				case ShaderProgramInterfaceInfo::MaxNumActiveVariables:
-					return GL_MAX_NUM_ACTIVE_VARIABLES;
-				case ShaderProgramInterfaceInfo::MaxNumCompatibleSubroutines:
-					return GL_MAX_NUM_COMPATIBLE_SUBROUTINES;
 				default:
 					assert(false);
 					return 0;
