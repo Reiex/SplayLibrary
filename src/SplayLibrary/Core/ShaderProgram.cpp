@@ -202,9 +202,9 @@ namespace spl
 	namespace
 	{
 		template<uint8_t Interface>
-		void extractInterfaceInfos(uint32_t program, ShaderProgramInterfaceInfos* infos)
+		inline void extractInterfaceInfos(uint32_t program, ShaderProgramInterfaceInfos* infos)
 		{
-			constexpr GLenum glInterface = _spl::shaderProgramInterfaceToGLenum(static_cast<ShaderProgramInterface>(Interface));
+			static constexpr GLenum glInterface = _spl::shaderProgramInterfaceToGLenum(static_cast<ShaderProgramInterface>(Interface));
 
 			glGetProgramInterfaceiv(program, glInterface, GL_ACTIVE_RESOURCES, &infos->activeResources);
 
@@ -234,7 +234,7 @@ namespace spl
 		}
 
 		template<GLenum Prop, GLenum... Props>
-		void extractResourceInfo(ShaderProgramResourceInfos* infos, int32_t* params)
+		inline void extractResourceInfo(ShaderProgramResourceInfos* infos, int32_t* params)
 		{
 			if constexpr (Prop == GL_ARRAY_SIZE)
 			{
@@ -366,7 +366,7 @@ namespace spl
 		}
 
 		template<GLenum... Props>
-		void extractResourceInfos(uint32_t program, uint32_t index, ShaderProgramResourceInfos* infos, GLenum glInterface)
+		inline void extractResourceInfos(uint32_t program, uint32_t index, ShaderProgramResourceInfos* infos, GLenum glInterface)
 		{
 			static constexpr GLenum props[] = { Props... };
 			static constexpr GLsizei propCount = sizeof...(Props);
@@ -378,13 +378,12 @@ namespace spl
 		}
 
 		template<uint8_t Interface>
-		void extractResourceInfos(uint32_t program, uint32_t index, ShaderProgramResourceInfos* infos)
+		inline void extractResourceInfos(uint32_t program, uint32_t index, ShaderProgramResourceInfos* infos)
 		{
-			constexpr GLenum glInterface = _spl::shaderProgramInterfaceToGLenum(static_cast<ShaderProgramInterface>(Interface));
+			static constexpr GLenum glInterface = _spl::shaderProgramInterfaceToGLenum(static_cast<ShaderProgramInterface>(Interface));
 
 			bool hasName = false;
 			bool hasActiveVariables = false;
-			bool hasCompatibleSubroutines = false;
 
 			if constexpr (glInterface == GL_UNIFORM)
 			{
@@ -465,67 +464,102 @@ namespace spl
 			}
 			else if constexpr (glInterface == GL_TRANSFORM_FEEDBACK_VARYING)
 			{
+				extractResourceInfos<
+					GL_ARRAY_SIZE,
+					GL_NAME_LENGTH,
+					GL_OFFSET,
+					GL_TRANSFORM_FEEDBACK_BUFFER_INDEX,
+					GL_TYPE
+				>(program, index, infos, glInterface);
 
+				hasName = true;
 			}
 			else if constexpr (glInterface == GL_TRANSFORM_FEEDBACK_BUFFER)
 			{
+				extractResourceInfos<
+					GL_BUFFER_BINDING,
+					GL_NUM_ACTIVE_VARIABLES,
+					GL_TRANSFORM_FEEDBACK_BUFFER_STRIDE
+				>(program, index, infos, glInterface);
 
+				hasActiveVariables = true;
 			}
 			else if constexpr (glInterface == GL_BUFFER_VARIABLE)
 			{
+				extractResourceInfos<
+					GL_ARRAY_SIZE,
+					GL_ARRAY_STRIDE,
+					GL_BLOCK_INDEX,
+					GL_IS_ROW_MAJOR,
+					GL_MATRIX_STRIDE,
+					GL_NAME_LENGTH,
+					GL_OFFSET,
+					GL_REFERENCED_BY_VERTEX_SHADER,
+					GL_REFERENCED_BY_TESS_CONTROL_SHADER,
+					GL_REFERENCED_BY_TESS_EVALUATION_SHADER,
+					GL_REFERENCED_BY_GEOMETRY_SHADER,
+					GL_REFERENCED_BY_FRAGMENT_SHADER,
+					GL_REFERENCED_BY_COMPUTE_SHADER,
+					GL_TOP_LEVEL_ARRAY_SIZE,
+					GL_TOP_LEVEL_ARRAY_STRIDE,
+					GL_TYPE
+				>(program, index, infos, glInterface);
 
+				hasName = true;
 			}
 			else if constexpr (glInterface == GL_SHADER_STORAGE_BLOCK)
 			{
+				extractResourceInfos<
+					GL_BUFFER_BINDING,
+					GL_NUM_ACTIVE_VARIABLES,
+					GL_BUFFER_DATA_SIZE,
+					GL_NAME_LENGTH,
+					GL_REFERENCED_BY_VERTEX_SHADER,
+					GL_REFERENCED_BY_TESS_CONTROL_SHADER,
+					GL_REFERENCED_BY_TESS_EVALUATION_SHADER,
+					GL_REFERENCED_BY_GEOMETRY_SHADER,
+					GL_REFERENCED_BY_FRAGMENT_SHADER,
+					GL_REFERENCED_BY_COMPUTE_SHADER
+				>(program, index, infos, glInterface);
 
+				hasName = true;
+				hasActiveVariables = true;
 			}
-			else if constexpr (glInterface == GL_COMPUTE_SUBROUTINE)
+			else if constexpr (glInterface == GL_COMPUTE_SUBROUTINE
+				|| glInterface == GL_VERTEX_SUBROUTINE
+				|| glInterface == GL_TESS_CONTROL_SUBROUTINE
+				|| glInterface == GL_TESS_EVALUATION_SUBROUTINE
+				|| glInterface == GL_GEOMETRY_SUBROUTINE
+				|| glInterface == GL_FRAGMENT_SUBROUTINE)
 			{
+				extractResourceInfos<
+					GL_NAME_LENGTH
+				>(program, index, infos, glInterface);
 
+				hasName = true;
+				hasActiveVariables = true;
 			}
-			else if constexpr (glInterface == GL_VERTEX_SUBROUTINE)
+			else if constexpr (glInterface == GL_COMPUTE_SUBROUTINE_UNIFORM
+				|| glInterface == GL_VERTEX_SUBROUTINE_UNIFORM
+				|| glInterface == GL_TESS_CONTROL_SUBROUTINE_UNIFORM
+				|| glInterface == GL_TESS_EVALUATION_SUBROUTINE_UNIFORM
+				|| glInterface == GL_GEOMETRY_SUBROUTINE_UNIFORM
+				|| glInterface == GL_FRAGMENT_SUBROUTINE_UNIFORM)
 			{
+				extractResourceInfos<
+					GL_ARRAY_SIZE,
+					GL_NUM_COMPATIBLE_SUBROUTINES,
+					GL_NAME_LENGTH
+				>(program, index, infos, glInterface);
 
+				hasName = true;
+
+				static constexpr GLenum prop = GL_COMPATIBLE_SUBROUTINES;
+				glGetProgramResourceiv(program, glInterface, index, 1, &prop, infos->compatibleSubroutines.size(), nullptr, reinterpret_cast<int32_t*>(infos->compatibleSubroutines.data()));
 			}
-			else if constexpr (glInterface == GL_TESS_CONTROL_SUBROUTINE)
+			else
 			{
-
-			}
-			else if constexpr (glInterface == GL_TESS_EVALUATION_SUBROUTINE)
-			{
-
-			}
-			else if constexpr (glInterface == GL_GEOMETRY_SUBROUTINE)
-			{
-
-			}
-			else if constexpr (glInterface == GL_FRAGMENT_SUBROUTINE)
-			{
-
-			}
-			else if constexpr (glInterface == GL_COMPUTE_SUBROUTINE_UNIFORM)
-			{
-
-			}
-			else if constexpr (glInterface == GL_VERTEX_SUBROUTINE_UNIFORM)
-			{
-
-			}
-			else if constexpr (glInterface == GL_TESS_CONTROL_SUBROUTINE_UNIFORM)
-			{
-
-			}
-			else if constexpr (glInterface == GL_TESS_EVALUATION_SUBROUTINE_UNIFORM)
-			{
-
-			}
-			else if constexpr (glInterface == GL_GEOMETRY_SUBROUTINE_UNIFORM)
-			{
-
-			}
-			else if constexpr (glInterface == GL_FRAGMENT_SUBROUTINE_UNIFORM)
-			{
-
+				assert(false);
 			}
 
 			if (hasName)
@@ -533,11 +567,15 @@ namespace spl
 				glGetProgramResourceName(program, glInterface, index, infos->name.size(), nullptr, infos->name.data());
 			}
 
-			// TODO: if (hasActiveVariables) ... if (hasCompatibleSubroutines) ...
+			if (hasActiveVariables)
+			{
+				static constexpr GLenum prop = GL_ACTIVE_VARIABLES;
+				glGetProgramResourceiv(program, glInterface, index, 1, &prop, infos->activeVariables.size(), nullptr, reinterpret_cast<int32_t*>(infos->activeVariables.data()));
+			}
 		}
 
 		template<uint8_t Interface>
-		void extractResourcesInfos(uint32_t program, uint32_t activeResources, std::vector<ShaderProgramResourceInfos>* infos)
+		inline void extractResourcesInfos(uint32_t program, uint32_t activeResources, std::vector<ShaderProgramResourceInfos>* infos)
 		{
 			infos->resize(activeResources);
 
@@ -548,26 +586,51 @@ namespace spl
 			}
 		}
 
-		void extractResourcesLocation()
+		template<uint8_t Interface>
+		inline void extractResourcesLocation(uint32_t program, const std::vector<ShaderProgramResourceInfos>* resourcesInfos, std::unordered_map<std::string, uint32_t>* locations, std::unordered_map<std::string, uint32_t>& locationIndices)
 		{
-			// TODO
+			static constexpr GLenum glInterface = _spl::shaderProgramInterfaceToGLenum(static_cast<ShaderProgramInterface>(Interface));
+
+			if constexpr (glInterface == GL_UNIFORM
+				|| glInterface == GL_PROGRAM_INPUT
+				|| glInterface == GL_PROGRAM_OUTPUT
+				|| glInterface == GL_COMPUTE_SUBROUTINE_UNIFORM
+				|| glInterface == GL_VERTEX_SUBROUTINE_UNIFORM
+				|| glInterface == GL_TESS_CONTROL_SUBROUTINE_UNIFORM
+				|| glInterface == GL_TESS_EVALUATION_SUBROUTINE_UNIFORM
+				|| glInterface == GL_GEOMETRY_SUBROUTINE_UNIFORM
+				|| glInterface == GL_FRAGMENT_SUBROUTINE_UNIFORM)
+			{
+				for (const ShaderProgramResourceInfos infos : *resourcesInfos)
+				{
+					(*locations)[infos.name] = glGetProgramResourceLocation(program, glInterface, infos.name.c_str());
+
+					if constexpr (glInterface == GL_PROGRAM_OUTPUT)
+					{
+						locationIndices[infos.name] = glGetProgramResourceLocationIndex(program, glInterface, infos.name.c_str());
+					}
+
+					// TODO: Handle aggregate types
+				}
+			}
 		}
 
 		template<uint8_t Interface>
-		void extractInfos(uint32_t program, ShaderProgramInterfaceInfos* interfaceInfos, std::vector<ShaderProgramResourceInfos>* resourcesInfos)
+		inline void extractInfos(uint32_t program, ShaderProgramInterfaceInfos* interfaceInfos, std::vector<ShaderProgramResourceInfos>* resourcesInfos, std::unordered_map<std::string, uint32_t>* locations, std::unordered_map<std::string, uint32_t>& locationIndices)
 		{
 			extractInterfaceInfos<Interface>(program, interfaceInfos);
 			extractResourcesInfos<Interface>(program, interfaceInfos->activeResources, resourcesInfos);
+			extractResourcesLocation<Interface>(program, resourcesInfos, locations, locationIndices);
 
 			if constexpr (Interface != 0)
 			{
-				extractInfos<Interface - 1>(program, interfaceInfos - 1, resourcesInfos - 1);
+				extractInfos<Interface - 1>(program, interfaceInfos - 1, resourcesInfos - 1, locations - 1, locationIndices);
 			}
 		}
 	}
 
 	void ShaderProgram::_shaderIntrospection()
 	{
-		extractInfos<_interfaceCount - 1>(_program, &_interfacesInfos.back(), &_resourcesInfos.back());
+		extractInfos<_interfaceCount - 1>(_program, &_interfacesInfos.back(), &_resourcesInfos.back(), &_locations.back(), _locationIndices);
 	}
 }
