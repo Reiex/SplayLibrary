@@ -28,6 +28,7 @@ namespace spl
 		constexpr GLenum shaderStageToGLenum(ShaderStage::Stage stage);
 		constexpr GLbitfield shaderStageToGLbitfield(ShaderStage::Stage stage);
 		constexpr GLenum shaderProgramInterfaceToGLenum(ShaderProgramInterface programInterface);
+		constexpr GlslType glToGlslType(GLenum type);
 
 		constexpr GLenum textureTargetToGLenum(TextureTarget target);
 		constexpr GLenum textureFormatToGLenum(TextureFormat format);

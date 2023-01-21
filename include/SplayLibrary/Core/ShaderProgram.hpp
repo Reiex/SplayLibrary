@@ -36,14 +36,14 @@ namespace spl
 		ComputeSubroutine,
 		VertexSubroutine,
 		TessControlSubroutine,
-		TessEvalSubroutine,
+		TessEvaluationSubroutine,
 		GeometrySubroutine,
 		FragmentSubroutine,
 
 		ComputeSubroutineUniform,
 		VertexSubroutineUniform,
 		TessControlSubroutineUniform,
-		TessEvalSubroutineUniform,
+		TessEvaluationSubroutineUniform,
 		GeometrySubroutineUniform,
 		FragmentSubroutineUniform
 	};
@@ -170,15 +170,15 @@ namespace spl
 		UnsignedIntAtomicCounter
 	};
 
-	struct ShaderProgramInterfaceInfo
+	struct ShaderProgramInterfaceInfos
 	{
-		uint32_t activeResources = 0;
-		uint32_t maxNameLength = 0;
-		uint32_t maxNumActiveVariables = 0;
-		uint32_t maxNumCompatibleSubroutines = 0;
+		int32_t activeResources = 0;
+		int32_t maxNameLength = 0;
+		int32_t maxNumActiveVariables = 0;
+		int32_t maxNumCompatibleSubroutines = 0;
 	};
 
-	struct ShaderProgramResourceInfo
+	struct ShaderProgramResourceInfos
 	{
 		std::string name = "";
 		GlslType type = GlslType::Undefined;
@@ -252,15 +252,18 @@ namespace spl
 
 		private:
 
-			static constexpr uint32_t _interfaceCount = 21;
+			void _shaderIntrospection();
+
+			static constexpr uint8_t _interfaceCount = 21;
 
 			uint32_t _program;
 			ShaderProgramFlags::Flags _flags;
 			int32_t _linkStatus;
 
-			std::array<ShaderProgramInterfaceInfo, _interfaceCount> _interfaceInfos;
-			std::array<std::vector<ShaderProgramResourceInfo>, _interfaceCount> _resourceInfos;
+			std::array<ShaderProgramInterfaceInfos, _interfaceCount> _interfacesInfos;
+			std::array<std::vector<ShaderProgramResourceInfos>, _interfaceCount> _resourcesInfos;
 
 			std::array<std::unordered_map<std::string, uint32_t>, _interfaceCount> _locations;
+			std::unordered_map<std::string, uint32_t> _locationIndices;
 	};
 }

@@ -237,7 +237,7 @@ namespace spl
 					return GL_VERTEX_SUBROUTINE;
 				case ShaderProgramInterface::TessControlSubroutine:
 					return GL_TESS_CONTROL_SUBROUTINE;
-				case ShaderProgramInterface::TessEvalSubroutine:
+				case ShaderProgramInterface::TessEvaluationSubroutine:
 					return GL_TESS_EVALUATION_SUBROUTINE;
 				case ShaderProgramInterface::GeometrySubroutine:
 					return GL_GEOMETRY_SUBROUTINE;
@@ -249,7 +249,7 @@ namespace spl
 					return GL_VERTEX_SUBROUTINE_UNIFORM;
 				case ShaderProgramInterface::TessControlSubroutineUniform:
 					return GL_TESS_CONTROL_SUBROUTINE_UNIFORM;
-				case ShaderProgramInterface::TessEvalSubroutineUniform:
+				case ShaderProgramInterface::TessEvaluationSubroutineUniform:
 					return GL_TESS_EVALUATION_SUBROUTINE_UNIFORM;
 				case ShaderProgramInterface::GeometrySubroutineUniform:
 					return GL_GEOMETRY_SUBROUTINE_UNIFORM;
@@ -258,6 +258,240 @@ namespace spl
 				default:
 					assert(false);
 					return 0;
+			}
+		}
+
+		constexpr GlslType glToGlslType(GLenum type)
+		{
+			switch (type)
+			{
+				case GL_FLOAT:
+					return GlslType::Float;
+				case GL_FLOAT_VEC2:
+					return GlslType::FloatVec2;
+				case GL_FLOAT_VEC3:
+					return GlslType::FloatVec3;
+				case GL_FLOAT_VEC4:
+					return GlslType::FloatVec4;
+				case GL_DOUBLE:
+					return GlslType::Double;
+				case GL_DOUBLE_VEC2:
+					return GlslType::DoubleVec2;
+				case GL_DOUBLE_VEC3:
+					return GlslType::DoubleVec3;
+				case GL_DOUBLE_VEC4:
+					return GlslType::DoubleVec4;
+				case GL_INT:
+					return GlslType::Int;
+				case GL_INT_VEC2:
+					return GlslType::IntVec2;
+				case GL_INT_VEC3:
+					return GlslType::IntVec3;
+				case GL_INT_VEC4:
+					return GlslType::IntVec4;
+				case GL_UNSIGNED_INT:
+					return GlslType::UnsignedInt;
+				case GL_UNSIGNED_INT_VEC2:
+					return GlslType::UnsignedIntVec2;
+				case GL_UNSIGNED_INT_VEC3:
+					return GlslType::UnsignedIntVec3;
+				case GL_UNSIGNED_INT_VEC4:
+					return GlslType::UnsignedIntVec4;
+				case GL_BOOL:
+					return GlslType::Bool;
+				case GL_BOOL_VEC2:
+					return GlslType::BoolVec2;
+				case GL_BOOL_VEC3:
+					return GlslType::BoolVec3;
+				case GL_BOOL_VEC4:
+					return GlslType::BoolVec4;
+				case GL_FLOAT_MAT2:
+					return GlslType::FloatMat2x2;
+				case GL_FLOAT_MAT2x3:
+					return GlslType::FloatMat2x3;
+				case GL_FLOAT_MAT2x4:
+					return GlslType::FloatMat2x4;
+				case GL_FLOAT_MAT3x2:
+					return GlslType::FloatMat3x2;
+				case GL_FLOAT_MAT3:
+					return GlslType::FloatMat3x3;
+				case GL_FLOAT_MAT3x4:
+					return GlslType::FloatMat3x4;
+				case GL_FLOAT_MAT4x2:
+					return GlslType::FloatMat4x2;
+				case GL_FLOAT_MAT4x3:
+					return GlslType::FloatMat4x3;
+				case GL_FLOAT_MAT4:
+					return GlslType::FloatMat4x4;
+				case GL_DOUBLE_MAT2:
+					return GlslType::DoubleMat2x2;
+				case GL_DOUBLE_MAT2x3:
+					return GlslType::DoubleMat2x3;
+				case GL_DOUBLE_MAT2x4:
+					return GlslType::DoubleMat2x4;
+				case GL_DOUBLE_MAT3x2:
+					return GlslType::DoubleMat3x2;
+				case GL_DOUBLE_MAT3:
+					return GlslType::DoubleMat3x3;
+				case GL_DOUBLE_MAT3x4:
+					return GlslType::DoubleMat3x4;
+				case GL_DOUBLE_MAT4x2:
+					return GlslType::DoubleMat4x2;
+				case GL_DOUBLE_MAT4x3:
+					return GlslType::DoubleMat4x3;
+				case GL_DOUBLE_MAT4:
+					return GlslType::DoubleMat4x4;
+				case GL_SAMPLER_1D:
+					return GlslType::Sampler1d;
+				case GL_SAMPLER_2D:
+					return GlslType::Sampler2d;
+				case GL_SAMPLER_3D:
+					return GlslType::Sampler3d;
+				case GL_SAMPLER_CUBE:
+					return GlslType::SamplerCube;
+				case GL_SAMPLER_1D_SHADOW:
+					return GlslType::Sampler1dShadow;
+				case GL_SAMPLER_2D_SHADOW:
+					return GlslType::Sampler2dShadow;
+				case GL_SAMPLER_CUBE_SHADOW:
+					return GlslType::SamplerCubeShadow;
+				case GL_SAMPLER_1D_ARRAY:
+					return GlslType::Sampler1dArray;
+				case GL_SAMPLER_2D_ARRAY:
+					return GlslType::Sampler2dArray;
+				case GL_SAMPLER_CUBE_MAP_ARRAY:
+					return GlslType::SamplerCubeArray;
+				case GL_SAMPLER_1D_ARRAY_SHADOW:
+					return GlslType::Sampler1dArrayShadow;
+				case GL_SAMPLER_2D_ARRAY_SHADOW:
+					return GlslType::Sampler2dArrayShadow;
+				case GL_SAMPLER_CUBE_MAP_ARRAY_SHADOW:
+					return GlslType::SamplerCubeArrayShadow;
+				case GL_SAMPLER_2D_MULTISAMPLE:
+					return GlslType::Sampler2dMultisample;
+				case GL_SAMPLER_2D_MULTISAMPLE_ARRAY:
+					return GlslType::Sampler2dMultisampleArray;
+				case GL_SAMPLER_BUFFER:
+					return GlslType::SamplerBuffer;
+				case GL_SAMPLER_2D_RECT:
+					return GlslType::Sampler2dRect;
+				case GL_SAMPLER_2D_RECT_SHADOW:
+					return GlslType::Sampler2dRectShadow;
+				case GL_INT_SAMPLER_1D:
+					return GlslType::IntSampler1d;
+				case GL_INT_SAMPLER_2D:
+					return GlslType::IntSampler2d;
+				case GL_INT_SAMPLER_3D:
+					return GlslType::IntSampler3d;
+				case GL_INT_SAMPLER_CUBE:
+					return GlslType::IntSamplerCube;
+				case GL_INT_SAMPLER_1D_ARRAY:
+					return GlslType::IntSampler1dArray;
+				case GL_INT_SAMPLER_2D_ARRAY:
+					return GlslType::IntSampler2dArray;
+				case GL_INT_SAMPLER_CUBE_MAP_ARRAY:
+					return GlslType::IntSamplerCubeArray;
+				case GL_INT_SAMPLER_2D_MULTISAMPLE:
+					return GlslType::IntSampler2dMultisample;
+				case GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY:
+					return GlslType::IntSampler2dMultisampleArray;
+				case GL_INT_SAMPLER_BUFFER:
+					return GlslType::IntSamplerBuffer;
+				case GL_INT_SAMPLER_2D_RECT:
+					return GlslType::IntSampler2dRect;
+				case GL_UNSIGNED_INT_SAMPLER_1D:
+					return GlslType::UnsignedIntSampler1d;
+				case GL_UNSIGNED_INT_SAMPLER_2D:
+					return GlslType::UnsignedIntSampler2d;
+				case GL_UNSIGNED_INT_SAMPLER_3D:
+					return GlslType::UnsignedIntSampler3d;
+				case GL_UNSIGNED_INT_SAMPLER_CUBE:
+					return GlslType::UnsignedIntSamplerCube;
+				case GL_UNSIGNED_INT_SAMPLER_1D_ARRAY:
+					return GlslType::UnsignedIntSampler1dArray;
+				case GL_UNSIGNED_INT_SAMPLER_2D_ARRAY:
+					return GlslType::UnsignedIntSampler2dArray;
+				case GL_UNSIGNED_INT_SAMPLER_CUBE_MAP_ARRAY:
+					return GlslType::UnsignedIntSamplerCubeArray;
+				case GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE:
+					return GlslType::UnsignedIntSampler2dMultisample;
+				case GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY:
+					return GlslType::UnsignedIntSampler2dMultisampleArray;
+				case GL_UNSIGNED_INT_SAMPLER_BUFFER:
+					return GlslType::UnsignedIntSamplerBuffer;
+				case GL_UNSIGNED_INT_SAMPLER_2D_RECT:
+					return GlslType::UnsignedIntSampler2dRect;
+				case GL_IMAGE_1D:
+					return GlslType::Image1d;
+				case GL_IMAGE_2D:
+					return GlslType::Image2d;
+				case GL_IMAGE_3D:
+					return GlslType::Image3d;
+				case GL_IMAGE_2D_RECT:
+					return GlslType::Image2dRect;
+				case GL_IMAGE_CUBE:
+					return GlslType::ImageCube;
+				case GL_IMAGE_BUFFER:
+					return GlslType::ImageBuffer;
+				case GL_IMAGE_1D_ARRAY:
+					return GlslType::Image1dArray;
+				case GL_IMAGE_2D_ARRAY:
+					return GlslType::Image2dArray;
+				case GL_IMAGE_CUBE_MAP_ARRAY:
+					return GlslType::ImageCubeArray;
+				case GL_IMAGE_2D_MULTISAMPLE:
+					return GlslType::Image2dMultisample;
+				case GL_IMAGE_2D_MULTISAMPLE_ARRAY:
+					return GlslType::Image2dMultisampleArray;
+				case GL_INT_IMAGE_1D:
+					return GlslType::IntImage1d;
+				case GL_INT_IMAGE_2D:
+					return GlslType::IntImage2d;
+				case GL_INT_IMAGE_3D:
+					return GlslType::IntImage3d;
+				case GL_INT_IMAGE_2D_RECT:
+					return GlslType::IntImage2dRect;
+				case GL_INT_IMAGE_CUBE:
+					return GlslType::IntImageCube;
+				case GL_INT_IMAGE_BUFFER:
+					return GlslType::IntImageBuffer;
+				case GL_INT_IMAGE_1D_ARRAY:
+					return GlslType::IntImage1dArray;
+				case GL_INT_IMAGE_2D_ARRAY:
+					return GlslType::IntImage2dArray;
+				case GL_INT_IMAGE_CUBE_MAP_ARRAY:
+					return GlslType::IntImageCubeArray;
+				case GL_INT_IMAGE_2D_MULTISAMPLE:
+					return GlslType::IntImage2dMultisample;
+				case GL_INT_IMAGE_2D_MULTISAMPLE_ARRAY:
+					return GlslType::IntImage2dMultisampleArray;
+				case GL_UNSIGNED_INT_IMAGE_1D:
+					return GlslType::UnsignedIntImage1d;
+				case GL_UNSIGNED_INT_IMAGE_2D:
+					return GlslType::UnsignedIntImage2d;
+				case GL_UNSIGNED_INT_IMAGE_3D:
+					return GlslType::UnsignedIntImage3d;
+				case GL_UNSIGNED_INT_IMAGE_2D_RECT:
+					return GlslType::UnsignedIntImage2dRect;
+				case GL_UNSIGNED_INT_IMAGE_CUBE:
+					return GlslType::UnsignedIntImageCube;
+				case GL_UNSIGNED_INT_IMAGE_BUFFER:
+					return GlslType::UnsignedIntImageBuffer;
+				case GL_UNSIGNED_INT_IMAGE_1D_ARRAY:
+					return GlslType::UnsignedIntImage1dArray;
+				case GL_UNSIGNED_INT_IMAGE_2D_ARRAY:
+					return GlslType::UnsignedIntImage2dArray;
+				case GL_UNSIGNED_INT_IMAGE_CUBE_MAP_ARRAY:
+					return GlslType::UnsignedIntImageCubeArray;
+				case GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE:
+					return GlslType::UnsignedIntImage2dMultisample;
+				case GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_ARRAY:
+					return GlslType::UnsignedIntImage2dMultisampleArray;
+				case GL_UNSIGNED_INT_ATOMIC_COUNTER:
+					return GlslType::UnsignedIntAtomicCounter;
+				default:
+					assert(false);
+					return GlslType::Undefined;
 			}
 		}
 

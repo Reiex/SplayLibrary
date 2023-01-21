@@ -18,8 +18,8 @@ namespace spl
 			None					= 0,
 			Compute					= 1 << 0,
 			Vertex					= 1 << 1,
-			TessControl		= 1 << 2,
-			TessEvaluation	= 1 << 3,
+			TessControl				= 1 << 2,
+			TessEvaluation			= 1 << 3,
 			Geometry				= 1 << 4,
 			Fragment				= 1 << 5
 		};

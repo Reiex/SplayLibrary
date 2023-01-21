@@ -13,7 +13,11 @@ namespace spl
 	ShaderProgram::ShaderProgram() :
 		_program(0),
 		_flags(ShaderProgramFlags::None),
-		_linkStatus(0)
+		_linkStatus(0),
+		_interfacesInfos(),
+		_resourcesInfos(),
+		_locations(),
+		_locationIndices()
 	{
 	}
 
@@ -138,6 +142,11 @@ namespace spl
 		glLinkProgram(_program);
 		glGetProgramiv(_program, GL_LINK_STATUS, &_linkStatus);
 
+		if (isValid())
+		{
+			_shaderIntrospection();
+		}
+
 		return _linkStatus;
 	}
 
@@ -151,6 +160,11 @@ namespace spl
 		_program = 0;
 		_flags = ShaderProgramFlags::None;
 		_linkStatus = 0;
+
+		_interfacesInfos.fill({});
+		_resourcesInfos.fill({});
+		_locations.fill({});
+		_locationIndices.clear();
 	}
 
 	uint32_t ShaderProgram::getHandle() const
@@ -183,5 +197,377 @@ namespace spl
 	void ShaderProgram::unbind()
 	{
 		glUseProgram(0);
+	}
+
+	namespace
+	{
+		template<uint8_t Interface>
+		void extractInterfaceInfos(uint32_t program, ShaderProgramInterfaceInfos* infos)
+		{
+			constexpr GLenum glInterface = _spl::shaderProgramInterfaceToGLenum(static_cast<ShaderProgramInterface>(Interface));
+
+			glGetProgramInterfaceiv(program, glInterface, GL_ACTIVE_RESOURCES, &infos->activeResources);
+
+			if constexpr (glInterface != GL_ATOMIC_COUNTER_BUFFER
+				&& glInterface != GL_TRANSFORM_FEEDBACK_BUFFER)
+			{
+				glGetProgramInterfaceiv(program, glInterface, GL_MAX_NAME_LENGTH, &infos->maxNameLength);
+			}
+
+			if constexpr (glInterface == GL_ATOMIC_COUNTER_BUFFER
+				|| glInterface == GL_SHADER_STORAGE_BLOCK
+				|| glInterface == GL_TRANSFORM_FEEDBACK_BUFFER
+				|| glInterface == GL_UNIFORM_BLOCK)
+			{
+				glGetProgramInterfaceiv(program, glInterface, GL_MAX_NUM_ACTIVE_VARIABLES, &infos->maxNumActiveVariables);
+			}
+
+			if constexpr (glInterface == GL_COMPUTE_SUBROUTINE_UNIFORM
+				|| glInterface == GL_VERTEX_SUBROUTINE_UNIFORM
+				|| glInterface == GL_TESS_CONTROL_SUBROUTINE_UNIFORM
+				|| glInterface == GL_TESS_EVALUATION_SUBROUTINE_UNIFORM
+				|| glInterface == GL_GEOMETRY_SUBROUTINE_UNIFORM
+				|| glInterface == GL_FRAGMENT_SUBROUTINE_UNIFORM)
+			{
+				glGetProgramInterfaceiv(program, glInterface, GL_MAX_NUM_COMPATIBLE_SUBROUTINES, &infos->maxNumCompatibleSubroutines);
+			}
+		}
+
+		template<GLenum Prop, GLenum... Props>
+		void extractResourceInfo(ShaderProgramResourceInfos* infos, int32_t* params)
+		{
+			if constexpr (Prop == GL_ARRAY_SIZE)
+			{
+				infos->arraySize = *params;
+			}
+			else if constexpr (Prop == GL_ARRAY_STRIDE)
+			{
+				infos->arrayStride = *params;
+			}
+			else if constexpr (Prop == GL_ATOMIC_COUNTER_BUFFER_INDEX)
+			{
+				infos->atomicCounterBufferIndex = *params;
+			}
+			else if constexpr (Prop == GL_BLOCK_INDEX)
+			{
+				infos->blockIndex = *params;
+			}
+			else if constexpr (Prop == GL_BUFFER_BINDING)
+			{
+				infos->bufferBinding = *params;
+			}
+			else if constexpr (Prop == GL_BUFFER_DATA_SIZE)
+			{
+				infos->bufferDataSize = *params;
+			}
+			else if constexpr (Prop == GL_IS_PER_PATCH)
+			{
+				infos->isPerPatch = *params;
+			}
+			else if constexpr (Prop == GL_IS_ROW_MAJOR)
+			{
+				infos->isRowMajor = *params;
+			}
+			else if constexpr (Prop == GL_LOCATION_COMPONENT)
+			{
+				infos->locationComponent = *params;
+			}
+			else if constexpr (Prop == GL_MATRIX_STRIDE)
+			{
+				infos->matrixStride = *params;
+			}
+			else if constexpr (Prop == GL_NAME_LENGTH)
+			{
+				infos->name.resize(*params);
+			}
+			else if constexpr (Prop == GL_NUM_ACTIVE_VARIABLES)
+			{
+				infos->activeVariables.resize(*params);
+			}
+			else if constexpr (Prop == GL_NUM_COMPATIBLE_SUBROUTINES)
+			{
+				infos->compatibleSubroutines.resize(*params);
+			}
+			else if constexpr (Prop == GL_OFFSET)
+			{
+				infos->offset = *params;
+			}
+			else if constexpr (Prop == GL_REFERENCED_BY_VERTEX_SHADER)
+			{
+				if (*params)
+				{
+					infos->referencedBy = static_cast<ShaderStage::Stage>(infos->referencedBy | ShaderStage::Vertex);
+				}
+			}
+			else if constexpr (Prop == GL_REFERENCED_BY_TESS_CONTROL_SHADER)
+			{
+				if (*params)
+				{
+					infos->referencedBy = static_cast<ShaderStage::Stage>(infos->referencedBy | ShaderStage::TessControl);
+				}
+			}
+			else if constexpr (Prop == GL_REFERENCED_BY_TESS_EVALUATION_SHADER)
+			{
+				if (*params)
+				{
+					infos->referencedBy = static_cast<ShaderStage::Stage>(infos->referencedBy | ShaderStage::TessEvaluation);
+				}
+			}
+			else if constexpr (Prop == GL_REFERENCED_BY_GEOMETRY_SHADER)
+			{
+				if (*params)
+				{
+					infos->referencedBy = static_cast<ShaderStage::Stage>(infos->referencedBy | ShaderStage::Geometry);
+				}
+			}
+			else if constexpr (Prop == GL_REFERENCED_BY_FRAGMENT_SHADER)
+			{
+				if (*params)
+				{
+					infos->referencedBy = static_cast<ShaderStage::Stage>(infos->referencedBy | ShaderStage::Fragment);
+				}
+			}
+			else if constexpr (Prop == GL_REFERENCED_BY_COMPUTE_SHADER)
+			{
+				if (*params)
+				{
+					infos->referencedBy = static_cast<ShaderStage::Stage>(infos->referencedBy | ShaderStage::Compute);
+				}
+			}
+			else if constexpr (Prop == GL_TOP_LEVEL_ARRAY_SIZE)
+			{
+				infos->topLevelArraySize = *params;
+			}
+			else if constexpr (Prop == GL_TOP_LEVEL_ARRAY_STRIDE)
+			{
+				infos->topLevelArrayStride = *params;
+			}
+			else if constexpr (Prop == GL_TRANSFORM_FEEDBACK_BUFFER_INDEX)
+			{
+				infos->transformFeedbackBufferIndex = *params;
+			}
+			else if constexpr (Prop == GL_TRANSFORM_FEEDBACK_BUFFER_STRIDE)
+			{
+				infos->transformFeedbackBufferStride = *params;
+			}
+			else if constexpr (Prop == GL_TYPE)
+			{
+				infos->type = _spl::glToGlslType(*params);
+			}
+			else
+			{
+				assert(false);
+			}
+
+			if constexpr (sizeof...(Props) != 0)
+			{
+				extractResourceInfo<Props...>(infos, params + 1);
+			}
+		}
+
+		template<GLenum... Props>
+		void extractResourceInfos(uint32_t program, uint32_t index, ShaderProgramResourceInfos* infos, GLenum glInterface)
+		{
+			static constexpr GLenum props[] = { Props... };
+			static constexpr GLsizei propCount = sizeof...(Props);
+
+			int32_t params[propCount];
+			glGetProgramResourceiv(program, glInterface, index, propCount, props, propCount, nullptr, params);
+
+			extractResourceInfo<Props...>(infos, params);
+		}
+
+		template<uint8_t Interface>
+		void extractResourceInfos(uint32_t program, uint32_t index, ShaderProgramResourceInfos* infos)
+		{
+			constexpr GLenum glInterface = _spl::shaderProgramInterfaceToGLenum(static_cast<ShaderProgramInterface>(Interface));
+
+			bool hasName = false;
+			bool hasActiveVariables = false;
+			bool hasCompatibleSubroutines = false;
+
+			if constexpr (glInterface == GL_UNIFORM)
+			{
+				extractResourceInfos<
+					GL_ARRAY_SIZE,
+					GL_ARRAY_STRIDE,
+					GL_BLOCK_INDEX,
+					GL_IS_ROW_MAJOR,
+					GL_MATRIX_STRIDE,
+					GL_ATOMIC_COUNTER_BUFFER_INDEX,
+					GL_NAME_LENGTH,
+					GL_OFFSET,
+					GL_REFERENCED_BY_VERTEX_SHADER,
+					GL_REFERENCED_BY_TESS_CONTROL_SHADER,
+					GL_REFERENCED_BY_TESS_EVALUATION_SHADER,
+					GL_REFERENCED_BY_GEOMETRY_SHADER,
+					GL_REFERENCED_BY_FRAGMENT_SHADER,
+					GL_REFERENCED_BY_COMPUTE_SHADER,
+					GL_TYPE
+				>(program, index, infos, glInterface);
+				
+				hasName = true;
+			}
+			else if constexpr (glInterface == GL_UNIFORM_BLOCK)
+			{
+				extractResourceInfos<
+					GL_BUFFER_BINDING,
+					GL_NUM_ACTIVE_VARIABLES,
+					GL_BUFFER_DATA_SIZE,
+					GL_NAME_LENGTH,
+					GL_REFERENCED_BY_VERTEX_SHADER,
+					GL_REFERENCED_BY_TESS_CONTROL_SHADER,
+					GL_REFERENCED_BY_TESS_EVALUATION_SHADER,
+					GL_REFERENCED_BY_GEOMETRY_SHADER,
+					GL_REFERENCED_BY_FRAGMENT_SHADER,
+					GL_REFERENCED_BY_COMPUTE_SHADER
+				>(program, index, infos, glInterface);
+
+				hasName = true;
+				hasActiveVariables = true;
+			}
+			else if constexpr (glInterface == GL_ATOMIC_COUNTER_BUFFER)
+			{
+				extractResourceInfos<
+					GL_BUFFER_BINDING,
+					GL_NUM_ACTIVE_VARIABLES,
+					GL_BUFFER_DATA_SIZE,
+					GL_REFERENCED_BY_VERTEX_SHADER,
+					GL_REFERENCED_BY_TESS_CONTROL_SHADER,
+					GL_REFERENCED_BY_TESS_EVALUATION_SHADER,
+					GL_REFERENCED_BY_GEOMETRY_SHADER,
+					GL_REFERENCED_BY_FRAGMENT_SHADER,
+					GL_REFERENCED_BY_COMPUTE_SHADER
+				>(program, index, infos, glInterface);
+
+				// TODO: Set type to atomic and check if other things can be set "manually"
+
+				hasName = true;
+				hasActiveVariables = true;
+			}
+			else if constexpr (glInterface == GL_PROGRAM_INPUT || glInterface == GL_PROGRAM_OUTPUT)
+			{
+				extractResourceInfos<
+					GL_ARRAY_SIZE,
+					GL_IS_PER_PATCH,
+					GL_LOCATION_COMPONENT,
+					GL_NAME_LENGTH,
+					GL_REFERENCED_BY_VERTEX_SHADER,
+					GL_REFERENCED_BY_TESS_CONTROL_SHADER,
+					GL_REFERENCED_BY_TESS_EVALUATION_SHADER,
+					GL_REFERENCED_BY_GEOMETRY_SHADER,
+					GL_REFERENCED_BY_FRAGMENT_SHADER,
+					GL_REFERENCED_BY_COMPUTE_SHADER,
+					GL_TYPE
+				>(program, index, infos, glInterface);
+
+				hasName = true;
+			}
+			else if constexpr (glInterface == GL_TRANSFORM_FEEDBACK_VARYING)
+			{
+
+			}
+			else if constexpr (glInterface == GL_TRANSFORM_FEEDBACK_BUFFER)
+			{
+
+			}
+			else if constexpr (glInterface == GL_BUFFER_VARIABLE)
+			{
+
+			}
+			else if constexpr (glInterface == GL_SHADER_STORAGE_BLOCK)
+			{
+
+			}
+			else if constexpr (glInterface == GL_COMPUTE_SUBROUTINE)
+			{
+
+			}
+			else if constexpr (glInterface == GL_VERTEX_SUBROUTINE)
+			{
+
+			}
+			else if constexpr (glInterface == GL_TESS_CONTROL_SUBROUTINE)
+			{
+
+			}
+			else if constexpr (glInterface == GL_TESS_EVALUATION_SUBROUTINE)
+			{
+
+			}
+			else if constexpr (glInterface == GL_GEOMETRY_SUBROUTINE)
+			{
+
+			}
+			else if constexpr (glInterface == GL_FRAGMENT_SUBROUTINE)
+			{
+
+			}
+			else if constexpr (glInterface == GL_COMPUTE_SUBROUTINE_UNIFORM)
+			{
+
+			}
+			else if constexpr (glInterface == GL_VERTEX_SUBROUTINE_UNIFORM)
+			{
+
+			}
+			else if constexpr (glInterface == GL_TESS_CONTROL_SUBROUTINE_UNIFORM)
+			{
+
+			}
+			else if constexpr (glInterface == GL_TESS_EVALUATION_SUBROUTINE_UNIFORM)
+			{
+
+			}
+			else if constexpr (glInterface == GL_GEOMETRY_SUBROUTINE_UNIFORM)
+			{
+
+			}
+			else if constexpr (glInterface == GL_FRAGMENT_SUBROUTINE_UNIFORM)
+			{
+
+			}
+
+			if (hasName)
+			{
+				glGetProgramResourceName(program, glInterface, index, infos->name.size(), nullptr, infos->name.data());
+			}
+
+			// TODO: if (hasActiveVariables) ... if (hasCompatibleSubroutines) ...
+		}
+
+		template<uint8_t Interface>
+		void extractResourcesInfos(uint32_t program, uint32_t activeResources, std::vector<ShaderProgramResourceInfos>* infos)
+		{
+			infos->resize(activeResources);
+
+			ShaderProgramResourceInfos* it = infos->data();
+			for (uint32_t i = 0; i < activeResources; ++i, ++it)
+			{
+				extractResourceInfos<Interface>(program, i, it);
+			}
+		}
+
+		void extractResourcesLocation()
+		{
+			// TODO
+		}
+
+		template<uint8_t Interface>
+		void extractInfos(uint32_t program, ShaderProgramInterfaceInfos* interfaceInfos, std::vector<ShaderProgramResourceInfos>* resourcesInfos)
+		{
+			extractInterfaceInfos<Interface>(program, interfaceInfos);
+			extractResourcesInfos<Interface>(program, interfaceInfos->activeResources, resourcesInfos);
+
+			if constexpr (Interface != 0)
+			{
+				extractInfos<Interface - 1>(program, interfaceInfos - 1, resourcesInfos - 1);
+			}
+		}
+	}
+
+	void ShaderProgram::_shaderIntrospection()
+	{
+		extractInfos<_interfaceCount - 1>(_program, &_interfacesInfos.back(), &_resourcesInfos.back());
 	}
 }
