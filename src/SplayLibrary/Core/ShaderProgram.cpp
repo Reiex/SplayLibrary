@@ -164,7 +164,65 @@ namespace spl
 		_interfacesInfos.fill({});
 		_resourcesInfos.fill({});
 		_locations.fill({});
-		_locationIndices.clear();
+		_locationIndices.fill({});
+	}
+
+	const ShaderProgramInterfaceInfos& ShaderProgram::getInterfaceInfos(ShaderProgramInterface programInterface) const
+	{
+		assert(isValid());
+
+		return _interfacesInfos[static_cast<uint8_t>(programInterface)];
+	}
+
+	const ShaderProgramResourceInfos& ShaderProgram::getResourceInfos(ShaderProgramInterface programInterface, uint32_t index) const
+	{
+		assert(isValid());
+		assert(index < _interfacesInfos[static_cast<uint8_t>(programInterface)].activeResources);
+
+		return _resourcesInfos[static_cast<uint8_t>(programInterface)][index];
+	}
+
+	uint32_t ShaderProgram::getResourceLocation(ShaderProgramInterface programInterface, const std::string& name) const
+	{
+		assert(isValid());
+		assert(programInterface == ShaderProgramInterface::Uniform
+			|| programInterface == ShaderProgramInterface::ProgramInput
+			|| programInterface == ShaderProgramInterface::ProgramOutput
+			|| programInterface == ShaderProgramInterface::ComputeSubroutineUniform
+			|| programInterface == ShaderProgramInterface::VertexSubroutineUniform
+			|| programInterface == ShaderProgramInterface::TessControlSubroutineUniform
+			|| programInterface == ShaderProgramInterface::TessEvaluationSubroutineUniform
+			|| programInterface == ShaderProgramInterface::GeometrySubroutineUniform
+			|| programInterface == ShaderProgramInterface::FragmentSubroutineUniform);
+
+		const std::unordered_map<std::string, uint32_t>& locations = _locations[static_cast<uint8_t>(programInterface)];
+		auto it = locations.find(name);
+
+		if (it == locations.end())
+		{
+			return -1;
+		}
+		else
+		{
+			return it->second;
+		}
+	}
+
+	uint32_t ShaderProgram::getResourceLocationIndex(ShaderProgramInterface programInterface, const std::string& name) const
+	{
+		assert(isValid());
+		assert(programInterface == ShaderProgramInterface::ProgramOutput);
+
+		auto it = _locationIndices[static_cast<uint8_t>(ShaderProgramInterface::ProgramOutput)].find(name);
+
+		if (it == _locationIndices[static_cast<uint8_t>(ShaderProgramInterface::ProgramOutput)].end())
+		{
+			return -1;
+		}
+		else
+		{
+			return it->second;
+		}
 	}
 
 	uint32_t ShaderProgram::getHandle() const
@@ -587,7 +645,20 @@ namespace spl
 		}
 
 		template<uint8_t Interface>
-		inline void extractResourcesLocation(uint32_t program, const std::vector<ShaderProgramResourceInfos>* resourcesInfos, std::unordered_map<std::string, uint32_t>* locations, std::unordered_map<std::string, uint32_t>& locationIndices)
+		inline void extractResourceLocation(uint32_t program, std::unordered_map<std::string, uint32_t>* locations, std::unordered_map<std::string, uint32_t>* locationIndices, const char* name)
+		{
+			static constexpr GLenum glInterface = _spl::shaderProgramInterfaceToGLenum(static_cast<ShaderProgramInterface>(Interface));
+
+			(*locations)[name] = glGetProgramResourceLocation(program, glInterface, name);
+
+			if constexpr (glInterface == GL_PROGRAM_OUTPUT)
+			{
+				(*locationIndices)[name] = glGetProgramResourceLocationIndex(program, glInterface, name);
+			}
+		}
+
+		template<uint8_t Interface>
+		inline void extractResourcesLocation(uint32_t program, const std::vector<ShaderProgramResourceInfos>* resourcesInfos, std::unordered_map<std::string, uint32_t>* locations, std::unordered_map<std::string, uint32_t>* locationIndices)
 		{
 			static constexpr GLenum glInterface = _spl::shaderProgramInterfaceToGLenum(static_cast<ShaderProgramInterface>(Interface));
 
@@ -603,20 +674,34 @@ namespace spl
 			{
 				for (const ShaderProgramResourceInfos infos : *resourcesInfos)
 				{
-					(*locations)[infos.name] = glGetProgramResourceLocation(program, glInterface, infos.name.c_str());
+					extractResourceLocation<Interface>(program, locations, locationIndices, infos.name.c_str());
 
-					if constexpr (glInterface == GL_PROGRAM_OUTPUT)
+					if (infos.name.ends_with("[0]"))
 					{
-						locationIndices[infos.name] = glGetProgramResourceLocationIndex(program, glInterface, infos.name.c_str());
-					}
+						const uint32_t rootSize = infos.name.size() - 3;
+						const uint32_t bufferSize = rootSize + 16;
 
-					// TODO: Handle aggregate types
+						char* buffer = reinterpret_cast<char*>(alloca(bufferSize));
+						std::copy_n(infos.name.data(), rootSize, buffer);
+						std::fill_n(buffer + rootSize, bufferSize - rootSize, '\0');
+
+						extractResourceLocation<Interface>(program, locations, locationIndices, buffer);
+
+						*(buffer + rootSize) = '[';
+						char* beginNum = buffer + rootSize + 1;
+						char* endNum = buffer + bufferSize;
+						for (uint32_t i = 1; i < infos.arraySize; ++i)
+						{
+							*std::to_chars(beginNum, endNum, i).ptr = ']';
+							extractResourceLocation<Interface>(program, locations, locationIndices, buffer);
+						}
+					}
 				}
 			}
 		}
 
 		template<uint8_t Interface>
-		inline void extractInfos(uint32_t program, ShaderProgramInterfaceInfos* interfaceInfos, std::vector<ShaderProgramResourceInfos>* resourcesInfos, std::unordered_map<std::string, uint32_t>* locations, std::unordered_map<std::string, uint32_t>& locationIndices)
+		inline void extractInfos(uint32_t program, ShaderProgramInterfaceInfos* interfaceInfos, std::vector<ShaderProgramResourceInfos>* resourcesInfos, std::unordered_map<std::string, uint32_t>* locations, std::unordered_map<std::string, uint32_t>* locationIndices)
 		{
 			extractInterfaceInfos<Interface>(program, interfaceInfos);
 			extractResourcesInfos<Interface>(program, interfaceInfos->activeResources, resourcesInfos);
@@ -624,13 +709,13 @@ namespace spl
 
 			if constexpr (Interface != 0)
 			{
-				extractInfos<Interface - 1>(program, interfaceInfos - 1, resourcesInfos - 1, locations - 1, locationIndices);
+				extractInfos<Interface - 1>(program, interfaceInfos - 1, resourcesInfos - 1, locations - 1, locationIndices - 1);
 			}
 		}
 	}
 
 	void ShaderProgram::_shaderIntrospection()
 	{
-		extractInfos<_interfaceCount - 1>(_program, &_interfacesInfos.back(), &_resourcesInfos.back(), &_locations.back(), _locationIndices);
+		extractInfos<_interfaceCount - 1>(_program, &_interfacesInfos.back(), &_resourcesInfos.back(), &_locations.back(), &_locationIndices.back());
 	}
 }

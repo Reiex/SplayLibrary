@@ -239,6 +239,12 @@ namespace spl
 			void destroy();
 
 
+			const ShaderProgramInterfaceInfos& getInterfaceInfos(ShaderProgramInterface programInterface) const;
+			const ShaderProgramResourceInfos& getResourceInfos(ShaderProgramInterface programInterface, uint32_t index) const;
+			uint32_t getResourceLocation(ShaderProgramInterface programInterface, const std::string& name) const;
+			uint32_t getResourceLocationIndex(ShaderProgramInterface programInterface, const std::string& name) const;
+
+
 			uint32_t getHandle() const;
 			ShaderProgramFlags::Flags getFlags() const;
 			bool isValid() const;
@@ -264,6 +270,6 @@ namespace spl
 			std::array<std::vector<ShaderProgramResourceInfos>, _interfaceCount> _resourcesInfos;
 
 			std::array<std::unordered_map<std::string, uint32_t>, _interfaceCount> _locations;
-			std::unordered_map<std::string, uint32_t> _locationIndices;
+			std::array<std::unordered_map<std::string, uint32_t>, _interfaceCount> _locationIndices;
 	};
 }
