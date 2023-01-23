@@ -19,6 +19,9 @@ namespace scp
 		{
 			public:
 
+				using IsMat = bool;
+				using ValueType = TValue;
+
 				constexpr Mat() = default;
 				constexpr Mat(TValue diagValue);
 				constexpr Mat(const std::initializer_list<TValue>& values);

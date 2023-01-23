@@ -41,7 +41,181 @@ namespace spl
 		}
 
 
-		template<CGenType TValue> constexpr TextureInternalFormat genTypeToTextureInternalFormat()
+		template<CGenType TValue>
+		constexpr GlslType genTypeToGlslType()
+		{
+			if constexpr (std::same_as<TValue, float>)
+			{
+				return GlslType::Float;
+			}
+			else if constexpr (std::same_as<TValue, scp::f32vec2>)
+			{
+				return GlslType::FloatVec2;
+			}
+			else if constexpr (std::same_as<TValue, scp::f32vec3>)
+			{
+				return GlslType::FloatVec3;
+			}
+			else if constexpr (std::same_as<TValue, scp::f32vec4>)
+			{
+				return GlslType::FloatVec4;
+			}
+			else if constexpr (std::same_as<TValue, double>)
+			{
+				return GlslType::Double;
+			}
+			else if constexpr (std::same_as<TValue, scp::f64vec2>)
+			{
+				return GlslType::DoubleVec2;
+			}
+			else if constexpr (std::same_as<TValue, scp::f64vec3>)
+			{
+				return GlslType::DoubleVec3;
+			}
+			else if constexpr (std::same_as<TValue, scp::f64vec4>)
+			{
+				return GlslType::DoubleVec4;
+			}
+			else if constexpr (std::same_as<TValue, int32_t>)
+			{
+				return GlslType::Int;
+			}
+			else if constexpr (std::same_as<TValue, scp::i32vec2>)
+			{
+				return GlslType::IntVec2;
+			}
+			else if constexpr (std::same_as<TValue, scp::i32vec3>)
+			{
+				return GlslType::IntVec3;
+			}
+			else if constexpr (std::same_as<TValue, scp::i32vec4>)
+			{
+				return GlslType::IntVec4;
+			}
+			else if constexpr (std::same_as<TValue, uint32_t>)
+			{
+				return GlslType::UnsignedInt;
+			}
+			else if constexpr (std::same_as<TValue, scp::u32vec2>)
+			{
+				return GlslType::UnsignedIntVec2;
+			}
+			else if constexpr (std::same_as<TValue, scp::u32vec3>)
+			{
+				return GlslType::UnsignedIntVec3;
+			}
+			else if constexpr (std::same_as<TValue, scp::u32vec4>)
+			{
+				return GlslType::UnsignedIntVec4;
+			}
+			else if constexpr (std::same_as<TValue, bool>)
+			{
+				return GlslType::Bool;
+			}
+			else if constexpr (std::same_as<TValue, scp::bvec2>)
+			{
+				return GlslType::BoolVec2;
+			}
+			else if constexpr (std::same_as<TValue, scp::bvec3>)
+			{
+				return GlslType::BoolVec3;
+			}
+			else if constexpr (std::same_as<TValue, scp::bvec4>)
+			{
+				return GlslType::BoolVec4;
+			}
+			else
+			{
+				assert(false);
+				return GlslType::Undefined;
+			}
+		}
+
+		template<scp::CMat TMat>
+		constexpr GlslType matTypeToGlslType()
+		{
+			if constexpr (std::same_as<TMat, scp::f32mat2x2>)
+			{
+				return GlslType::FloatMat2x2;
+			}
+			else if constexpr (std::same_as<TMat, scp::f32mat2x3>)
+			{
+				return GlslType::FloatMat2x3;
+			}
+			else if constexpr (std::same_as<TMat, scp::f32mat2x4>)
+			{
+				return GlslType::FloatMat2x4;
+			}
+			else if constexpr (std::same_as<TMat, scp::f32mat3x2>)
+			{
+				return GlslType::FloatMat3x2;
+			}
+			else if constexpr (std::same_as<TMat, scp::f32mat3x3>)
+			{
+				return GlslType::FloatMat3x3;
+			}
+			else if constexpr (std::same_as<TMat, scp::f32mat3x4>)
+			{
+				return GlslType::FloatMat3x4;
+			}
+			else if constexpr (std::same_as<TMat, scp::f32mat4x2>)
+			{
+				return GlslType::FloatMat4x2;
+			}
+			else if constexpr (std::same_as<TMat, scp::f32mat4x3>)
+			{
+				return GlslType::FloatMat4x3;
+			}
+			else if constexpr (std::same_as<TMat, scp::f32mat4x4>)
+			{
+				return GlslType::FloatMat4x4;
+			}
+			else if constexpr (std::same_as<TMat, scp::f64mat2x2>)
+			{
+				return GlslType::DoubleMat2x2;
+			}
+			else if constexpr (std::same_as<TMat, scp::f64mat2x3>)
+			{
+				return GlslType::DoubleMat2x3;
+			}
+			else if constexpr (std::same_as<TMat, scp::f64mat2x4>)
+			{
+				return GlslType::DoubleMat2x4;
+			}
+			else if constexpr (std::same_as<TMat, scp::f64mat3x2>)
+			{
+				return GlslType::DoubleMat3x2;
+			}
+			else if constexpr (std::same_as<TMat, scp::f64mat3x3>)
+			{
+				return GlslType::DoubleMat3x3;
+			}
+			else if constexpr (std::same_as<TMat, scp::f64mat3x4>)
+			{
+				return GlslType::DoubleMat3x4;
+			}
+			else if constexpr (std::same_as<TMat, scp::f64mat4x2>)
+			{
+				return GlslType::DoubleMat4x2;
+			}
+			else if constexpr (std::same_as<TMat, scp::f64mat4x3>)
+			{
+				return GlslType::DoubleMat4x3;
+			}
+			else if constexpr (std::same_as<TMat, scp::f64mat4x4>)
+			{
+				return GlslType::DoubleMat4x4;
+			}
+			else
+			{
+				assert(false);
+				return GlslType::Undefined;
+			}
+		}
+
+
+		template<CGenType TValue>
+		constexpr TextureInternalFormat genTypeToTextureInternalFormat()
 		{
 			if constexpr (std::same_as<TValue, int8_t>)				{ return TextureInternalFormat::R_i8; }
 			else if constexpr (std::same_as<TValue, scp::i8vec2>)	{ return TextureInternalFormat::RG_i8; }

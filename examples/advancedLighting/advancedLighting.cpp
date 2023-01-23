@@ -11,8 +11,8 @@ int advancedLightingMain()
 	framebuffer.createNewTextureAttachment<spl::Texture2D>(spl::FramebufferAttachment::ColorAttachment0, scp::u32vec2{ 1000, 600 });
 	framebuffer.createNewRenderBufferAttachment(spl::FramebufferAttachment::DepthAttachment, spl::TextureInternalFormat::Depth_nu24_Stencil_u8, scp::u32vec2{ 1000, 600 });
 
-	spl::Shader shader1("examples/advancedLighting/resources/shaders/firstPass.vert", "examples/advancedLighting/resources/shaders/firstPass.frag");
-	spl::Shader shader2("examples/advancedLighting/resources/shaders/secondPass.vert", "examples/advancedLighting/resources/shaders/secondPass.frag");
+	spl::ShaderProgram shader1("examples/advancedLighting/resources/shaders/firstPass.vert", "examples/advancedLighting/resources/shaders/firstPass.frag");
+	spl::ShaderProgram shader2("examples/advancedLighting/resources/shaders/secondPass.vert", "examples/advancedLighting/resources/shaders/secondPass.frag");
 
 	spl::PerspectiveCamera camera({ 1000, 600 }, 0.1f, 100.f, 1.f);
 	camera.setTranslation({ 0.f, 0.f, 2.f });
@@ -61,7 +61,7 @@ int advancedLightingMain()
 
 		meshTransform.rotate({ -0.5f, 1.f, 0.3f }, 0.01f);
 
-		spl::Shader::bind(shader1);
+		spl::ShaderProgram::bind(shader1);
 		shader1.setUniform("cameraPos", camera.getTranslation());
 		shader1.setUniform("lightDir", lightDir);
 
@@ -74,8 +74,8 @@ int advancedLightingMain()
 		spl::Framebuffer::bind(window.getFramebuffer(), spl::FramebufferTarget::DrawFramebuffer);
 		spl::Framebuffer::clear();
 
-		spl::Shader::bind(shader2);
-		shader2.setUniform("scene", *framebuffer.getTextureAttachment(spl::FramebufferAttachment::ColorAttachment0));
+		spl::ShaderProgram::bind(shader2);
+		shader2.setUniform("scene", 0, *framebuffer.getTextureAttachment(spl::FramebufferAttachment::ColorAttachment0));
 
 		screen.draw();
 

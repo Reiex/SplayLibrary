@@ -15,6 +15,9 @@ namespace spl
 	{
 		constexpr bool isIndexedBufferTarget(BufferTarget target);
 
+		template<CGenType TValue> constexpr GlslType genTypeToGlslType();
+		template<scp::CMat TMat> constexpr GlslType matTypeToGlslType();
+
 		template<CGenType TValue> constexpr TextureInternalFormat genTypeToTextureInternalFormat();
 		constexpr TextureFormat textureInternalFormatToTextureFormat(TextureInternalFormat internalFormat);
 		constexpr TextureDataType textureInternalFormatToTextureDataType(TextureInternalFormat internalFormat);

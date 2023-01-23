@@ -8,10 +8,8 @@ int basicPhongMain()
 	context->setIsDepthTestEnabled(true);
 	context->setClearColor({ 0.2f, 0.3f, 0.3f, 1.f });
 
-	spl::ShaderProgram program("examples/basicPhong/resources/shaders/main.vert", "examples/basicPhong/resources/shaders/main.frag");
-
-	spl::Shader shader("examples/basicPhong/resources/shaders/main.vert", "examples/basicPhong/resources/shaders/main.frag");
-	spl::Shader::bind(shader);
+	spl::ShaderProgram shader("examples/basicPhong/resources/shaders/main.vert", "examples/basicPhong/resources/shaders/main.frag");
+	spl::ShaderProgram::bind(shader);
 
 	spl::PerspectiveCamera camera({ 1000, 600 }, 0.1f, 100.f, 1.f);
 	camera.setTranslation({ 0.f, 0.f, 2.f });

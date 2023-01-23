@@ -61,13 +61,10 @@ namespace spl
 	class Texture2D;
 
 
-	class Shader;
-
 	namespace ShaderStage { enum Stage; }
 	class ShaderModule;
 	namespace ShaderProgramFlags { enum Flags; }
 	class ShaderProgram;
-	class ShaderPipeline;
 
 
 	enum class FramebufferTarget;

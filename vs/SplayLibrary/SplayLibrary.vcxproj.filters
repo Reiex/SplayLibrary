@@ -57,9 +57,6 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\Drawable.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\SplayLibrary\Core\Shader.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\SplayLibrary\3D\Mesh.cpp">
       <Filter>Source Files\3D</Filter>
     </ClCompile>
@@ -108,9 +105,6 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Event.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Core\Shader.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\SplayLibrary.hpp">
@@ -164,9 +158,6 @@
     <ClInclude Include="..\..\include\SplayLibrary\Core\templates\Framebuffer.hpp">
       <Filter>Header Files\Core\templates</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Core\templates\Shader.hpp">
-      <Filter>Header Files\Core\templates</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Texture\Texture2D.hpp">
       <Filter>Header Files\Core\Texture</Filter>
     </ClInclude>
@@ -211,6 +202,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\ShaderProgram.hpp">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\templates\ShaderProgram.hpp">
+      <Filter>Header Files\Core\templates</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

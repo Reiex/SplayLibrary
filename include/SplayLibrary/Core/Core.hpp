@@ -20,6 +20,6 @@
 #include <SplayLibrary/Core/Texture/templates/TextureBase.hpp>
 #include <SplayLibrary/Core/Texture/templates/Texture2D.hpp>
 
-#include <SplayLibrary/Core/templates/Shader.hpp>
+#include <SplayLibrary/Core/templates/ShaderProgram.hpp>
 
 #include <SplayLibrary/Core/templates/Framebuffer.hpp>

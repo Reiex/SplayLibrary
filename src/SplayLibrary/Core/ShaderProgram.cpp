@@ -182,47 +182,15 @@ namespace spl
 		return _resourcesInfos[static_cast<uint8_t>(programInterface)][index];
 	}
 
-	uint32_t ShaderProgram::getResourceLocation(ShaderProgramInterface programInterface, const std::string& name) const
+	void ShaderProgram::setUniform(const std::string& name, uint32_t textureUnit, const RawTexture& texture) const
 	{
-		assert(isValid());
-		assert(programInterface == ShaderProgramInterface::Uniform
-			|| programInterface == ShaderProgramInterface::ProgramInput
-			|| programInterface == ShaderProgramInterface::ProgramOutput
-			|| programInterface == ShaderProgramInterface::ComputeSubroutineUniform
-			|| programInterface == ShaderProgramInterface::VertexSubroutineUniform
-			|| programInterface == ShaderProgramInterface::TessControlSubroutineUniform
-			|| programInterface == ShaderProgramInterface::TessEvaluationSubroutineUniform
-			|| programInterface == ShaderProgramInterface::GeometrySubroutineUniform
-			|| programInterface == ShaderProgramInterface::FragmentSubroutineUniform);
-
-		const std::unordered_map<std::string, uint32_t>& locations = _locations[static_cast<uint8_t>(programInterface)];
-		auto it = locations.find(name);
-
-		if (it == locations.end())
-		{
-			return -1;
-		}
-		else
-		{
-			return it->second;
-		}
+		RawTexture::bind(texture, texture.getCreationParams().target, textureUnit);
+		_setUniform(name, GlslType::Int, &textureUnit, 1);
 	}
 
-	uint32_t ShaderProgram::getResourceLocationIndex(ShaderProgramInterface programInterface, const std::string& name) const
+	void ShaderProgram::setUniform(const std::string& name, uint32_t textureUnit, const TextureBase& texture) const
 	{
-		assert(isValid());
-		assert(programInterface == ShaderProgramInterface::ProgramOutput);
-
-		auto it = _locationIndices[static_cast<uint8_t>(ShaderProgramInterface::ProgramOutput)].find(name);
-
-		if (it == _locationIndices[static_cast<uint8_t>(ShaderProgramInterface::ProgramOutput)].end())
-		{
-			return -1;
-		}
-		else
-		{
-			return it->second;
-		}
+		setUniform(name, textureUnit, texture.getRawTexture());
 	}
 
 	uint32_t ShaderProgram::getHandle() const
@@ -717,5 +685,123 @@ namespace spl
 	void ShaderProgram::_shaderIntrospection()
 	{
 		extractInfos<_interfaceCount - 1>(_program, &_interfacesInfos.back(), &_resourcesInfos.back(), &_locations.back(), &_locationIndices.back());
+	}
+
+	void ShaderProgram::_setUniform(const std::string& name, GlslType type, const void* values, uint32_t count) const
+	{
+		assert(isValid());
+		assert(_locations[static_cast<uint8_t>(ShaderProgramInterface::Uniform)].find(name) != _locations[static_cast<uint8_t>(ShaderProgramInterface::Uniform)].end());
+		// TODO: Check type, array size, etc. corresponds...
+
+		const uint32_t& location = _locations[static_cast<uint8_t>(ShaderProgramInterface::Uniform)].find(name)->second;
+
+		switch (type)
+		{
+			case GlslType::Float:
+				glProgramUniform1fv(_program, location, count, reinterpret_cast<const float*>(values));
+				break;
+			case GlslType::FloatVec2:
+				glProgramUniform2fv(_program, location, count, reinterpret_cast<const float*>(values));
+				break;
+			case GlslType::FloatVec3:
+				glProgramUniform3fv(_program, location, count, reinterpret_cast<const float*>(values));
+				break;
+			case GlslType::FloatVec4:
+				glProgramUniform4fv(_program, location, count, reinterpret_cast<const float*>(values));
+				break;
+			case GlslType::Double:
+				glProgramUniform1dv(_program, location, count, reinterpret_cast<const double*>(values));
+				break;
+			case GlslType::DoubleVec2:
+				glProgramUniform2dv(_program, location, count, reinterpret_cast<const double*>(values));
+				break;
+			case GlslType::DoubleVec3:
+				glProgramUniform3dv(_program, location, count, reinterpret_cast<const double*>(values));
+				break;
+			case GlslType::DoubleVec4:
+				glProgramUniform4dv(_program, location, count, reinterpret_cast<const double*>(values));
+				break;
+			case GlslType::Int:
+				glProgramUniform1iv(_program, location, count, reinterpret_cast<const int32_t*>(values));
+				break;
+			case GlslType::IntVec2:
+				glProgramUniform2iv(_program, location, count, reinterpret_cast<const int32_t*>(values));
+				break;
+			case GlslType::IntVec3:
+				glProgramUniform3iv(_program, location, count, reinterpret_cast<const int32_t*>(values));
+				break;
+			case GlslType::IntVec4:
+				glProgramUniform4iv(_program, location, count, reinterpret_cast<const int32_t*>(values));
+				break;
+			case GlslType::UnsignedInt:
+				glProgramUniform1uiv(_program, location, count, reinterpret_cast<const uint32_t*>(values));
+				break;
+			case GlslType::UnsignedIntVec2:
+				glProgramUniform2uiv(_program, location, count, reinterpret_cast<const uint32_t*>(values));
+				break;
+			case GlslType::UnsignedIntVec3:
+				glProgramUniform3uiv(_program, location, count, reinterpret_cast<const uint32_t*>(values));
+				break;
+			case GlslType::UnsignedIntVec4:
+				glProgramUniform4uiv(_program, location, count, reinterpret_cast<const uint32_t*>(values));
+				break;
+			case GlslType::FloatMat2x2:
+				glProgramUniformMatrix2fv(_program, location, count, true, reinterpret_cast<const float*>(values));
+				break;
+			case GlslType::FloatMat2x3:
+				glProgramUniformMatrix2x3fv(_program, location, count, true, reinterpret_cast<const float*>(values));
+				break;
+			case GlslType::FloatMat2x4:
+				glProgramUniformMatrix2x4fv(_program, location, count, true, reinterpret_cast<const float*>(values));
+				break;
+			case GlslType::FloatMat3x2:
+				glProgramUniformMatrix3x2fv(_program, location, count, true, reinterpret_cast<const float*>(values));
+				break;
+			case GlslType::FloatMat3x3:
+				glProgramUniformMatrix3fv(_program, location, count, true, reinterpret_cast<const float*>(values));
+				break;
+			case GlslType::FloatMat3x4:
+				glProgramUniformMatrix3x4fv(_program, location, count, true, reinterpret_cast<const float*>(values));
+				break;
+			case GlslType::FloatMat4x2:
+				glProgramUniformMatrix4x2fv(_program, location, count, true, reinterpret_cast<const float*>(values));
+				break;
+			case GlslType::FloatMat4x3:
+				glProgramUniformMatrix4x3fv(_program, location, count, true, reinterpret_cast<const float*>(values));
+				break;
+			case GlslType::FloatMat4x4:
+				glProgramUniformMatrix4fv(_program, location, count, true, reinterpret_cast<const float*>(values));
+				break;
+			case GlslType::DoubleMat2x2:
+				glProgramUniformMatrix2dv(_program, location, count, true, reinterpret_cast<const double*>(values));
+				break;
+			case GlslType::DoubleMat2x3:
+				glProgramUniformMatrix2x3dv(_program, location, count, true, reinterpret_cast<const double*>(values));
+				break;
+			case GlslType::DoubleMat2x4:
+				glProgramUniformMatrix2x4dv(_program, location, count, true, reinterpret_cast<const double*>(values));
+				break;
+			case GlslType::DoubleMat3x2:
+				glProgramUniformMatrix3x2dv(_program, location, count, true, reinterpret_cast<const double*>(values));
+				break;
+			case GlslType::DoubleMat3x3:
+				glProgramUniformMatrix3dv(_program, location, count, true, reinterpret_cast<const double*>(values));
+				break;
+			case GlslType::DoubleMat3x4:
+				glProgramUniformMatrix3x4dv(_program, location, count, true, reinterpret_cast<const double*>(values));
+				break;
+			case GlslType::DoubleMat4x2:
+				glProgramUniformMatrix4x2dv(_program, location, count, true, reinterpret_cast<const double*>(values));
+				break;
+			case GlslType::DoubleMat4x3:
+				glProgramUniformMatrix4x3dv(_program, location, count, true, reinterpret_cast<const double*>(values));
+				break;
+			case GlslType::DoubleMat4x4:
+				glProgramUniformMatrix4dv(_program, location, count, true, reinterpret_cast<const double*>(values));
+				break;
+			default:
+				assert(false);
+				break;
+		}
 	}
 }

@@ -38,7 +38,6 @@ namespace spl
 		_debugContext(false),
 		_hasBeenActivated(false),
 		_currentFramebuffer(nullptr),
-		_currentShader(nullptr),
 		_clearColor(0.f, 0.f, 0.f, 1.f),
 		_clearDepth(1.f),
 		_clearStencil(0),
@@ -128,11 +127,6 @@ namespace spl
 	Framebuffer* Context::getCurrentFramebuffer()
 	{
 		return _currentFramebuffer;
-	}
-
-	Shader* Context::getCurrentShader()
-	{
-		return _currentShader;
 	}
 
 	const scp::f32vec4& Context::getClearColor() const

@@ -73,7 +73,6 @@ namespace spl
 			Window* getWindow();
 			bool getIsDebugContext() const;
 			Framebuffer* getCurrentFramebuffer();
-			Shader* getCurrentShader();
 			const scp::f32vec4& getClearColor() const;
 			double getClearDepth() const;
 			int32_t getClearStencil() const;
@@ -96,7 +95,7 @@ namespace spl
 
 			// TODO ? (costly, maybe in debug) : Check buffers binding
 			Framebuffer* _currentFramebuffer;
-			Shader* _currentShader;
+			// TODO ? ShaderProgram* _currentShader;
 
 			scp::f32vec4 _clearColor;
 			double _clearDepth;

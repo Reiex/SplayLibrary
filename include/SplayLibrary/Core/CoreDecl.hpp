@@ -22,10 +22,8 @@
 #include <SplayLibrary/Core/Texture/TextureBase.hpp>
 #include <SplayLibrary/Core/Texture/Texture2D.hpp>
 
-#include <SplayLibrary/Core/Shader.hpp>
 #include <SplayLibrary/Core/ShaderModule.hpp>
 #include <SplayLibrary/Core/ShaderProgram.hpp>
-#include <SplayLibrary/Core/ShaderPipeline.hpp>
 
 #include <SplayLibrary/Core/Framebuffer.hpp>
 #include <SplayLibrary/Core/DefaultFramebuffer.hpp>

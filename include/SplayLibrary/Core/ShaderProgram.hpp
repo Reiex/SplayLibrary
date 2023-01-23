@@ -241,8 +241,14 @@ namespace spl
 
 			const ShaderProgramInterfaceInfos& getInterfaceInfos(ShaderProgramInterface programInterface) const;
 			const ShaderProgramResourceInfos& getResourceInfos(ShaderProgramInterface programInterface, uint32_t index) const;
-			uint32_t getResourceLocation(ShaderProgramInterface programInterface, const std::string& name) const;
-			uint32_t getResourceLocationIndex(ShaderProgramInterface programInterface, const std::string& name) const;
+
+
+			template<CGenType TValue> void setUniform(const std::string& name, const TValue& value) const;
+			template<CGenType TValue> void setUniform(const std::string& name, const TValue* values, uint32_t count) const;
+			template<scp::CMat TMat> void setUniform(const std::string& name, const TMat& matrix) const;
+			template<scp::CMat TMat> void setUniform(const std::string& name, const TMat* matrices, uint32_t count) const;
+			void setUniform(const std::string& name, uint32_t textureUnit, const RawTexture& texture) const;
+			void setUniform(const std::string& name, uint32_t textureUnit, const TextureBase& texture) const;
 
 
 			uint32_t getHandle() const;
@@ -259,6 +265,7 @@ namespace spl
 		private:
 
 			void _shaderIntrospection();
+			void _setUniform(const std::string& name, GlslType type, const void* values, uint32_t count) const;
 
 			static constexpr uint8_t _interfaceCount = 21;
 
