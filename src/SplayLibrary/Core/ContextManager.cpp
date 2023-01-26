@@ -187,6 +187,8 @@ namespace spl
 		{
 			glDisable(GL_DEBUG_OUTPUT);
 		}
+
+		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	}
 
 

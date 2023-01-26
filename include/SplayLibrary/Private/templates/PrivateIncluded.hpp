@@ -366,8 +366,8 @@ namespace spl
 				case TextureInternalFormat::Stencil_u1:
 				case TextureInternalFormat::Stencil_u4:
 				case TextureInternalFormat::Stencil_u8:
-				case TextureInternalFormat::RGB_nu4:	// TODO: TextureDataType::UnsignedShort_4_4_4_4
-				case TextureInternalFormat::RGB_nu5:	// TODO: TextureDataType::UnsignedShort_5_5_5_1
+				case TextureInternalFormat::RGB_nu4:	// TODO: TextureDataType::UnsignedShort_4_4_4_4 ?
+				case TextureInternalFormat::RGB_nu5:	// TODO: TextureDataType::UnsignedShort_5_5_5_1 ?
 				case TextureInternalFormat::RGBA_nu2:
 					return TextureDataType::UnsignedByte;
 
@@ -391,7 +391,7 @@ namespace spl
 				case TextureInternalFormat::RGBA_nu16:
 				case TextureInternalFormat::Depth_nu16:
 				case TextureInternalFormat::Stencil_u16:
-				case TextureInternalFormat::RGB_nu10:	// TODO: TextureDataType::UnsignedInt_10_10_10_2
+				case TextureInternalFormat::RGB_nu10:	// TODO: TextureDataType::UnsignedInt_10_10_10_2 ?
 				case TextureInternalFormat::RGB_nu12:
 				case TextureInternalFormat::RGBA_nu12:
 					return TextureDataType::UnsignedShort;
