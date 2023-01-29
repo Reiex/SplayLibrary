@@ -67,6 +67,7 @@ namespace spl
 
 
 	enum class PrimitiveType;
+	enum class IndexType;
 	class VertexArray;
 
 	struct VertexAttribute;
