@@ -890,15 +890,15 @@ namespace spl
 				return GL_POINTS;
 			case PrimitiveType::Lines:
 				return GL_LINES;
-			case PrimitiveType::LineStrip:
+			case PrimitiveType::LineStrips:
 				return GL_LINE_STRIP;
-			case PrimitiveType::LineLoop:
+			case PrimitiveType::LineLoops:
 				return GL_LINE_LOOP;
 			case PrimitiveType::Triangles:
 				return GL_TRIANGLES;
-			case PrimitiveType::TriangleStrip:
+			case PrimitiveType::TriangleStrips:
 				return GL_TRIANGLE_STRIP;
-			case PrimitiveType::TriangleFan:
+			case PrimitiveType::TriangleFans:
 				return GL_TRIANGLE_FAN;
 			default:
 				assert(false);

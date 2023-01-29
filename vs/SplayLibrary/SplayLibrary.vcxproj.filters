@@ -99,6 +99,9 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\ShaderProgram.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\SplayLibrary\Core\VertexArray.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Drawable.hpp">
@@ -205,6 +208,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\templates\ShaderProgram.hpp">
       <Filter>Header Files\Core\templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\VertexArray.hpp">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

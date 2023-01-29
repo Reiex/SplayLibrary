@@ -44,12 +44,6 @@ namespace spl
 	class Buffer;
 
 
-	struct VertexAttribute;
-	enum class DrawableStorage;
-	enum class PrimitiveType;
-	class Drawable;
-
-
 	enum class TextureTarget;
 	enum class TextureFormat;
 	enum class TextureDataType;
@@ -63,14 +57,28 @@ namespace spl
 
 	namespace ShaderStage { enum Stage; }
 	class ShaderModule;
+
 	namespace ShaderProgramFlags { enum Flags; }
+	enum class ShaderProgramInterface;
+	enum class GlslType;
+	struct ShaderProgramInterfaceInfos;
+	struct ShaderProgramResourceInfos;
 	class ShaderProgram;
+
+
+	enum class PrimitiveType;
+	class VertexArray;
+
+	struct VertexAttribute;
+	enum class DrawableStorage;
+	class Drawable;
 
 
 	enum class FramebufferTarget;
 	enum class FramebufferAttachment;
 	class Framebuffer;
 	class DefaultFramebuffer;
+
 
 	enum class EventType;
 	struct Event;

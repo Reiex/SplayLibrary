@@ -32,6 +32,7 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\ShaderProgram.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Texture\Texture2D.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Texture\TextureBase.cpp" />
+    <ClCompile Include="..\..\src\SplayLibrary\Core\VertexArray.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Window.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\DefaultFramebuffer.cpp" />
   </ItemGroup>
@@ -62,6 +63,7 @@
     <ClInclude Include="..\..\include\SplayLibrary\Core\Texture\Texture2D.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Texture\TextureBase.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\CoreTypes.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\VertexArray.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Window.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\DefaultFramebuffer.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Private\PrivateIncluded.hpp" />

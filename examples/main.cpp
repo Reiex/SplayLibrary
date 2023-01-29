@@ -19,6 +19,5 @@ int main()
 	// 
 	// return 0;
 
-	// return basicPhongMain();
-	return advancedLightingMain();
+	return basicPhongMain();
 }

@@ -61,7 +61,7 @@ int basicPhongMain()
 		shader.setUniform("view", camera.getViewMatrix());
 		shader.setUniform("model", meshTransform.getTransformMatrix());
 
-		mesh.draw();
+		mesh.draw(spl::PrimitiveType::Triangles);
 
 		window.display();
 		spl::Framebuffer::clear();

@@ -69,7 +69,7 @@ int advancedLightingMain()
 		shader1.setUniform("view", camera.getViewMatrix());
 		shader1.setUniform("model", meshTransform.getTransformMatrix());
 
-		mesh.draw();
+		mesh.draw(spl::PrimitiveType::Triangles);
 
 		spl::Framebuffer::bind(window.getFramebuffer(), spl::FramebufferTarget::DrawFramebuffer);
 		spl::Framebuffer::clear();
@@ -77,7 +77,7 @@ int advancedLightingMain()
 		spl::ShaderProgram::bind(shader2);
 		shader2.setUniform("scene", 0, *framebuffer.getTextureAttachment(spl::FramebufferAttachment::ColorAttachment0));
 
-		screen.draw();
+		screen.draw(spl::PrimitiveType::Triangles);
 
 		window.display();
 	}
