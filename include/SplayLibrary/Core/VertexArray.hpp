@@ -50,8 +50,10 @@ namespace spl
 			void bindArrayBuffer(const Buffer& buffer, uint32_t bindingIndex, uintptr_t offset, uint32_t stride);
 			void bindArrayBuffer(const Buffer* buffers, uint32_t count, uint32_t firstIndex, const uintptr_t* offsets, const uint32_t* strides);
 
-			void setAttribute(uint32_t attributeIndex, GlslType type, uint32_t offsetInBuffer, bool normalized = false);
-			void bindAttribute(uint32_t attributeIndex, uint32_t bindingIndex);
+			void setAttributeFormat(uint32_t attributeIndex, GlslType type, uint32_t offsetInBuffer);
+			void setAttributeEnabled(uint32_t attributeIndex, bool enabled);
+			void setAttributeBinding(uint32_t attributeIndex, uint32_t bindingIndex);
+			void setBindingDivisor(uint32_t bindingIndex, uint32_t divisor);
 
 			uint32_t getHandle() const;
 
