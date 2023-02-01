@@ -9,4 +9,3 @@
 
 
 #include <SplayLibrary/Core/CoreTypes.hpp>
-#include <SplayLibrary/3D/3DTypes.hpp>

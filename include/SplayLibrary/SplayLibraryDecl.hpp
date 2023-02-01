@@ -9,4 +9,3 @@
 
 
 #include <SplayLibrary/Core/CoreDecl.hpp>
-#include <SplayLibrary/3D/3DDecl.hpp>

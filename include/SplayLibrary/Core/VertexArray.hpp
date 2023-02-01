@@ -28,9 +28,6 @@ namespace spl
 		TriangleStripsAdjacency,
 
 		Patches
-
-		// TODO: Adjacency
-		// TODO: Patches
 	};
 
 	enum class IndexType

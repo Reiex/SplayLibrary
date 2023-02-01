@@ -19,9 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\SplayLibrary\3D\Mesh.cpp" />
-    <ClCompile Include="..\..\src\SplayLibrary\3D\PerspectiveCamera.cpp" />
-    <ClCompile Include="..\..\src\SplayLibrary\3D\Transformable3D.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Buffer.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\ContextManager.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Drawable.cpp" />
@@ -37,13 +34,6 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\DefaultFramebuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\SplayLibrary\3D\3D.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\3D\3DDecl.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\3D\Mesh.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\3D\PerspectiveCamera.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\3D\templates\Mesh.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\3D\Transformable3D.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\3D\3DTypes.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Buffer.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\ContextManager.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Core.hpp" />

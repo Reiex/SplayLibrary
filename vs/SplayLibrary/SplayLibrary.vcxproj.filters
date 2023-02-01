@@ -19,17 +19,8 @@
     <Filter Include="Source Files\Core">
       <UniqueIdentifier>{e311c327-8c36-47cb-a80e-989e60edc0b1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\3D">
-      <UniqueIdentifier>{2643c459-1512-4ae1-9990-0b2396343cb7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\3D">
-      <UniqueIdentifier>{5c78c3eb-27ce-47cf-a4e9-f3ed836c1027}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Private">
       <UniqueIdentifier>{eb7e9762-bb9b-4ac8-973b-bc480877c6f8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\3D\templates">
-      <UniqueIdentifier>{2a2c0166-8e4a-4d82-8018-7017e2982f39}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Core\templates">
       <UniqueIdentifier>{a6c92beb-60a4-47bf-8354-d0c4dec54141}</UniqueIdentifier>
@@ -57,9 +48,6 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\Drawable.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\SplayLibrary\3D\Mesh.cpp">
-      <Filter>Source Files\3D</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\SplayLibrary\Core\Buffer.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
@@ -71,12 +59,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\SplayLibrary\Core\ContextManager.cpp">
       <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\SplayLibrary\3D\PerspectiveCamera.cpp">
-      <Filter>Source Files\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\SplayLibrary\3D\Transformable3D.cpp">
-      <Filter>Source Files\3D</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\SplayLibrary\Core\Framebuffer.cpp">
       <Filter>Source Files\Core</Filter>
@@ -116,15 +98,6 @@
     <ClInclude Include="..\..\include\SplayLibrary\Core\Core.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\3D\3D.hpp">
-      <Filter>Header Files\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\3D\Mesh.hpp">
-      <Filter>Header Files\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\3D\3DTypes.hpp">
-      <Filter>Header Files\3D</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Buffer.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
@@ -137,12 +110,6 @@
     <ClInclude Include="..\..\include\SplayLibrary\Core\ContextManager.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\3D\PerspectiveCamera.hpp">
-      <Filter>Header Files\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\3D\Transformable3D.hpp">
-      <Filter>Header Files\3D</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Framebuffer.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
@@ -154,9 +121,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\CoreTypes.hpp">
       <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\3D\templates\Mesh.hpp">
-      <Filter>Header Files\3D\templates</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\templates\Framebuffer.hpp">
       <Filter>Header Files\Core\templates</Filter>
@@ -178,9 +142,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\templates\Buffer.hpp">
       <Filter>Header Files\Core\templates</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\3D\3DDecl.hpp">
-      <Filter>Header Files\3D</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\CoreDecl.hpp">
       <Filter>Header Files\Core</Filter>
