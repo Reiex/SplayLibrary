@@ -142,9 +142,19 @@ namespace spl
 		glLinkProgram(_program);
 		glGetProgramiv(_program, GL_LINK_STATUS, &_linkStatus);
 
-		if (isValid())
+		if (_linkStatus)
 		{
 			_shaderIntrospection();
+		}
+		else
+		{
+			int32_t length;
+			glGetProgramiv(_program, GL_INFO_LOG_LENGTH, &length);
+
+			char* buffer = reinterpret_cast<char*>(alloca(length));
+			glGetProgramInfoLog(_program, length, nullptr, buffer);
+
+			glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_ERROR, 0, GL_DEBUG_SEVERITY_HIGH, length, buffer);
 		}
 
 		return _linkStatus;

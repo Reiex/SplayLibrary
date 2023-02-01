@@ -82,6 +82,17 @@ namespace spl
 		glCompileShader(_shader);
 		glGetShaderiv(_shader, GL_COMPILE_STATUS, &_compileStatus);
 
+		if (!_compileStatus)
+		{
+			int32_t length;
+			glGetShaderiv(_shader, GL_INFO_LOG_LENGTH, &length);
+
+			char* buffer = reinterpret_cast<char*>(alloca(length));
+			glGetShaderInfoLog(_shader, length, nullptr, buffer);
+
+			glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_ERROR, 0, GL_DEBUG_SEVERITY_HIGH, length, buffer);
+		}
+
 		return _compileStatus;
 	}
 
@@ -118,6 +129,17 @@ namespace spl
 		glShaderBinary(1, &_shader, GL_SHADER_BINARY_FORMAT_SPIR_V, binary, size);
 		glSpecializeShader(_shader, entryPoint, specializationConstantsCount, constantIndices, reinterpret_cast<const GLuint*>(constantValues));
 		glGetShaderiv(_shader, GL_COMPILE_STATUS, &_compileStatus);
+
+		if (!_compileStatus)
+		{
+			int32_t length;
+			glGetShaderiv(_shader, GL_INFO_LOG_LENGTH, &length);
+
+			char* buffer = reinterpret_cast<char*>(alloca(length));
+			glGetShaderInfoLog(_shader, length, nullptr, buffer);
+
+			glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_ERROR, 0, GL_DEBUG_SEVERITY_HIGH, length, buffer);
+		}
 
 		return _compileStatus;
 	}
