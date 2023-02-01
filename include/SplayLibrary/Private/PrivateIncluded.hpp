@@ -15,10 +15,11 @@ namespace spl
 	{
 		constexpr bool isIndexedBufferTarget(BufferTarget target);
 
-		template<CGenType TValue> constexpr GlslType genTypeToGlslType();
-		template<scp::CMat TMat> constexpr GlslType matTypeToGlslType();
+		template<CGlslScalarType TScalar> consteval GlslType glslScalarTypeToGlslType();
+		template<CGlslVecType TVec> consteval GlslType glslVecTypeToGlslType();
+		template<CGlslMatType TMat> consteval GlslType glslMatTypeToGlslType();
 
-		template<CGenType TValue> constexpr TextureInternalFormat genTypeToTextureInternalFormat();
+		template<CTextureInternalFormatType TValue> consteval TextureInternalFormat textureInternalFormatTypeToTextureInternalFormat();
 		constexpr TextureFormat textureInternalFormatToTextureFormat(TextureInternalFormat internalFormat);
 		constexpr TextureDataType textureInternalFormatToTextureDataType(TextureInternalFormat internalFormat);
 		constexpr uint8_t textureInternalFormatToComponentCount(TextureInternalFormat internalFormat);

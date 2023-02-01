@@ -12,83 +12,107 @@
 
 namespace spl
 {
-	template<CGenType TValue> void ShaderProgram::setUniform(const std::string& name, const TValue& value) const
+	template<CGlslScalarType TScalar>
+	void ShaderProgram::setUniform(const std::string& name, const TScalar& scalar) const
 	{
-		static constexpr GlslType type = _spl::genTypeToGlslType<TValue>();
-		
+		static constexpr GlslType type = _spl::glslScalarTypeToGlslType<TScalar>();
+
 		if constexpr (type == GlslType::Bool)
 		{
-			int32_t buffer = value;
+			const int32_t buffer = scalar;
 			_setUniform(name, GlslType::Int, &buffer, 1);
-		}
-		else if constexpr (type == GlslType::BoolVec2)
-		{
-			int32_t buffer[2] = { value.x, value.y };
-			_setUniform(name, GlslType::IntVec2, buffer, 1);
-		}
-		else if constexpr (type == GlslType::BoolVec3)
-		{
-			int32_t buffer[3] = { value.x, value.y, value.z };
-			_setUniform(name, GlslType::IntVec3, buffer, 1);
-		}
-		else if constexpr (type == GlslType::BoolVec4)
-		{
-			int32_t buffer[4] = { value.x, value.y, value.z, value.w };
-			_setUniform(name, GlslType::IntVec4, buffer, 1);
 		}
 		else
 		{
-			_setUniform(name, type, &value, 1);
+			_setUniform(name, type, &scalar, 1);
 		}
 	}
 
-	template<CGenType TValue> void ShaderProgram::setUniform(const std::string& name, const TValue* values, uint32_t count) const
+	template<CGlslScalarType TScalar>
+	void ShaderProgram::setUniform(const std::string& name, const TScalar* scalars, uint32_t count) const
 	{
-		static constexpr GlslType type = _spl::genTypeToGlslType<TValue>();
+		static constexpr GlslType type = _spl::glslScalarTypeToGlslType<TScalar>();
 
 		if constexpr (type == GlslType::Bool)
 		{
 			std::vector<int32_t> buffer(count);
-			std::copy_n(values, count, buffer.begin());
+			std::copy_n(scalars, count, buffer.begin());
 
 			_setUniform(name, GlslType::Int, buffer.data(), count);
 		}
-		else if constexpr (type == GlslType::BoolVec2)
+		else
+		{
+			_setUniform(name, type, scalars, count);
+		}
+	}
+
+	template<CGlslVecType TVec>
+	void ShaderProgram::setUniform(const std::string& name, const TVec& vec) const
+	{
+		static constexpr GlslType type = _spl::glslVecTypeToGlslType<TVec>();
+
+		if constexpr (type == GlslType::BoolVec2)
+		{
+			const int32_t buffer[2] = { vec.x, vec.y };
+			_setUniform(name, GlslType::IntVec2, buffer, 1);
+		}
+		else if constexpr (type == GlslType::BoolVec3)
+		{
+			const int32_t buffer[3] = { vec.x, vec.y, vec.z };
+			_setUniform(name, GlslType::IntVec3, buffer, 1);
+		}
+		else if constexpr (type == GlslType::BoolVec4)
+		{
+			const int32_t buffer[4] = { vec.x, vec.y, vec.z, vec.w };
+			_setUniform(name, GlslType::IntVec4, buffer, 1);
+		}
+		else
+		{
+			_setUniform(name, type, &vec, 1);
+		}
+	}
+
+	template<CGlslVecType TVec>
+	void ShaderProgram::setUniform(const std::string& name, const TVec* vecs, uint32_t count) const
+	{
+		static constexpr GlslType type = _spl::glslVecTypeToGlslType<TVec>();
+
+		if constexpr (type == GlslType::BoolVec2)
 		{
 			std::vector<int32_t> buffer(2 * count);
-			std::copy_n(reinterpret_cast<const bool*>(values), 2 * count, buffer.begin());
+			std::copy_n(reinterpret_cast<const bool*>(vecs), 2 * count, buffer.begin());
 
 			_setUniform(name, GlslType::IntVec2, buffer.data(), count);
 		}
 		else if constexpr (type == GlslType::BoolVec3)
 		{
 			std::vector<int32_t> buffer(3 * count);
-			std::copy_n(reinterpret_cast<const bool*>(values), 3 * count, buffer.begin());
+			std::copy_n(reinterpret_cast<const bool*>(vecs), 3 * count, buffer.begin());
 
 			_setUniform(name, GlslType::IntVec3, buffer.data(), count);
 		}
 		else if constexpr (type == GlslType::BoolVec4)
 		{
 			std::vector<int32_t> buffer(4 * count);
-			std::copy_n(reinterpret_cast<const bool*>(values), 4 * count, buffer.begin());
+			std::copy_n(reinterpret_cast<const bool*>(vecs), 4 * count, buffer.begin());
 
 			_setUniform(name, GlslType::IntVec4, buffer.data(), count);
 		}
 		else
 		{
-			_setUniform(name, type, values, count);
+			_setUniform(name, type, vecs, count);
 		}
 	}
 
-	template<scp::CMat TMat> void ShaderProgram::setUniform(const std::string& name, const TMat& matrix) const
+	template<CGlslMatType TMat>
+	void ShaderProgram::setUniform(const std::string& name, const TMat& mat) const
 	{
-		static constexpr GlslType type = _spl::matTypeToGlslType<TMat>();
-		_setUniform(name, type, &matrix, 1);
+		_setUniform(name, _spl::glslMatTypeToGlslType<TMat>(), &mat, 1);
 	}
 
-	template<scp::CMat TMat> void ShaderProgram::setUniform(const std::string& name, const TMat* matrices, uint32_t count) const
+	template<CGlslMatType TMat>
+	void ShaderProgram::setUniform(const std::string& name, const TMat* mats, uint32_t count) const
 	{
-		static constexpr GlslType type = _spl::matTypeToGlslType<TMat>();
-		_setUniform(name, type, matrices, count);
+		_setUniform(name, _spl::glslMatTypeToGlslType<TMat>(), mats, count);
 	}
 }

@@ -110,7 +110,7 @@ namespace spl
 
 			void update(const void* data, uintptr_t size = -1, uintptr_t dstOffset = 0);
 			void update(const Buffer& data, uintptr_t size = -1, uintptr_t dstOffset = 0, uintptr_t srcOffset = 0);
-			template<CGenType TClearValue> void clear(const TClearValue& clearValue, uintptr_t size = -1, uintptr_t offset = 0);
+			template<CTextureInternalFormatType TClearValue> void clear(const TClearValue& clearValue, uintptr_t size = -1, uintptr_t offset = 0);
 
 			void map(BufferMapAccessFlags::Flags flags, uintptr_t size = -1, uintptr_t offset = 0);
 			void flush(uintptr_t size = -1, uintptr_t offset = 0);

@@ -213,7 +213,6 @@ namespace spl
 		public:
 
 			// TODO: Give the possibility to not retrieve all the shader resource/interface informations directly !
-
 			ShaderProgram();
 			ShaderProgram(const std::filesystem::path& glslCompute, ShaderProgramFlags::Flags flags = ShaderProgramFlags::None);
 			ShaderProgram(const std::filesystem::path& glslVertex, const std::filesystem::path& glslFragment, ShaderProgramFlags::Flags flags = ShaderProgramFlags::None);
@@ -244,12 +243,17 @@ namespace spl
 			const ShaderProgramResourceInfos& getResourceInfos(ShaderProgramInterface programInterface, uint32_t index) const;
 
 
-			template<CGenType TValue> void setUniform(const std::string& name, const TValue& value) const;
-			template<CGenType TValue> void setUniform(const std::string& name, const TValue* values, uint32_t count) const;
-			template<scp::CMat TMat> void setUniform(const std::string& name, const TMat& matrix) const;
-			template<scp::CMat TMat> void setUniform(const std::string& name, const TMat* matrices, uint32_t count) const;
+			template<CGlslScalarType TScalar> void setUniform(const std::string& name, const TScalar& scalar) const;
+			template<CGlslScalarType TScalar> void setUniform(const std::string& name, const TScalar* scalars, uint32_t count) const;
+			template<CGlslVecType TVec> void setUniform(const std::string& name, const TVec& vec) const;
+			template<CGlslVecType TVec> void setUniform(const std::string& name, const TVec* vecs, uint32_t count) const;
+			template<CGlslMatType TMat> void setUniform(const std::string& name, const TMat& mat) const;
+			template<CGlslMatType TMat> void setUniform(const std::string& name, const TMat* mats, uint32_t count) const;
 			void setUniform(const std::string& name, uint32_t textureUnit, const RawTexture& texture) const;
 			void setUniform(const std::string& name, uint32_t textureUnit, const TextureBase& texture) const;
+
+			// TODO: Uniform blocks
+			// TODO: Shader storage blocks
 
 
 			uint32_t getHandle() const;
