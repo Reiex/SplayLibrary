@@ -42,147 +42,159 @@ namespace spl
 		glVertexArrayVertexBuffers(_vao, firstIndex, count, names, reinterpret_cast<const GLintptr*>(offsets), reinterpret_cast<const GLsizei*>(strides));
 	}
 
-	void VertexArray::setAttributeFormat(uint32_t attributeIndex, GlslType type, uint32_t offsetInBuffer)
+	void VertexArray::setAttributeFormat(uint32_t attributeIndex, GlslType type, uint32_t offsetInVertexStruct)
 	{
 		switch (type)
 		{
 			case GlslType::Float:
-				glVertexArrayAttribFormat(_vao, attributeIndex, 1, GL_FLOAT, false, offsetInBuffer);
+				glVertexArrayAttribFormat(_vao, attributeIndex, 1, GL_FLOAT, false, offsetInVertexStruct);
 				break;
 			case GlslType::FloatVec2:
-				glVertexArrayAttribFormat(_vao, attributeIndex, 2, GL_FLOAT, false, offsetInBuffer);
+				glVertexArrayAttribFormat(_vao, attributeIndex, 2, GL_FLOAT, false, offsetInVertexStruct);
 				break;
 			case GlslType::FloatVec3:
-				glVertexArrayAttribFormat(_vao, attributeIndex, 3, GL_FLOAT, false, offsetInBuffer);
+				glVertexArrayAttribFormat(_vao, attributeIndex, 3, GL_FLOAT, false, offsetInVertexStruct);
 				break;
 			case GlslType::FloatVec4:
-				glVertexArrayAttribFormat(_vao, attributeIndex, 4, GL_FLOAT, false, offsetInBuffer);
+				glVertexArrayAttribFormat(_vao, attributeIndex, 4, GL_FLOAT, false, offsetInVertexStruct);
 				break;
 			case GlslType::Double:
-				glVertexArrayAttribLFormat(_vao, attributeIndex, 1, GL_DOUBLE, offsetInBuffer);
+				glVertexArrayAttribLFormat(_vao, attributeIndex, 1, GL_DOUBLE, offsetInVertexStruct);
 				break;
 			case GlslType::DoubleVec2:
-				glVertexArrayAttribLFormat(_vao, attributeIndex, 2, GL_DOUBLE, offsetInBuffer);
+				glVertexArrayAttribLFormat(_vao, attributeIndex, 2, GL_DOUBLE, offsetInVertexStruct);
 				break;
 			case GlslType::DoubleVec3:
-				glVertexArrayAttribLFormat(_vao, attributeIndex, 3, GL_DOUBLE, offsetInBuffer);
+				glVertexArrayAttribLFormat(_vao, attributeIndex, 3, GL_DOUBLE, offsetInVertexStruct);
 				break;
 			case GlslType::DoubleVec4:
-				glVertexArrayAttribLFormat(_vao, attributeIndex, 4, GL_DOUBLE, offsetInBuffer);
+				glVertexArrayAttribLFormat(_vao, attributeIndex, 4, GL_DOUBLE, offsetInVertexStruct);
 				break;
 			case GlslType::Int:
-				glVertexArrayAttribIFormat(_vao, attributeIndex, 1, GL_INT, offsetInBuffer);
+				glVertexArrayAttribIFormat(_vao, attributeIndex, 1, GL_INT, offsetInVertexStruct);
 				break;
 			case GlslType::IntVec2:
-				glVertexArrayAttribIFormat(_vao, attributeIndex, 2, GL_INT, offsetInBuffer);
+				glVertexArrayAttribIFormat(_vao, attributeIndex, 2, GL_INT, offsetInVertexStruct);
 				break;
 			case GlslType::IntVec3:
-				glVertexArrayAttribIFormat(_vao, attributeIndex, 3, GL_INT, offsetInBuffer);
+				glVertexArrayAttribIFormat(_vao, attributeIndex, 3, GL_INT, offsetInVertexStruct);
 				break;
 			case GlslType::IntVec4:
-				glVertexArrayAttribIFormat(_vao, attributeIndex, 4, GL_INT, offsetInBuffer);
+				glVertexArrayAttribIFormat(_vao, attributeIndex, 4, GL_INT, offsetInVertexStruct);
 				break;
 			case GlslType::UnsignedInt:
-				glVertexArrayAttribIFormat(_vao, attributeIndex, 1, GL_UNSIGNED_INT, offsetInBuffer);
+				glVertexArrayAttribIFormat(_vao, attributeIndex, 1, GL_UNSIGNED_INT, offsetInVertexStruct);
 				break;
 			case GlslType::UnsignedIntVec2:
-				glVertexArrayAttribIFormat(_vao, attributeIndex, 2, GL_UNSIGNED_INT, offsetInBuffer);
+				glVertexArrayAttribIFormat(_vao, attributeIndex, 2, GL_UNSIGNED_INT, offsetInVertexStruct);
 				break;
 			case GlslType::UnsignedIntVec3:
-				glVertexArrayAttribIFormat(_vao, attributeIndex, 3, GL_UNSIGNED_INT, offsetInBuffer);
+				glVertexArrayAttribIFormat(_vao, attributeIndex, 3, GL_UNSIGNED_INT, offsetInVertexStruct);
 				break;
 			case GlslType::UnsignedIntVec4:
-				glVertexArrayAttribIFormat(_vao, attributeIndex, 4, GL_UNSIGNED_INT, offsetInBuffer);
+				glVertexArrayAttribIFormat(_vao, attributeIndex, 4, GL_UNSIGNED_INT, offsetInVertexStruct);
+				break;
+			case GlslType::Bool:
+				glVertexArrayAttribIFormat(_vao, attributeIndex, 1, GL_UNSIGNED_BYTE, offsetInVertexStruct);
+				break;
+			case GlslType::BoolVec2:
+				glVertexArrayAttribIFormat(_vao, attributeIndex, 2, GL_UNSIGNED_BYTE, offsetInVertexStruct);
+				break;
+			case GlslType::BoolVec3:
+				glVertexArrayAttribIFormat(_vao, attributeIndex, 3, GL_UNSIGNED_BYTE, offsetInVertexStruct);
+				break;
+			case GlslType::BoolVec4:
+				glVertexArrayAttribIFormat(_vao, attributeIndex, 4, GL_UNSIGNED_BYTE, offsetInVertexStruct);
 				break;
 			case GlslType::FloatMat2x2:
-				glVertexArrayAttribFormat(_vao, attributeIndex, 2, GL_FLOAT, false, offsetInBuffer);
-				glVertexArrayAttribFormat(_vao, attributeIndex + 1, 2, GL_FLOAT, false, offsetInBuffer + 2);
+				glVertexArrayAttribFormat(_vao, attributeIndex, 2, GL_FLOAT, false, offsetInVertexStruct);
+				glVertexArrayAttribFormat(_vao, attributeIndex + 1, 2, GL_FLOAT, false, offsetInVertexStruct + sizeof(float) * 2);
 				break;
 			case GlslType::FloatMat2x3:
-				glVertexArrayAttribFormat(_vao, attributeIndex, 3, GL_FLOAT, false, offsetInBuffer);
-				glVertexArrayAttribFormat(_vao, attributeIndex + 1, 3, GL_FLOAT, false, offsetInBuffer + 3);
+				glVertexArrayAttribFormat(_vao, attributeIndex, 3, GL_FLOAT, false, offsetInVertexStruct);
+				glVertexArrayAttribFormat(_vao, attributeIndex + 1, 3, GL_FLOAT, false, offsetInVertexStruct + sizeof(float) * 3);
 				break;
 			case GlslType::FloatMat2x4:
-				glVertexArrayAttribFormat(_vao, attributeIndex, 4, GL_FLOAT, false, offsetInBuffer);
-				glVertexArrayAttribFormat(_vao, attributeIndex + 1, 4, GL_FLOAT, false, offsetInBuffer + 4);
+				glVertexArrayAttribFormat(_vao, attributeIndex, 4, GL_FLOAT, false, offsetInVertexStruct);
+				glVertexArrayAttribFormat(_vao, attributeIndex + 1, 4, GL_FLOAT, false, offsetInVertexStruct + sizeof(float) * 4);
 				break;
 			case GlslType::FloatMat3x2:
-				glVertexArrayAttribFormat(_vao, attributeIndex, 2, GL_FLOAT, false, offsetInBuffer);
-				glVertexArrayAttribFormat(_vao, attributeIndex + 1, 2, GL_FLOAT, false, offsetInBuffer + 2);
-				glVertexArrayAttribFormat(_vao, attributeIndex + 2, 2, GL_FLOAT, false, offsetInBuffer + 4);
+				glVertexArrayAttribFormat(_vao, attributeIndex, 2, GL_FLOAT, false, offsetInVertexStruct);
+				glVertexArrayAttribFormat(_vao, attributeIndex + 1, 2, GL_FLOAT, false, offsetInVertexStruct + sizeof(float) * 2);
+				glVertexArrayAttribFormat(_vao, attributeIndex + 2, 2, GL_FLOAT, false, offsetInVertexStruct + sizeof(float) * 4);
 				break;
 			case GlslType::FloatMat3x3:
-				glVertexArrayAttribFormat(_vao, attributeIndex, 3, GL_FLOAT, false, offsetInBuffer);
-				glVertexArrayAttribFormat(_vao, attributeIndex + 1, 3, GL_FLOAT, false, offsetInBuffer + 3);
-				glVertexArrayAttribFormat(_vao, attributeIndex + 2, 3, GL_FLOAT, false, offsetInBuffer + 6);
+				glVertexArrayAttribFormat(_vao, attributeIndex, 3, GL_FLOAT, false, offsetInVertexStruct);
+				glVertexArrayAttribFormat(_vao, attributeIndex + 1, 3, GL_FLOAT, false, offsetInVertexStruct + sizeof(float) * 3);
+				glVertexArrayAttribFormat(_vao, attributeIndex + 2, 3, GL_FLOAT, false, offsetInVertexStruct + sizeof(float) * 6);
 				break;
 			case GlslType::FloatMat3x4:
-				glVertexArrayAttribFormat(_vao, attributeIndex, 4, GL_FLOAT, false, offsetInBuffer);
-				glVertexArrayAttribFormat(_vao, attributeIndex + 1, 4, GL_FLOAT, false, offsetInBuffer + 4);
-				glVertexArrayAttribFormat(_vao, attributeIndex + 2, 4, GL_FLOAT, false, offsetInBuffer + 8);
+				glVertexArrayAttribFormat(_vao, attributeIndex, 4, GL_FLOAT, false, offsetInVertexStruct);
+				glVertexArrayAttribFormat(_vao, attributeIndex + 1, 4, GL_FLOAT, false, offsetInVertexStruct + sizeof(float) * 4);
+				glVertexArrayAttribFormat(_vao, attributeIndex + 2, 4, GL_FLOAT, false, offsetInVertexStruct + sizeof(float) * 8);
 				break;
 			case GlslType::FloatMat4x2:
-				glVertexArrayAttribFormat(_vao, attributeIndex, 2, GL_FLOAT, false, offsetInBuffer);
-				glVertexArrayAttribFormat(_vao, attributeIndex + 1, 2, GL_FLOAT, false, offsetInBuffer + 2);
-				glVertexArrayAttribFormat(_vao, attributeIndex + 2, 2, GL_FLOAT, false, offsetInBuffer + 4);
-				glVertexArrayAttribFormat(_vao, attributeIndex + 3, 2, GL_FLOAT, false, offsetInBuffer + 6);
+				glVertexArrayAttribFormat(_vao, attributeIndex, 2, GL_FLOAT, false, offsetInVertexStruct);
+				glVertexArrayAttribFormat(_vao, attributeIndex + 1, 2, GL_FLOAT, false, offsetInVertexStruct + sizeof(float) * 2);
+				glVertexArrayAttribFormat(_vao, attributeIndex + 2, 2, GL_FLOAT, false, offsetInVertexStruct + sizeof(float) * 4);
+				glVertexArrayAttribFormat(_vao, attributeIndex + 3, 2, GL_FLOAT, false, offsetInVertexStruct + sizeof(float) * 6);
 				break;
 			case GlslType::FloatMat4x3:
-				glVertexArrayAttribFormat(_vao, attributeIndex, 3, GL_FLOAT, false, offsetInBuffer);
-				glVertexArrayAttribFormat(_vao, attributeIndex + 1, 3, GL_FLOAT, false, offsetInBuffer + 3);
-				glVertexArrayAttribFormat(_vao, attributeIndex + 2, 3, GL_FLOAT, false, offsetInBuffer + 6);
-				glVertexArrayAttribFormat(_vao, attributeIndex + 3, 3, GL_FLOAT, false, offsetInBuffer + 9);
+				glVertexArrayAttribFormat(_vao, attributeIndex, 3, GL_FLOAT, false, offsetInVertexStruct);
+				glVertexArrayAttribFormat(_vao, attributeIndex + 1, 3, GL_FLOAT, false, offsetInVertexStruct + sizeof(float) * 3);
+				glVertexArrayAttribFormat(_vao, attributeIndex + 2, 3, GL_FLOAT, false, offsetInVertexStruct + sizeof(float) * 6);
+				glVertexArrayAttribFormat(_vao, attributeIndex + 3, 3, GL_FLOAT, false, offsetInVertexStruct + sizeof(float) * 9);
 				break;
 			case GlslType::FloatMat4x4:
-				glVertexArrayAttribFormat(_vao, attributeIndex, 4, GL_FLOAT, false, offsetInBuffer);
-				glVertexArrayAttribFormat(_vao, attributeIndex + 1, 4, GL_FLOAT, false, offsetInBuffer + 4);
-				glVertexArrayAttribFormat(_vao, attributeIndex + 2, 4, GL_FLOAT, false, offsetInBuffer + 8);
-				glVertexArrayAttribFormat(_vao, attributeIndex + 3, 4, GL_FLOAT, false, offsetInBuffer + 12);
+				glVertexArrayAttribFormat(_vao, attributeIndex, 4, GL_FLOAT, false, offsetInVertexStruct);
+				glVertexArrayAttribFormat(_vao, attributeIndex + 1, 4, GL_FLOAT, false, offsetInVertexStruct + sizeof(float) * 4);
+				glVertexArrayAttribFormat(_vao, attributeIndex + 2, 4, GL_FLOAT, false, offsetInVertexStruct + sizeof(float) * 8);
+				glVertexArrayAttribFormat(_vao, attributeIndex + 3, 4, GL_FLOAT, false, offsetInVertexStruct + sizeof(float) * 12);
 				break;
 			case GlslType::DoubleMat2x2:
-				glVertexArrayAttribLFormat(_vao, attributeIndex, 2, GL_DOUBLE, offsetInBuffer);
-				glVertexArrayAttribLFormat(_vao, attributeIndex + 1, 2, GL_DOUBLE, offsetInBuffer + 2);
+				glVertexArrayAttribLFormat(_vao, attributeIndex, 2, GL_DOUBLE, offsetInVertexStruct);
+				glVertexArrayAttribLFormat(_vao, attributeIndex + 1, 2, GL_DOUBLE, offsetInVertexStruct + sizeof(double) * 2);
 				break;
 			case GlslType::DoubleMat2x3:
-				glVertexArrayAttribLFormat(_vao, attributeIndex, 3, GL_DOUBLE, offsetInBuffer);
-				glVertexArrayAttribLFormat(_vao, attributeIndex + 1, 3, GL_DOUBLE, offsetInBuffer + 3);
+				glVertexArrayAttribLFormat(_vao, attributeIndex, 3, GL_DOUBLE, offsetInVertexStruct);
+				glVertexArrayAttribLFormat(_vao, attributeIndex + 1, 3, GL_DOUBLE, offsetInVertexStruct + sizeof(double) * 3);
 				break;
 			case GlslType::DoubleMat2x4:
-				glVertexArrayAttribLFormat(_vao, attributeIndex, 4, GL_DOUBLE, offsetInBuffer);
-				glVertexArrayAttribLFormat(_vao, attributeIndex + 1, 4, GL_DOUBLE, offsetInBuffer + 4);
+				glVertexArrayAttribLFormat(_vao, attributeIndex, 4, GL_DOUBLE, offsetInVertexStruct);
+				glVertexArrayAttribLFormat(_vao, attributeIndex + 1, 4, GL_DOUBLE, offsetInVertexStruct + sizeof(double) * 4);
 				break;
 			case GlslType::DoubleMat3x2:
-				glVertexArrayAttribLFormat(_vao, attributeIndex, 2, GL_DOUBLE, offsetInBuffer);
-				glVertexArrayAttribLFormat(_vao, attributeIndex + 1, 2, GL_DOUBLE, offsetInBuffer + 2);
-				glVertexArrayAttribLFormat(_vao, attributeIndex + 2, 2, GL_DOUBLE, offsetInBuffer + 4);
+				glVertexArrayAttribLFormat(_vao, attributeIndex, 2, GL_DOUBLE, offsetInVertexStruct);
+				glVertexArrayAttribLFormat(_vao, attributeIndex + 1, 2, GL_DOUBLE, offsetInVertexStruct + sizeof(double) * 2);
+				glVertexArrayAttribLFormat(_vao, attributeIndex + 2, 2, GL_DOUBLE, offsetInVertexStruct + sizeof(double) * 4);
 				break;
 			case GlslType::DoubleMat3x3:
-				glVertexArrayAttribLFormat(_vao, attributeIndex, 3, GL_DOUBLE, offsetInBuffer);
-				glVertexArrayAttribLFormat(_vao, attributeIndex + 1, 3, GL_DOUBLE, offsetInBuffer + 3);
-				glVertexArrayAttribLFormat(_vao, attributeIndex + 2, 3, GL_DOUBLE, offsetInBuffer + 6);
+				glVertexArrayAttribLFormat(_vao, attributeIndex, 3, GL_DOUBLE, offsetInVertexStruct);
+				glVertexArrayAttribLFormat(_vao, attributeIndex + 1, 3, GL_DOUBLE, offsetInVertexStruct + sizeof(double) * 3);
+				glVertexArrayAttribLFormat(_vao, attributeIndex + 2, 3, GL_DOUBLE, offsetInVertexStruct + sizeof(double) * 6);
 				break;
 			case GlslType::DoubleMat3x4:
-				glVertexArrayAttribLFormat(_vao, attributeIndex, 4, GL_DOUBLE, offsetInBuffer);
-				glVertexArrayAttribLFormat(_vao, attributeIndex + 1, 4, GL_DOUBLE, offsetInBuffer + 4);
-				glVertexArrayAttribLFormat(_vao, attributeIndex + 2, 4, GL_DOUBLE, offsetInBuffer + 8);
+				glVertexArrayAttribLFormat(_vao, attributeIndex, 4, GL_DOUBLE, offsetInVertexStruct);
+				glVertexArrayAttribLFormat(_vao, attributeIndex + 1, 4, GL_DOUBLE, offsetInVertexStruct + sizeof(double) * 4);
+				glVertexArrayAttribLFormat(_vao, attributeIndex + 2, 4, GL_DOUBLE, offsetInVertexStruct + sizeof(double) * 8);
 				break;
 			case GlslType::DoubleMat4x2:
-				glVertexArrayAttribLFormat(_vao, attributeIndex, 2, GL_DOUBLE, offsetInBuffer);
-				glVertexArrayAttribLFormat(_vao, attributeIndex + 1, 2, GL_DOUBLE, offsetInBuffer + 2);
-				glVertexArrayAttribLFormat(_vao, attributeIndex + 2, 2, GL_DOUBLE, offsetInBuffer + 4);
-				glVertexArrayAttribLFormat(_vao, attributeIndex + 3, 2, GL_DOUBLE, offsetInBuffer + 6);
+				glVertexArrayAttribLFormat(_vao, attributeIndex, 2, GL_DOUBLE, offsetInVertexStruct);
+				glVertexArrayAttribLFormat(_vao, attributeIndex + 1, 2, GL_DOUBLE, offsetInVertexStruct + sizeof(double) * 2);
+				glVertexArrayAttribLFormat(_vao, attributeIndex + 2, 2, GL_DOUBLE, offsetInVertexStruct + sizeof(double) * 4);
+				glVertexArrayAttribLFormat(_vao, attributeIndex + 3, 2, GL_DOUBLE, offsetInVertexStruct + sizeof(double) * 6);
 				break;
 			case GlslType::DoubleMat4x3:
-				glVertexArrayAttribLFormat(_vao, attributeIndex, 3, GL_DOUBLE, offsetInBuffer);
-				glVertexArrayAttribLFormat(_vao, attributeIndex + 1, 3, GL_DOUBLE, offsetInBuffer + 3);
-				glVertexArrayAttribLFormat(_vao, attributeIndex + 2, 3, GL_DOUBLE, offsetInBuffer + 6);
-				glVertexArrayAttribLFormat(_vao, attributeIndex + 3, 3, GL_DOUBLE, offsetInBuffer + 9);
+				glVertexArrayAttribLFormat(_vao, attributeIndex, 3, GL_DOUBLE, offsetInVertexStruct);
+				glVertexArrayAttribLFormat(_vao, attributeIndex + 1, 3, GL_DOUBLE, offsetInVertexStruct + sizeof(double) * 3);
+				glVertexArrayAttribLFormat(_vao, attributeIndex + 2, 3, GL_DOUBLE, offsetInVertexStruct + sizeof(double) * 6);
+				glVertexArrayAttribLFormat(_vao, attributeIndex + 3, 3, GL_DOUBLE, offsetInVertexStruct + sizeof(double) * 9);
 				break;
 			case GlslType::DoubleMat4x4:
-				glVertexArrayAttribLFormat(_vao, attributeIndex, 4, GL_DOUBLE, offsetInBuffer);
-				glVertexArrayAttribLFormat(_vao, attributeIndex + 1, 4, GL_DOUBLE, offsetInBuffer + 4);
-				glVertexArrayAttribLFormat(_vao, attributeIndex + 2, 4, GL_DOUBLE, offsetInBuffer + 8);
-				glVertexArrayAttribLFormat(_vao, attributeIndex + 3, 4, GL_DOUBLE, offsetInBuffer + 12);
+				glVertexArrayAttribLFormat(_vao, attributeIndex, 4, GL_DOUBLE, offsetInVertexStruct);
+				glVertexArrayAttribLFormat(_vao, attributeIndex + 1, 4, GL_DOUBLE, offsetInVertexStruct + sizeof(double) * 4);
+				glVertexArrayAttribLFormat(_vao, attributeIndex + 2, 4, GL_DOUBLE, offsetInVertexStruct + sizeof(double) * 8);
+				glVertexArrayAttribLFormat(_vao, attributeIndex + 3, 4, GL_DOUBLE, offsetInVertexStruct + sizeof(double) * 12);
 				break;
 			default:
 				assert(false);
