@@ -36,13 +36,11 @@ namespace scp
 			constexpr bool operator==(const Quat<TValue>& q) const;
 			constexpr bool operator!=(const Quat<TValue>& q) const;
 
-			constexpr void setFromRotationAxisAngle(const std::initializer_list<TValue>& axis, const TValue& angle);
-			template<CTensor<TValue> TTensor> constexpr void setFromRotationAxisAngle(const TTensor& axis, const TValue& angle);
-			template<CTensor<TValue> TTensor> constexpr void getRotationAxisAngle(TTensor& axis, TValue& angle);
+			constexpr void setFromRotationAxisAngle(const TValue& xAxis, const TValue& yAxis, const TValue& zAxis, const TValue& angle);
+			constexpr void getRotationAxisAngle(TValue& xAxis, TValue& yAxis, TValue& zAxis, TValue& angle) const;
 
-			constexpr void setFromRotationMatrix(const std::initializer_list<TValue>& matrix);
-			template<CTensor<TValue> TTensor> constexpr void setFromRotationMatrix(const TTensor& matrix);
-			template<CTensor<TValue> TTensor> constexpr void getRotationMatrix(TTensor& matrix) const;
+			constexpr void setFromRotationMatrix(const TValue& r00, const TValue& r01, const TValue& r02, const TValue& r10, const TValue& r11, const TValue& r12, const TValue& r20, const TValue& r21, const TValue& r22);
+			constexpr void getRotationMatrix(TValue& r00, TValue& r01, TValue& r02, TValue& r10, TValue& r11, TValue& r12, TValue& r20, TValue& r21, TValue& r22);
 
 			constexpr void inverse();
 			constexpr void conjugate();

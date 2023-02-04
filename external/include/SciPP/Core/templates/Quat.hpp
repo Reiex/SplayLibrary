@@ -120,15 +120,9 @@ namespace scp
 	}
 
 	template<typename TValue>
-	constexpr void Quat<TValue>::setFromRotationAxisAngle(const std::initializer_list<TValue>& axis, const TValue& angle)
+	constexpr void Quat<TValue>::setFromRotationAxisAngle(const TValue& xAxis, const TValue& yAxis, const TValue& zAxis, const TValue& angle)
 	{
-		assert(axis.size() == 3);
-
-		const TValue& xAxis = axis.begin()[0];
-		const TValue& yAxis = axis.begin()[1];
-		const TValue& zAxis = axis.begin()[2];
-
-		assert(std::abs(xAxis * xAxis + yAxis * yAxis + zAxis * zAxis - _one) < FLT_EPSILON);
+		assert(std::abs(xAxis * xAxis + yAxis * yAxis + zAxis * zAxis - _one) < 1e-2f);
 
 		const TValue halfAngle = angle / 2;
 		const TValue sinHalfAngle = std::sin(halfAngle);
@@ -140,106 +134,61 @@ namespace scp
 	}
 
 	template<typename TValue>
-	template<CTensor<TValue> TTensor>
-	constexpr void Quat<TValue>::setFromRotationAxisAngle(const TTensor& axis, const TValue& angle)
+	constexpr void Quat<TValue>::getRotationAxisAngle(TValue& xAxis, TValue& yAxis, TValue& zAxis, TValue& angle) const
 	{
-		assert(axis.getOrder() == 1);
-		assert(axis.getSize(0) == 3);
-		setFromAxisAngle({ axis.get(0ULL), axis.get(1ULL), axis.get(2ULL) }, angle);
-	}
-
-	template<typename TValue>
-	template<CTensor<TValue> TTensor>
-	constexpr void Quat<TValue>::getRotationAxisAngle(TTensor& axis, TValue& angle)
-	{
-		assert(axis.getOrder() == 1);
-		assert(axis.getSize(0) == 3);
-		assert(normSq() - _one < FLT_EPSILON);
+		assert(std::abs(normSq() - _one) < 1e-2f);
 
 		angle = std::acos(w) * 2;
 
 		const TValue factor = std::sin(angle / 2);
-		axis.set(0ULL, x / factor);
-		axis.set(1ULL, y / factor);
-		axis.set(2ULL, z / factor);
+		xAxis = x / factor;
+		yAxis = y / factor;
+		zAxis = z / factor;
 	}
 
 	template<typename TValue>
-	constexpr void Quat<TValue>::setFromRotationMatrix(const std::initializer_list<TValue>& matrix)
+	constexpr void Quat<TValue>::setFromRotationMatrix(const TValue& r00, const TValue& r01, const TValue& r02, const TValue& r10, const TValue& r11, const TValue& r12, const TValue& r20, const TValue& r21, const TValue& r22)
 	{
-		assert(matrix.size() == 9);
-		// TODO: Verify it is a rotation matrix
-
-		const TValue& m00 = matrix[0];
-		const TValue& m01 = matrix[1];
-		const TValue& m02 = matrix[2];
-		const TValue& m10 = matrix[3];
-		const TValue& m11 = matrix[4];
-		const TValue& m12 = matrix[5];
-		const TValue& m20 = matrix[6];
-		const TValue& m21 = matrix[7];
-		const TValue& m22 = matrix[8];
-
-		const TValue trace = m00 + m11 + m22;
+		const TValue trace = r00 + r11 + r22;
 
 		if (trace > _zero)
 		{
 			const TValue s = 2 * std::sqrt(_one + trace);
 			w = s / 4;
-			x = (m21 - m12) / s;
-			y = (m02 - m20) / s;
-			z = (m10 - m01) / s;
+			x = (r21 - r12) / s;
+			y = (r02 - r20) / s;
+			z = (r10 - r01) / s;
 		}
-		else if (m00 > m11 && m00 > m22)
+		else if (r00 > r11 && r00 > r22)
 		{
-			const TValue s = 2 * std::sqrt(_one + m00 - m11 - m22);
-			w = (m21 - m12) / s;
+			const TValue s = 2 * std::sqrt(_one + r00 - r11 - r22);
+			w = (r21 - r12) / s;
 			x = s / 4;
-			y = (m01 + m10) / s;
-			z = (m02 + m20) / s;
+			y = (r01 + r10) / s;
+			z = (r02 + r20) / s;
 		}
-		else if (m11 > m22)
+		else if (r11 > r22)
 		{
-			const TValue s = 2 * std::sqrt(_one - m00 + m11 - m22);
-			w = (m02 - m20) / s;
-			x = (m01 + m10) / s;
+			const TValue s = 2 * std::sqrt(_one - r00 + r11 - r22);
+			w = (r02 - r20) / s;
+			x = (r01 + r10) / s;
 			y = s / 4;
-			z = (m12 + m21) / s;
+			z = (r12 + r21) / s;
 		}
 		else
 		{
-			const TValue s = 2 * std::sqrt(_one - m00 - m11 + m22);
-			w = (m10 - m01) / s;
-			x = (m02 + m20) / s;
-			y = (m12 + m21) / s;
+			const TValue s = 2 * std::sqrt(_one - r00 - r11 + r22);
+			w = (r10 - r01) / s;
+			x = (r02 + r20) / s;
+			y = (r12 + r21) / s;
 			z = s / 4;
 		}
 	}
 
 	template<typename TValue>
-	template<CTensor<TValue> TTensor>
-	constexpr void Quat<TValue>::setFromRotationMatrix(const TTensor& matrix)
+	constexpr void Quat<TValue>::getRotationMatrix(TValue& r00, TValue& r01, TValue& r02, TValue& r10, TValue& r11, TValue& r12, TValue& r20, TValue& r21, TValue& r22)
 	{
-		assert(matrix.getOrder() == 2);
-		assert(matrix.getSize(0) == 3);
-		assert(matrix.getSize(1) == 3);
-		setFromMatrix(
-			{
-				matrix.get(0ULL), matrix.get(1ULL), matrix.get(2ULL),
-				matrix.get(3ULL), matrix.get(4ULL), matrix.get(5ULL),
-				matrix.get(6ULL), matrix.get(7ULL), matrix.get(8ULL)
-			}
-		);
-	}
-
-	template<typename TValue>
-	template<CTensor<TValue> TTensor>
-	constexpr void Quat<TValue>::getRotationMatrix(TTensor& matrix) const
-	{
-		assert(matrix.getOrder() == 2);
-		assert(matrix.getSize(0) == 3);
-		assert(matrix.getSize(1) == 3);
-		assert(normSq() - _one < FLT_EPSILON);
+		assert(std::abs(normSq() - _one) < 1e-2f);
 
 		const TValue ww = w * w;
 		const TValue xx = x * x;
@@ -253,15 +202,15 @@ namespace scp
 		const TValue xz2 = 2 * x * z;
 		const TValue yz2 = 2 * y * z;
 
-		matrix.set(0ULL, ww + xx - yy - zz);
-		matrix.set(1ULL, xy2 - wz2);
-		matrix.set(2ULL, wy2 + xz2);
-		matrix.set(3ULL, wz2 + xy2);
-		matrix.set(4ULL, ww - xx + yy - zz);
-		matrix.set(5ULL, yz2 - wx2);
-		matrix.set(6ULL, xz2 - wy2);
-		matrix.set(7ULL, wx2 + yz2);
-		matrix.set(8ULL, ww - xx - yy + zz);
+		r00 = ww + xx - yy - zz;
+		r01 = xy2 - wz2;
+		r02 = wy2 + xz2;
+		r10 = wz2 + xy2;
+		r11 = ww - xx + yy - zz;
+		r12 = yz2 - wx2;
+		r20 = xz2 - wy2;
+		r21 = wx2 + yz2;
+		r22 = ww - xx - yy + zz;
 	}
 
 	template<typename TValue>
