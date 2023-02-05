@@ -23,9 +23,6 @@ namespace spl
 		constexpr TextureFormat textureInternalFormatToTextureFormat(TextureInternalFormat internalFormat);
 		constexpr TextureDataType textureInternalFormatToTextureDataType(TextureInternalFormat internalFormat);
 		constexpr uint8_t textureInternalFormatToComponentCount(TextureInternalFormat internalFormat);
-
-		constexpr BufferUsage drawableStorageToBufferUsage(DrawableStorage storage);
-		constexpr BufferStorageFlags::Flags drawableStorageToBufferStorageFlags(DrawableStorage storage);
 	}
 }
 

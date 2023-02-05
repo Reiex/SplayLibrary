@@ -428,39 +428,5 @@ namespace spl
 					return 0;
 			}
 		}
-
-
-		constexpr BufferUsage drawableStorageToBufferUsage(DrawableStorage storage)
-		{
-			switch (storage)
-			{
-				case DrawableStorage::Immutable:
-					return BufferUsage::Undefined;
-				case DrawableStorage::Static:
-					return BufferUsage::StaticDraw;
-				case DrawableStorage::Dynamic:
-					return BufferUsage::DynamicDraw;
-				case DrawableStorage::Stream:
-					return BufferUsage::StreamDraw;
-				default:
-					assert(false);
-					return BufferUsage::Undefined;
-			}
-		}
-
-		constexpr BufferStorageFlags::Flags drawableStorageToBufferStorageFlags(DrawableStorage storage)
-		{
-			switch (storage)
-			{
-				case DrawableStorage::Immutable:
-				case DrawableStorage::Static:
-				case DrawableStorage::Dynamic:
-				case DrawableStorage::Stream:
-					return BufferStorageFlags::None;
-				default:
-					assert(false);
-					return BufferStorageFlags::None;
-			}
-		}
 	}
 }
