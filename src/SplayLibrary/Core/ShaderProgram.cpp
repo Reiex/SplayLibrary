@@ -227,11 +227,21 @@ namespace spl
 	{
 		assert(program.isValid());
 
+		Context* context = ContextManager::getCurrentContext();
+		assert(context);
+		
+		context->_shaderBinding = &program;
+
 		glUseProgram(program._program);
 	}
 
 	void ShaderProgram::unbind()
 	{
+		Context* context = ContextManager::getCurrentContext();
+		assert(context);
+
+		context->_shaderBinding = nullptr;
+
 		glUseProgram(0);
 	}
 

@@ -103,6 +103,11 @@ namespace spl
 
 	void Framebuffer::bind(const Framebuffer& framebuffer, FramebufferTarget target)
 	{
+		Context* context = ContextManager::getCurrentContext();
+		assert(context);
+
+		context->_framebufferBindings[static_cast<uint32_t>(target)] = &framebuffer;
+
 		glBindFramebuffer(_spl::framebufferTargetToGLenum(target), framebuffer._framebuffer);
 	}
 

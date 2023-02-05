@@ -111,9 +111,9 @@ namespace spl
 				assert(params.width > 0);
 				assert(params.height > 0);
 
-				glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, _texture);
+				RawTexture::bind(*this, TextureTarget::Multisample2D);
 				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, params.samples, internalFormatGL, params.width, params.height, params.fixedSampleLocations);
-				glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+				RawTexture::unbind(TextureTarget::Multisample2D);
 
 				break;
 			}
@@ -124,9 +124,9 @@ namespace spl
 				assert(params.height > 0);
 				assert(params.depth > 0);
 
-				glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, _texture);
+				RawTexture::bind(*this, TextureTarget::Multisample2DArray);
 				glTexImage3DMultisample(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, params.samples, internalFormatGL, params.width, params.height, params.depth, params.fixedSampleLocations);
-				glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, 0);
+				RawTexture::unbind(TextureTarget::Multisample2DArray);
 
 				break;
 			}
@@ -248,6 +248,16 @@ namespace spl
 		assert(texture._creationParams.target == target);
 		// TODO: Verifier textureUnit valide
 
+		Context* context = ContextManager::getCurrentContext();
+		assert(context);
+
+		if (textureUnit >= context->_textureBindings.size())
+		{
+			context->_textureBindings.resize(textureUnit + 1, {});
+		}
+
+		context->_textureBindings[textureUnit][static_cast<uint32_t>(target) - 1] = &texture;
+
 		glActiveTexture(GL_TEXTURE0 + textureUnit);
 		glBindTexture(_spl::textureTargetToGLenum(target), texture._texture);
 	}
@@ -256,6 +266,18 @@ namespace spl
 	{
 		assert(_spl::textureTargetToGLenum(target) != 0);
 		// TODO: Verifier textureUnit valide
+
+		Context* context = ContextManager::getCurrentContext();
+		assert(context);
+
+		if (textureUnit < context->_textureBindings.size())
+		{
+			context->_textureBindings[textureUnit][static_cast<uint32_t>(target) - 1] = nullptr;
+		}
+		else
+		{
+			context->_textureBindings.resize(textureUnit + 1, {});
+		}
 
 		glActiveTexture(GL_TEXTURE0 + textureUnit);
 		glBindTexture(_spl::textureTargetToGLenum(target), 0);

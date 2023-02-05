@@ -37,16 +37,26 @@ namespace spl
 		_window(nullptr),
 		_debugContext(false),
 		_hasBeenActivated(false),
-		_currentFramebuffer(nullptr),
+
+		_bufferBindings(),
+		_indexedBufferBindings(),
+		_textureBindings(),
+		_framebufferBindings(),
+		_shaderBinding(nullptr),
+
 		_clearColor(0.f, 0.f, 0.f, 1.f),
 		_clearDepth(1.f),
 		_clearStencil(0),
 		_viewportOffset(0, 0),
 		_viewportSize(0, 0),
 		_isDepthTestEnabled(false),
+
 		_debugMessages(),
 		_lastDebugMessageSent(nullptr)
 	{
+		_bufferBindings.fill(nullptr);
+		_indexedBufferBindings.fill({});	// TODO: Replace dynamic size vectors with static size vectors (contexte state queries...) (same for _textureBindings)
+		_framebufferBindings.fill(nullptr);
 	}
 
 	void Context::setClearColor(const scp::f32vec4& clearColor)
@@ -124,9 +134,47 @@ namespace spl
 		return _debugContext;
 	}
 
-	Framebuffer* Context::getCurrentFramebuffer()
+	const Buffer* Context::getBufferBinding(BufferTarget target, uint32_t index) const
 	{
-		return _currentFramebuffer;
+		if (_spl::isIndexedBufferTarget(target))
+		{
+			if (index < _indexedBufferBindings[_spl::bufferTargetContextIndex(target)].size())
+			{
+				return _indexedBufferBindings[_spl::bufferTargetContextIndex(target)][index];
+			}
+			else
+			{
+				return nullptr;
+			}
+		}
+		else
+		{
+			return _bufferBindings[_spl::bufferTargetContextIndex(target)];
+		}
+	}
+
+	const RawTexture* Context::getTextureBinding(TextureTarget target, uint32_t textureUnit) const
+	{
+		assert(target != TextureTarget::Undefined);
+
+		if (textureUnit < _textureBindings.size())
+		{
+			return _textureBindings[textureUnit][static_cast<uint32_t>(target) - 1];
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	const Framebuffer* Context::getFramebufferBinding(FramebufferTarget target) const
+	{
+		return _framebufferBindings[static_cast<uint32_t>(target)];
+	}
+
+	const ShaderProgram* Context::getShaderBinding() const
+	{
+		return _shaderBinding;
 	}
 
 	const scp::f32vec4& Context::getClearColor() const
@@ -171,7 +219,7 @@ namespace spl
 	void Context::_setWindow(Window* window)
 	{
 		_window = window;
-		_currentFramebuffer = &window->getFramebuffer();
+		_framebufferBindings.fill(&window->getFramebuffer());
 		_viewportSize = window->getSize();
 	}
 
