@@ -2,11 +2,11 @@
 
 int basicPhongMain()
 {
-	spl::Window window({ 1000, 600 }, "SPL Example", true);
+	spl::Window window(1000, 600, "SPL Example", true);
 	spl::Context* context = window.getContext();
 	spl::ContextManager::setCurrentContext(context);
 	context->setIsDepthTestEnabled(true);
-	context->setClearColor({ 0.2f, 0.3f, 0.3f, 1.f });
+	context->setClearColor(0.2f, 0.3f, 0.3f, 1.f);
 	
 	spl::ShaderProgram shader("examples/basicPhong/resources/shaders/main.vert", "examples/basicPhong/resources/shaders/main.frag");
 	spl::ShaderProgram::bind(shader);
@@ -30,7 +30,7 @@ int basicPhongMain()
 				case spl::EventType::ResizeEvent:
 				{
 					spl::ResizeEvent event = rawEvent->specialize<spl::EventType::ResizeEvent>();
-					context->setViewport({ 0, 0 }, event.size);
+					context->setViewport(0, 0, event.size.x, event.size.y);
 					// camera.setAspect(event.size);
 					break;
 				}

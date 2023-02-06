@@ -748,7 +748,7 @@ namespace spl
 	{
 	}
 
-	Window::Window(const scp::u32vec2& size, const std::string& title, bool debugContext) : Window()
+	Window::Window(uint32_t width, uint32_t height, const std::string& title, bool debugContext) : Window()
 	{
 		// Create window and OpenGL context
 
@@ -771,7 +771,8 @@ namespace spl
 		// TODO: Flags (triple buffering, full screen, etc...)
 		// TODO: Choice of monitor
 		// TODO: Shared context
-		_size = size;
+		_size.x = width;
+		_size.y = height;
 		_window = glfwCreateWindow(_size.x, _size.y, title.c_str(), nullptr, nullptr);
 		if (!_window)
 		{

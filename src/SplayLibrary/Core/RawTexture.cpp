@@ -287,36 +287,4 @@ namespace spl
 	{
 		destroy();
 	}
-
-
-	RenderBuffer::RenderBuffer(TextureInternalFormat internalFormat, const scp::u32vec2& size, uint32_t samples) :
-		_renderBuffer(0),
-		_internalFormat(internalFormat),
-		_size(size)
-	{
-		assert(_spl::textureInternalFormatToGLenum(internalFormat) != 0);
-
-		glCreateRenderbuffers(1, &_renderBuffer);
-		glNamedRenderbufferStorageMultisample(_renderBuffer, samples, _spl::textureInternalFormatToGLenum(internalFormat), size.x, size.y);
-	}
-
-	uint32_t RenderBuffer::getHandle() const
-	{
-		return _renderBuffer;
-	}
-
-	TextureInternalFormat RenderBuffer::getInternalFormat() const
-	{
-		return _internalFormat;
-	}
-
-	const scp::u32vec2& RenderBuffer::getSize() const
-	{
-		return _size;
-	}
-
-	RenderBuffer::~RenderBuffer()
-	{
-		glDeleteRenderbuffers(1, &_renderBuffer);
-	}
 }

@@ -59,14 +59,18 @@ namespace spl
 		_framebufferBindings.fill(nullptr);
 	}
 
-	void Context::setClearColor(const scp::f32vec4& clearColor)
+	void Context::setClearColor(float r, float g, float b, float a)
 	{
-		assert(clearColor.x >= 0.f && clearColor.x <= 1);
-		assert(clearColor.y >= 0.f && clearColor.y <= 1);
-		assert(clearColor.z >= 0.f && clearColor.z <= 1);
-		assert(clearColor.w >= 0.f && clearColor.w <= 1);
+		assert(r >= 0.f && r <= 1);
+		assert(g >= 0.f && g <= 1);
+		assert(b >= 0.f && b <= 1);
+		assert(a >= 0.f && a <= 1);
 
-		_clearColor = clearColor;
+		_clearColor.x = r;
+		_clearColor.y = g;
+		_clearColor.z = b;
+		_clearColor.w = a;
+
 		glClearColor(_clearColor.x, _clearColor.y, _clearColor.z, _clearColor.w);
 	}
 
@@ -84,10 +88,13 @@ namespace spl
 		glClearStencil(_clearStencil);
 	}
 
-	void Context::setViewport(const scp::i32vec2& offset, const scp::u32vec2& size)
+	void Context::setViewport(int32_t xOffset, int32_t yOffset, uint32_t width, uint32_t height)
 	{
-		_viewportOffset = offset;
-		_viewportSize = size;
+		_viewportOffset.x = xOffset;
+		_viewportOffset.y = yOffset;
+		_viewportSize.x = width;
+		_viewportSize.y = height;
+
 		glViewport(_viewportOffset.x, _viewportOffset.y, _viewportSize.x, _viewportSize.y);
 	}
 

@@ -13,7 +13,7 @@ namespace spl
 	Framebuffer::Framebuffer() :
 		_framebuffer(),
 		_textureAttachments(),
-		_renderBufferAttachments()
+		_renderbufferAttachments()
 	{
 		glCreateFramebuffers(1, &_framebuffer);
 	}
@@ -21,7 +21,7 @@ namespace spl
 	Framebuffer::Framebuffer(Window* window) :
 		_framebuffer(0),
 		_textureAttachments(),
-		_renderBufferAttachments()
+		_renderbufferAttachments()
 	{
 	}
 
@@ -40,35 +40,35 @@ namespace spl
 		}
 	}
 
-	void Framebuffer::createNewRenderBufferAttachment(FramebufferAttachment attachment, TextureInternalFormat internalFormat, const scp::u32vec2& size, uint32_t samples)
+	void Framebuffer::createNewRenderbufferAttachment(FramebufferAttachment attachment, TextureInternalFormat internalFormat, uint32_t width, uint32_t height, uint32_t samples)
 	{
 		assert(_framebuffer != 0);
 		assert(_spl::framebufferAttachmentToGLenum(attachment) != 0);
 
 		auto textureIt = _textureAttachments.find(attachment);
-		auto renderBufferIt = _renderBufferAttachments.find(attachment);
+		auto renderbufferIt = _renderbufferAttachments.find(attachment);
 
 		if (textureIt != _textureAttachments.end())
 		{
 			delete textureIt->second;
 			_textureAttachments.erase(textureIt);
 		}
-		else if (renderBufferIt != _renderBufferAttachments.end())
+		else if (renderbufferIt != _renderbufferAttachments.end())
 		{
-			delete renderBufferIt->second;
+			delete renderbufferIt->second;
 		}
 
 		// TODO: Check that the render buffer type and format correspond to the attachment
-		_renderBufferAttachments[attachment] = new RenderBuffer(internalFormat, size, samples);
-		glNamedFramebufferRenderbuffer(_framebuffer, _spl::framebufferAttachmentToGLenum(attachment), GL_RENDERBUFFER, _renderBufferAttachments[attachment]->getHandle());
+		_renderbufferAttachments[attachment] = new Renderbuffer(internalFormat, width, height, samples);
+		glNamedFramebufferRenderbuffer(_framebuffer, _spl::framebufferAttachmentToGLenum(attachment), GL_RENDERBUFFER, _renderbufferAttachments[attachment]->getHandle());
 	}
 
-	const RenderBuffer* Framebuffer::getRenderBufferAttachment(FramebufferAttachment attachment) const
+	const Renderbuffer* Framebuffer::getRenderbufferAttachment(FramebufferAttachment attachment) const
 	{
 		assert(_framebuffer != 0);
 
-		const auto it = _renderBufferAttachments.find(attachment);
-		if (it != _renderBufferAttachments.end())
+		const auto it = _renderbufferAttachments.find(attachment);
+		if (it != _renderbufferAttachments.end())
 		{
 			return it->second;
 		}
@@ -83,16 +83,16 @@ namespace spl
 		assert(_framebuffer != 0);
 
 		auto textureIt = _textureAttachments.find(attachment);
-		auto renderBufferIt = _renderBufferAttachments.find(attachment);
+		auto renderbufferIt = _renderbufferAttachments.find(attachment);
 
 		if (textureIt != _textureAttachments.end())
 		{
 			delete textureIt->second;
 			_textureAttachments.erase(textureIt);
 		}
-		else if (renderBufferIt != _renderBufferAttachments.end())
+		else if (renderbufferIt != _renderbufferAttachments.end())
 		{
-			delete renderBufferIt->second;
+			delete renderbufferIt->second;
 		}
 	}
 

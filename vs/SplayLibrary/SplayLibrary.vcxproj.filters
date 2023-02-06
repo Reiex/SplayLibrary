@@ -81,6 +81,9 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\VertexArray.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\SplayLibrary\Core\Renderbuffer.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Event.hpp">
@@ -165,6 +168,9 @@
       <Filter>Header Files\Core\templates</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\VertexArray.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Renderbuffer.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
