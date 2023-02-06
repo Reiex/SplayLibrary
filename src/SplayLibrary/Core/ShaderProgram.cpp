@@ -203,6 +203,22 @@ namespace spl
 		setUniform(name, textureUnit, texture.getRawTexture());
 	}
 
+	void ShaderProgram::setUniformBlockBinding(uint32_t shaderBindingIndex, uint32_t bufferBindingIndex) const
+	{
+		assert(isValid());
+		// TODO: Verifications...
+
+		glUniformBlockBinding(_program, shaderBindingIndex, bufferBindingIndex);
+	}
+
+	void ShaderProgram::setShaderStorageBlockBinding(uint32_t shaderBindingIndex, uint32_t bufferBindingIndex) const
+	{
+		assert(isValid());
+		// TODO: Verifications...
+
+		glShaderStorageBlockBinding(_program, shaderBindingIndex, bufferBindingIndex);
+	}
+
 	uint32_t ShaderProgram::getHandle() const
 	{
 		return _program;
