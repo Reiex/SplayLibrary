@@ -103,7 +103,7 @@ namespace spl
 
 	void Framebuffer::bind(const Framebuffer& framebuffer, FramebufferTarget target)
 	{
-		Context* context = ContextManager::getCurrentContext();
+		Context* context = Context::getCurrentContext();
 		assert(context);
 
 		context->_framebufferBindings[static_cast<uint32_t>(target)] = &framebuffer;

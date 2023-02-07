@@ -54,7 +54,7 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\Window.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\SplayLibrary\Core\ContextManager.cpp">
+    <ClCompile Include="..\..\src\SplayLibrary\Core\Context.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\SplayLibrary\Core\Framebuffer.cpp">
@@ -104,7 +104,7 @@
     <ClInclude Include="..\..\include\SplayLibrary\Core\Window.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Core\ContextManager.hpp">
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Context.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Framebuffer.hpp">

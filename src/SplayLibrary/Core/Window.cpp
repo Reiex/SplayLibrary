@@ -752,7 +752,7 @@ namespace spl
 	{
 		// Create window and OpenGL context
 
-		_context = ContextManager::_createContext();
+		_context = Context::_createContext();
 		if (!_context)
 		{
 			return;
@@ -776,7 +776,7 @@ namespace spl
 		_window = glfwCreateWindow(_size.x, _size.y, title.c_str(), nullptr, nullptr);
 		if (!_window)
 		{
-			ContextManager::_destroyContext(_context);
+			Context::_destroyContext(_context);
 			return;
 		}
 
@@ -961,11 +961,11 @@ namespace spl
 			_events.pop();
 		}
 
-		if (_context == ContextManager::getCurrentContext())
+		if (_context == Context::getCurrentContext())
 		{
-			ContextManager::setCurrentContext(nullptr);
+			Context::setCurrentContext(nullptr);
 		}
-		ContextManager::_destroyContext(_context);
+		Context::_destroyContext(_context);
 		_context = nullptr;
 
 		if (_window)

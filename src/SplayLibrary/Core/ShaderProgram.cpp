@@ -243,7 +243,7 @@ namespace spl
 	{
 		assert(program.isValid());
 
-		Context* context = ContextManager::getCurrentContext();
+		Context* context = Context::getCurrentContext();
 		assert(context);
 		
 		context->_shaderBinding = &program;
@@ -253,7 +253,7 @@ namespace spl
 
 	void ShaderProgram::unbind()
 	{
-		Context* context = ContextManager::getCurrentContext();
+		Context* context = Context::getCurrentContext();
 		assert(context);
 
 		context->_shaderBinding = nullptr;

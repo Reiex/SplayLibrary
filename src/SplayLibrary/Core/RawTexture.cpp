@@ -248,7 +248,7 @@ namespace spl
 		assert(texture._creationParams.target == target);
 		// TODO: Verifier textureUnit valide
 
-		Context* context = ContextManager::getCurrentContext();
+		Context* context = Context::getCurrentContext();
 		assert(context);
 
 		if (textureUnit >= context->_textureBindings.size())
@@ -267,7 +267,7 @@ namespace spl
 		assert(_spl::textureTargetToGLenum(target) != 0);
 		// TODO: Verifier textureUnit valide
 
-		Context* context = ContextManager::getCurrentContext();
+		Context* context = Context::getCurrentContext();
 		assert(context);
 
 		if (textureUnit < context->_textureBindings.size())

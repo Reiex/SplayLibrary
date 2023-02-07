@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\SplayLibrary\Core\Buffer.cpp" />
-    <ClCompile Include="..\..\src\SplayLibrary\Core\ContextManager.cpp" />
+    <ClCompile Include="..\..\src\SplayLibrary\Core\Context.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\Framebuffer.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\glad\glad.cpp" />
     <ClCompile Include="..\..\src\SplayLibrary\Core\RawTexture.cpp" />
@@ -35,7 +35,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Buffer.hpp" />
-    <ClInclude Include="..\..\include\SplayLibrary\Core\ContextManager.hpp" />
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Context.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Core.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\CoreDecl.hpp" />
     <ClInclude Include="..\..\include\SplayLibrary\Core\Event.hpp" />

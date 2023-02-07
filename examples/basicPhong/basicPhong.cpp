@@ -4,7 +4,7 @@ int basicPhongMain()
 {
 	spl::Window window(1000, 600, "SPL Example", true);
 	spl::Context* context = window.getContext();
-	spl::ContextManager::setCurrentContext(context);
+	spl::Context::setCurrentContext(context);
 	context->setIsDepthTestEnabled(true);
 	context->setClearColor(0.2f, 0.3f, 0.3f, 1.f);
 	

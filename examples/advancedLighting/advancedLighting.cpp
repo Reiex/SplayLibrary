@@ -4,7 +4,7 @@ int advancedLightingMain()
 {
 	// spl::Window window({ 1000, 600 }, "SPL Example", false);
 	// spl::Context* context = window.getContext();
-	// spl::ContextManager::setCurrentContext(context);
+	// spl::Context::setCurrentContext(context);
 	// context->setIsDepthTestEnabled(true);
 	// 
 	// spl::Framebuffer framebuffer;

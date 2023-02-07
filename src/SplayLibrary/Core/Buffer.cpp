@@ -357,7 +357,7 @@ namespace spl
 		assert(buffer.isValid());
 		assert(_spl::bufferTargetToGLenum(target) != 0);
 
-		Context* context = ContextManager::getCurrentContext();
+		Context* context = Context::getCurrentContext();
 		assert(context);
 
 		if (_spl::isIndexedBufferTarget(target))
@@ -405,7 +405,7 @@ namespace spl
 
 		// Get current context buffers and resize the vector if necessary
 
-		Context* context = ContextManager::getCurrentContext();
+		Context* context = Context::getCurrentContext();
 		assert(context);
 
 		std::vector<const Buffer*>& contextBuffers = context->_indexedBufferBindings[_spl::bufferTargetContextIndex(target)];
@@ -458,7 +458,7 @@ namespace spl
 	{
 		assert(_spl::bufferTargetToGLenum(target) != 0);
 
-		Context* context = ContextManager::getCurrentContext();
+		Context* context = Context::getCurrentContext();
 		assert(context);
 
 		if (_spl::isIndexedBufferTarget(target))
