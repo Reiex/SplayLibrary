@@ -57,7 +57,6 @@ namespace spl
 	void Buffer::createNew(uintptr_t size, BufferUsage usage, const void* data)
 	{
 		assert(size != 0);
-		assert(_spl::bufferUsageToGLenum(usage) != 0);
 
 		if (hasImmutableStorage())
 		{
@@ -355,7 +354,6 @@ namespace spl
 	void Buffer::bind(const Buffer& buffer, BufferTarget target, uint32_t index, uintptr_t size, uintptr_t offset)
 	{
 		assert(buffer.isValid());
-		assert(_spl::bufferTargetToGLenum(target) != 0);
 
 		Context* context = Context::getCurrentContext();
 		assert(context);
@@ -399,7 +397,6 @@ namespace spl
 
 	void Buffer::bind(const Buffer* const* buffers, uint32_t count, BufferTarget target, uint32_t firstIndex, const uintptr_t* sizes, const uintptr_t* offsets)
 	{
-		assert(_spl::bufferTargetToGLenum(target) != 0);
 		assert(_spl::isIndexedBufferTarget(target));
 		assert(firstIndex != -1);	// TODO: Check index is valid (not just -1 but the glGetInteger thing)
 
@@ -456,8 +453,6 @@ namespace spl
 
 	void Buffer::unbind(BufferTarget target, uint32_t index, uint32_t count)
 	{
-		assert(_spl::bufferTargetToGLenum(target) != 0);
-
 		Context* context = Context::getCurrentContext();
 		assert(context);
 

@@ -43,7 +43,6 @@ namespace spl
 	void Framebuffer::createNewRenderbufferAttachment(FramebufferAttachment attachment, TextureInternalFormat internalFormat, uint32_t width, uint32_t height, uint32_t samples)
 	{
 		assert(_framebuffer != 0);
-		assert(_spl::framebufferAttachmentToGLenum(attachment) != 0);
 
 		auto textureIt = _textureAttachments.find(attachment);
 		auto renderbufferIt = _renderbufferAttachments.find(attachment);
@@ -141,7 +140,6 @@ namespace spl
 
 	void Framebuffer::_attachTexture(FramebufferAttachment attachment)
 	{
-		assert(_spl::framebufferAttachmentToGLenum(attachment) != 0);
 		// TODO: Choose level / layer (glNamedFramebufferTextureLayer ?)
 		// TODO: Check that the texture type and format correspond to the attachment
 		glNamedFramebufferTexture(_framebuffer, _spl::framebufferAttachmentToGLenum(attachment), _textureAttachments[attachment]->getRawTexture().getHandle(), 0);

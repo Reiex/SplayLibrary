@@ -64,7 +64,6 @@ namespace spl
 
 	bool ShaderModule::createFromGlsl(ShaderStage::Stage stage, const char* const* sources, const uint32_t* sizes, uint32_t count)
 	{
-		assert(_spl::shaderStageToGLenum(stage) != 0);
 		assert(count != 0);
 
 		if (_shader != 0 && _stage != stage)
@@ -113,8 +112,6 @@ namespace spl
 
 	bool ShaderModule::createFromSpirV(ShaderStage::Stage stage, const void* binary, uint32_t size, const char* entryPoint, const uint32_t* constantIndices, const void* constantValues, uint32_t specializationConstantsCount)
 	{
-		assert(_spl::shaderStageToGLenum(stage) != 0);
-
 		if (_shader != 0 && _stage != stage)
 		{
 			destroy();

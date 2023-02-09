@@ -15,8 +15,6 @@ namespace spl
 		_internalFormat(internalFormat),
 		_size(width, height)
 	{
-		assert(_spl::textureInternalFormatToGLenum(internalFormat) != 0);
-
 		glCreateRenderbuffers(1, &_renderbuffer);
 		glNamedRenderbufferStorageMultisample(_renderbuffer, samples, _spl::textureInternalFormatToGLenum(_internalFormat), _size.x, _size.y);
 	}

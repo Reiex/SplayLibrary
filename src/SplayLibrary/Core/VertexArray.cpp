@@ -226,8 +226,6 @@ namespace spl
 
 	void VertexArray::drawArrays(PrimitiveType type, uint32_t first, uint32_t count, uint32_t instanceCount, uint32_t baseInstance) const
 	{
-		assert(_spl::primitiveTypeToGLenum(type) != 0);
-
 		glBindVertexArray(_vao);
 		glDrawArraysInstancedBaseInstance(_spl::primitiveTypeToGLenum(type), first, count, instanceCount, baseInstance);
 		glBindVertexArray(0);
@@ -235,9 +233,6 @@ namespace spl
 
 	void VertexArray::drawElements(PrimitiveType primitiveType, IndexType indexType, uintptr_t first, uint32_t count, uint32_t instanceCount, uint32_t baseInstance, uint32_t baseVertex) const
 	{
-		assert(_spl::primitiveTypeToGLenum(primitiveType) != 0);
-		assert(_spl::indexTypeToGLenum(indexType) != 0);
-
 		glBindVertexArray(_vao);
 		glDrawElementsInstancedBaseVertexBaseInstance(_spl::primitiveTypeToGLenum(primitiveType), count, _spl::indexTypeToGLenum(indexType), reinterpret_cast<const void*>(first), instanceCount, baseVertex, baseInstance);
 		glBindVertexArray(0);
@@ -245,8 +240,6 @@ namespace spl
 
 	void VertexArray::multiDrawArrays(PrimitiveType type, const uint32_t* firsts, const uint32_t* counts, uint32_t drawCount) const
 	{
-		assert(_spl::primitiveTypeToGLenum(type) != 0);
-
 		glBindVertexArray(_vao);
 		glMultiDrawArrays(_spl::primitiveTypeToGLenum(type), reinterpret_cast<const GLint*>(firsts), reinterpret_cast<const GLsizei*>(counts), drawCount);
 		glBindVertexArray(0);
@@ -254,9 +247,6 @@ namespace spl
 
 	void VertexArray::multiDrawElements(PrimitiveType primitiveType, IndexType indexType, const uintptr_t* firsts, const uint32_t* counts, uint32_t drawCount, const uint32_t* baseVertex) const
 	{
-		assert(_spl::primitiveTypeToGLenum(primitiveType) != 0);
-		assert(_spl::indexTypeToGLenum(indexType) != 0);
-
 		glBindVertexArray(_vao);
 
 		if (baseVertex)

@@ -18,9 +18,6 @@ namespace spl
 
 	void RawTexture::createNew(const CreationParams& params)
 	{
-		assert(_spl::textureTargetToGLenum(params.target) != 0);
-		assert(_spl::textureInternalFormatToGLenum(params.internalFormat) != 0);
-
 		destroy();
 
 		const uint32_t internalFormatGL = _spl::textureInternalFormatToGLenum(params.internalFormat);
@@ -143,8 +140,6 @@ namespace spl
 	{
 		assert(isValid());
 		assert((params.data == nullptr) != (params.buffer == nullptr));
-		assert(_spl::textureFormatToGLenum(params.dataFormat) != 0);
-		assert(_spl::textureDataTypeToGLenum(params.dataType) != 0);
 
 		const uint32_t formatGL = _spl::textureFormatToGLenum(params.dataFormat);
 		const uint32_t dataTypeGL = _spl::textureDataTypeToGLenum(params.dataType);
@@ -264,8 +259,7 @@ namespace spl
 
 	void RawTexture::unbind(TextureTarget target, uint32_t textureUnit)
 	{
-		assert(_spl::textureTargetToGLenum(target) != 0);
-		// TODO: Verifier textureUnit valide
+		// TODO: Verify textureUnit is valid
 
 		Context* context = Context::getCurrentContext();
 		assert(context);
