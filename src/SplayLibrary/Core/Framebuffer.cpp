@@ -143,5 +143,18 @@ namespace spl
 		// TODO: Choose level / layer (glNamedFramebufferTextureLayer ?)
 		// TODO: Check that the texture type and format correspond to the attachment
 		glNamedFramebufferTexture(_framebuffer, _spl::framebufferAttachmentToGLenum(attachment), _textureAttachments[attachment]->getRawTexture().getHandle(), 0);
+
+		std::vector<GLenum> drawBuffers;
+		for (const std::pair<const FramebufferAttachment, TextureBase*>& textureAttachment : _textureAttachments)
+		{
+			if (textureAttachment.first != FramebufferAttachment::DepthAttachment
+				&& textureAttachment.first != FramebufferAttachment::StencilAttachment
+				&& textureAttachment.first != FramebufferAttachment::DepthStencilAttachment)
+			{
+				drawBuffers.push_back(_spl::framebufferAttachmentToGLenum(textureAttachment.first));
+			}
+		}
+
+		glNamedFramebufferDrawBuffers(_framebuffer, drawBuffers.size(), drawBuffers.data());
 	}
 }
