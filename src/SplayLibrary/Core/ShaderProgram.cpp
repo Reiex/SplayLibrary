@@ -46,7 +46,7 @@ namespace spl
 		createFromGlsl(glslVertex, glslTessControl, glslTessEval, glslGeometry, glslFragment, flags);
 	}
 
-	ShaderProgram::ShaderProgram(const ShaderModule* shaders, uint8_t count, ShaderProgramFlags::Flags flags) : ShaderProgram()
+	ShaderProgram::ShaderProgram(const ShaderModule* const* shaders, uint8_t count, ShaderProgramFlags::Flags flags) : ShaderProgram()
 	{
 		createFromShaderModules(shaders, count, flags);
 	}
@@ -54,10 +54,11 @@ namespace spl
 	bool ShaderProgram::createFromGlsl(const std::filesystem::path& glslCompute, ShaderProgramFlags::Flags flags)
 	{
 		ShaderModule shader;
+		const ShaderModule* shaderArray[] = { &shader };
 
 		if (shader.createFromGlsl(ShaderStage::Compute, glslCompute))
 		{
-			return createFromShaderModules(&shader, 1, flags);
+			return createFromShaderModules(shaderArray, 1, flags);
 		}
 
 		return false;
@@ -66,11 +67,12 @@ namespace spl
 	bool ShaderProgram::createFromGlsl(const std::filesystem::path& glslVertex, const std::filesystem::path& glslFragment, ShaderProgramFlags::Flags flags)
 	{
 		ShaderModule shaders[2];
+		const ShaderModule* shaderArray[] = { shaders, shaders + 1 };
 
 		if (shaders[0].createFromGlsl(ShaderStage::Vertex, glslVertex)
 			&& shaders[1].createFromGlsl(ShaderStage::Fragment, glslFragment))
 		{
-			return createFromShaderModules(shaders, 2, flags);
+			return createFromShaderModules(shaderArray, 2, flags);
 		}
 
 		return false;
@@ -79,12 +81,13 @@ namespace spl
 	bool ShaderProgram::createFromGlsl(const std::filesystem::path& glslVertex, const std::filesystem::path& glslGeometry, const std::filesystem::path& glslFragment, ShaderProgramFlags::Flags flags)
 	{
 		ShaderModule shaders[3];
+		const ShaderModule* shaderArray[] = { shaders, shaders + 1, shaders + 2 };
 
 		if (shaders[0].createFromGlsl(ShaderStage::Vertex, glslVertex)
 			&& shaders[1].createFromGlsl(ShaderStage::Geometry, glslGeometry)
 			&& shaders[2].createFromGlsl(ShaderStage::Fragment, glslFragment))
 		{
-			return createFromShaderModules(shaders, 3, flags);
+			return createFromShaderModules(shaderArray, 3, flags);
 		}
 
 		return false;
@@ -93,13 +96,14 @@ namespace spl
 	bool ShaderProgram::createFromGlsl(const std::filesystem::path& glslVertex, const std::filesystem::path& glslTessControl, const std::filesystem::path& glslTessEval, const std::filesystem::path& glslFragment, ShaderProgramFlags::Flags flags)
 	{
 		ShaderModule shaders[4];
+		const ShaderModule* shaderArray[] = { shaders, shaders + 1, shaders + 2, shaders + 3 };
 
 		if (shaders[0].createFromGlsl(ShaderStage::Vertex, glslVertex)
 			&& shaders[1].createFromGlsl(ShaderStage::TessControl, glslTessControl)
 			&& shaders[2].createFromGlsl(ShaderStage::TessEvaluation, glslTessEval)
 			&& shaders[3].createFromGlsl(ShaderStage::Fragment, glslFragment))
 		{
-			return createFromShaderModules(shaders, 4, flags);
+			return createFromShaderModules(shaderArray, 4, flags);
 		}
 
 		return false;
@@ -108,6 +112,7 @@ namespace spl
 	bool ShaderProgram::createFromGlsl(const std::filesystem::path& glslVertex, const std::filesystem::path& glslTessControl, const std::filesystem::path& glslTessEval, const std::filesystem::path& glslGeometry, const std::filesystem::path& glslFragment, ShaderProgramFlags::Flags flags)
 	{
 		ShaderModule shaders[5];
+		const ShaderModule* shaderArray[] = { shaders, shaders + 1, shaders + 2, shaders + 3, shaders + 4 };
 
 		if (shaders[0].createFromGlsl(ShaderStage::Vertex, glslVertex)
 			&& shaders[1].createFromGlsl(ShaderStage::TessControl, glslTessControl)
@@ -115,17 +120,17 @@ namespace spl
 			&& shaders[3].createFromGlsl(ShaderStage::Geometry, glslGeometry)
 			&& shaders[4].createFromGlsl(ShaderStage::Fragment, glslFragment))
 		{
-			return createFromShaderModules(shaders, 5, flags);
+			return createFromShaderModules(shaderArray, 5, flags);
 		}
 
 		return false;
 	}
 
-	bool ShaderProgram::createFromShaderModules(const ShaderModule* shaders, uint16_t count, ShaderProgramFlags::Flags flags)
+	bool ShaderProgram::createFromShaderModules(const ShaderModule* const* shaders, uint16_t count, ShaderProgramFlags::Flags flags)
 	{
 		for (uint16_t i = 0; i < count; ++i)
 		{
-			assert(shaders[i].isValid());
+			assert(shaders[i]->isValid());
 		}
 
 		destroy();
@@ -137,7 +142,7 @@ namespace spl
 
 		for (uint16_t i = 0; i < count; ++i)
 		{
-			glAttachShader(_program, shaders[i].getHandle());
+			glAttachShader(_program, shaders[i]->getHandle());
 		}
 		glLinkProgram(_program);
 		glGetProgramiv(_program, GL_LINK_STATUS, &_linkStatus);
