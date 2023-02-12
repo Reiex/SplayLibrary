@@ -93,6 +93,8 @@ namespace spl
 		{
 			delete renderbufferIt->second;
 		}
+
+		_updateDrawBuffers();
 	}
 
 	uint32_t Framebuffer::getHandle() const
@@ -144,6 +146,11 @@ namespace spl
 		// TODO: Check that the texture type and format correspond to the attachment
 		glNamedFramebufferTexture(_framebuffer, _spl::framebufferAttachmentToGLenum(attachment), _textureAttachments[attachment]->getRawTexture().getHandle(), 0);
 
+		_updateDrawBuffers();
+	}
+
+	void Framebuffer::_updateDrawBuffers()
+	{
 		std::vector<GLenum> drawBuffers;
 		for (const std::pair<const FramebufferAttachment, TextureBase*>& textureAttachment : _textureAttachments)
 		{

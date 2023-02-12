@@ -42,12 +42,13 @@ namespace spl
 		_debugMessages(),
 		_lastDebugMessageSent(nullptr),
 
-		_clearColor(0.f, 0.f, 0.f, 1.f),
-		_clearDepth(1.f),
+		_clearColor(0.f, 0.f, 0.f, 0.f),
+		_clearDepth(1.0),
 		_clearStencil(0),
-		_viewportOffset(0, 0),
-		_viewportSize(0, 0),
+		_viewport(0, 0, 0, 0),
+		_isSeamlessCubeMapFilteringEnabled(false),
 		_isDepthTestEnabled(false),
+		_faceCulling(FaceCulling::Disabled),
 
 		_bufferBindings(),
 		_indexedBufferBindings(),
@@ -88,7 +89,7 @@ namespace spl
 		return true;
 	}
 
-	const ImplementationDependent::Values& Context::getImplementationDependentValues() const
+	const ImplementationDependentValues& Context::getImplementationDependentValues() const
 	{
 		return _implementationDependentValues;
 	}
@@ -124,12 +125,25 @@ namespace spl
 
 	void Context::setViewport(int32_t xOffset, int32_t yOffset, uint32_t width, uint32_t height)
 	{
-		_viewportOffset.x = xOffset;
-		_viewportOffset.y = yOffset;
-		_viewportSize.x = width;
-		_viewportSize.y = height;
+		_viewport.x = xOffset;
+		_viewport.y = yOffset;
+		_viewport.z = width;
+		_viewport.w = height;
 
-		glViewport(_viewportOffset.x, _viewportOffset.y, _viewportSize.x, _viewportSize.y);
+		glViewport(_viewport.x, _viewport.y, _viewport.z, _viewport.w);
+	}
+
+	void Context::setIsSeamlessCubeMapFilteringEnabled(bool isEnabled)
+	{
+		_isSeamlessCubeMapFilteringEnabled = isEnabled;
+		if (_isSeamlessCubeMapFilteringEnabled)
+		{
+			glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+		}
+		else
+		{
+			glDisable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+		}
 	}
 
 	void Context::setIsDepthTestEnabled(bool isEnabled)
@@ -142,6 +156,49 @@ namespace spl
 		else
 		{
 			glDisable(GL_DEPTH_TEST);
+		}
+	}
+
+	void Context::setFaceCulling(FaceCulling faceCulling)
+	{
+		switch (faceCulling)
+		{
+			case FaceCulling::Disabled:
+				glDisable(GL_CULL_FACE);
+				return;
+			case FaceCulling::BackClockWise:
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_BACK);
+				glFrontFace(GL_CW);
+				return;
+			case FaceCulling::BackCounterClockWise:
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_BACK);
+				glFrontFace(GL_CCW);
+				return;
+			case FaceCulling::FrontClockWise:
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_FRONT);
+				glFrontFace(GL_CW);
+				return;
+			case FaceCulling::FrontCounterClockWise:
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_FRONT);
+				glFrontFace(GL_CCW);
+				return;
+			case FaceCulling::FrontAndBackClockWise:
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_FRONT_AND_BACK);
+				glFrontFace(GL_CW);
+				return;
+			case FaceCulling::FrontAndBackCounterClockWise:
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_FRONT_AND_BACK);
+				glFrontFace(GL_CCW);
+				return;
+			default:
+				assert(false);
+				return;
 		}
 	}
 
@@ -160,19 +217,24 @@ namespace spl
 		return _clearStencil;
 	}
 
-	const scp::i32vec2& Context::getViewportOffset() const
+	const scp::i32vec4& Context::getViewport() const
 	{
-		return _viewportOffset;
+		return _viewport;
 	}
 
-	const scp::u32vec2& Context::getViewportSize() const
+	bool Context::getIsSeamlessCubeMapFilteringEnabled() const
 	{
-		return _viewportSize;
+		return _isSeamlessCubeMapFilteringEnabled;
 	}
 
 	bool Context::getIsDepthTestEnabled() const
 	{
 		return _isDepthTestEnabled;
+	}
+
+	FaceCulling Context::getFaceCulling() const
+	{
+		return _faceCulling;
 	}
 
 	const Buffer* Context::getBufferBinding(BufferTarget target, uint32_t index) const
@@ -382,7 +444,8 @@ namespace spl
 	{
 		_window = window;
 		_framebufferBindings.fill(&window->getFramebuffer());
-		_viewportSize = window->getSize();
+		_viewport.z = window->getSize().x;
+		_viewport.w = window->getSize().y;
 	}
 
 	void Context::_onFirstActivation()
@@ -398,7 +461,9 @@ namespace spl
 			glDisable(GL_DEBUG_OUTPUT);
 		}
 
-		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+		setIsSeamlessCubeMapFilteringEnabled(true);
+		setIsDepthTestEnabled(true);
+		setFaceCulling(FaceCulling::FrontClockWise);
 
 		_loadImplementationDependentValues();
 	}
