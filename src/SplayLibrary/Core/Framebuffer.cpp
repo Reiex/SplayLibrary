@@ -151,14 +151,13 @@ namespace spl
 
 	void Framebuffer::_updateDrawBuffers()
 	{
+		constexpr uint8_t base = static_cast<uint8_t>(FramebufferAttachment::ColorAttachment0);
 		std::vector<GLenum> drawBuffers;
-		for (const std::pair<const FramebufferAttachment, TextureBase*>& textureAttachment : _textureAttachments)
+		for (uint8_t i = 0; i < 32; ++i)
 		{
-			if (textureAttachment.first != FramebufferAttachment::DepthAttachment
-				&& textureAttachment.first != FramebufferAttachment::StencilAttachment
-				&& textureAttachment.first != FramebufferAttachment::DepthStencilAttachment)
+			if (_textureAttachments.find(static_cast<FramebufferAttachment>(base + i)) != _textureAttachments.end())
 			{
-				drawBuffers.push_back(_spl::framebufferAttachmentToGLenum(textureAttachment.first));
+				drawBuffers.push_back(_spl::framebufferAttachmentToGLenum(static_cast<FramebufferAttachment>(base + i)));
 			}
 		}
 
