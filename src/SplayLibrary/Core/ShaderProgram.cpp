@@ -251,7 +251,7 @@ namespace spl
 		Context* context = Context::getCurrentContext();
 		assert(context);
 		
-		context->_shaderBinding = &program;
+		context->_state.shaderBinding = &program;
 
 		glUseProgram(program._program);
 	}
@@ -261,7 +261,7 @@ namespace spl
 		Context* context = Context::getCurrentContext();
 		assert(context);
 
-		context->_shaderBinding = nullptr;
+		context->_state.shaderBinding = nullptr;
 
 		glUseProgram(0);
 	}

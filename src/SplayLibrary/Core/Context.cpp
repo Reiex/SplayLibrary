@@ -10,6 +10,127 @@
 
 namespace spl
 {
+	uint8_t ContextState::bufferTargetToIndex(BufferTarget target)
+	{
+		switch (target)
+		{
+			case BufferTarget::Array:
+				return 0;
+			case BufferTarget::CopyRead:
+				return 1;
+			case BufferTarget::CopyWrite:
+				return 2;
+			case BufferTarget::DispatchIndirect:
+				return 3;
+			case BufferTarget::DrawIndirect:
+				return 4;
+			case BufferTarget::ElementArray:
+				return 5;
+			case BufferTarget::Parameter:
+				return 6;
+			case BufferTarget::PixelPack:
+				return 7;
+			case BufferTarget::PixelUnpack:
+				return 8;
+			case BufferTarget::Query:
+				return 9;
+			case BufferTarget::Texture:
+				return 10;
+			default:
+				assert(false);
+				return -1;
+		}
+	}
+
+	uint8_t ContextState::indexedBufferTargetToIndex(BufferTarget target)
+	{
+		switch (target)
+		{
+			case BufferTarget::AtomicCounter:
+				return 0;
+			case BufferTarget::ShaderStorage:
+				return 1;
+			case BufferTarget::TransformFeedback:
+				return 2;
+			case BufferTarget::Uniform:
+				return 3;
+			default:
+				assert(false);
+				return -1;
+		}
+	}
+
+	uint8_t ContextState::textureTargetToIndex(TextureTarget target)
+	{
+		return static_cast<uint8_t>(target) - 1;
+	}
+
+	uint8_t ContextState::framebufferTargetToIndex(FramebufferTarget target)
+	{
+		return static_cast<uint8_t>(target);
+	}
+
+	BufferTarget ContextState::indexToBufferTarget(uint8_t index)
+	{
+		switch (index)
+		{
+			case 0:
+				return BufferTarget::Array;
+			case 1:
+				return BufferTarget::CopyRead;
+			case 2:
+				return BufferTarget::CopyWrite;
+			case 3:
+				return BufferTarget::DispatchIndirect;
+			case 4:
+				return BufferTarget::DrawIndirect;
+			case 5:
+				return BufferTarget::ElementArray;
+			case 6:
+				return BufferTarget::Parameter;
+			case 7:
+				return BufferTarget::PixelPack;
+			case 8:
+				return BufferTarget::PixelUnpack;
+			case 9:
+				return BufferTarget::Query;
+			case 10:
+				return BufferTarget::Texture;
+			default:
+				assert(false);
+		}
+	}
+
+	BufferTarget ContextState::indexToIndexedBufferTarget(uint8_t index)
+	{
+		switch (index)
+		{
+			case 0:
+				return BufferTarget::AtomicCounter;
+			case 1:
+				return BufferTarget::ShaderStorage;
+			case 2:
+				return BufferTarget::TransformFeedback;
+			case 3:
+				return BufferTarget::Uniform;
+			default:
+				assert(false);
+		}
+	}
+
+	TextureTarget ContextState::indexToTextureTarget(uint8_t index)
+	{
+		assert(index < 11);
+		return static_cast<TextureTarget>(index + 1);
+	}
+
+	FramebufferTarget ContextState::indexToFramebufferTarget(uint8_t index)
+	{
+		assert(index < 2);
+		return static_cast<FramebufferTarget>(index);
+	}
+
+
 	namespace
 	{
 		void APIENTRY debugMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* rawMessage, const void* userParam)
@@ -38,30 +159,32 @@ namespace spl
 	std::unordered_map<std::thread::id, Context*> Context::_currentContexts;
 
 	Context::Context() :
+		_implementationDependentValues(),
 		_debugContext(false),
 		_debugMessages(),
 		_lastDebugMessageSent(nullptr),
-
-		_clearColor(0.f, 0.f, 0.f, 0.f),
-		_clearDepth(1.0),
-		_clearStencil(0),
-		_viewport(0, 0, 0, 0),
-		_isSeamlessCubeMapFilteringEnabled(false),
-		_isDepthTestEnabled(false),
-		_faceCulling(FaceCulling::Disabled),
-
-		_bufferBindings(),
-		_indexedBufferBindings(),
-		_textureBindings(),
-		_framebufferBindings(),
-		_shaderBinding(nullptr),
-
+		_state(),
 		_window(nullptr),
 		_hasBeenActivated(false)
 	{
-		_bufferBindings.fill(nullptr);
-		_indexedBufferBindings.fill({});	// TODO: Replace dynamic size vectors with static size vectors (contexte state queries...) (same for _textureBindings)
-		_framebufferBindings.fill(nullptr);
+		_state.clearColor = { 0.f, 0.f, 0.f, 0.f };
+		_state.clearDepth = 1.0;
+		_state.clearStencil = 0;
+		_state.viewport = { 0, 0, 0, 0 };
+		_state.isSeamlessCubeMapFilteringEnabled = false;
+		_state.isDepthTestEnabled = false;
+		_state.faceCulling = FaceCulling::Disabled;
+
+		_state.bufferBindings.fill(nullptr);
+		_state.indexedBufferBindings.fill({});	// TODO: Replace dynamic size vectors with static size vectors (contexte state queries...) (same for _textureBindings)
+		_state.textureBindings = {};
+		_state.framebufferBindings.fill(nullptr);
+		_state.shaderBinding = nullptr;
+	}
+
+	const ImplementationDependentValues& Context::getImplementationDependentValues() const
+	{
+		return _implementationDependentValues;
 	}
 
 	bool Context::getIsDebugContext() const
@@ -89,9 +212,70 @@ namespace spl
 		return true;
 	}
 
-	const ImplementationDependentValues& Context::getImplementationDependentValues() const
+	void Context::setState(const ContextState& state)
 	{
-		return _implementationDependentValues;
+		setClearColor(state.clearColor.x, state.clearColor.y, state.clearColor.z, state.clearColor.w);
+		setClearDepth(state.clearDepth);
+		setClearStencil(state.clearStencil);
+		setViewport(state.viewport.x, state.viewport.y, state.viewport.z, state.viewport.w);
+		setIsSeamlessCubeMapFilteringEnabled(state.isSeamlessCubeMapFilteringEnabled);
+		setIsDepthTestEnabled(state.isDepthTestEnabled);
+		setFaceCulling(state.faceCulling);
+
+		// TODO : Unbind everything in _state before binding everything in state
+		// TODO : Very important : When destroying/reallocating OpenGL resources UNBIND THEM !
+
+		_state = state;
+
+		for (uint8_t i = 0; i < _state.bufferBindings.size(); ++i)
+		{
+			if (_state.bufferBindings[i])
+			{
+				Buffer::bind(*_state.bufferBindings[i], ContextState::indexToBufferTarget(i));
+			}
+		}
+
+		for (uint8_t i = 0; i < _state.indexedBufferBindings.size(); ++i)
+		{
+			const uint32_t count = _state.indexedBufferBindings[i].size();
+
+			std::vector<const Buffer*> buffers(count);
+			std::vector<uintptr_t> sizes(count);
+			std::vector<uintptr_t> offsets(count);
+
+			for (uint32_t j = 0; j < count; ++j)
+			{
+				buffers[j] = _state.indexedBufferBindings[i][j].buffer;
+				sizes[j] = _state.indexedBufferBindings[i][j].size;
+				offsets[j] = _state.indexedBufferBindings[i][j].offset;
+			}
+
+			Buffer::bind(buffers.data(), count, ContextState::indexToIndexedBufferTarget(i), 0, sizes.data(), offsets.data());
+		}
+
+		for (uint32_t i = 0; i < _state.textureBindings.size(); ++i)
+		{
+			for (uint8_t j = 0; j < _state.textureBindings[i].size(); ++j)
+			{
+				if (_state.textureBindings[i][j])
+				{
+					RawTexture::bind(*_state.textureBindings[i][j], ContextState::indexToTextureTarget(j), i);
+				}
+			}
+		}
+
+		for (uint8_t i = 0; i < _state.framebufferBindings.size(); ++i)
+		{
+			if (_state.framebufferBindings[i])
+			{
+				Framebuffer::bind(*_state.framebufferBindings[i], ContextState::indexToFramebufferTarget(i));
+			}
+		}
+
+		if (_state.shaderBinding)
+		{
+			ShaderProgram::bind(*_state.shaderBinding);
+		}
 	}
 
 	void Context::setClearColor(float r, float g, float b, float a)
@@ -101,42 +285,42 @@ namespace spl
 		assert(b >= 0.f && b <= 1);
 		assert(a >= 0.f && a <= 1);
 
-		_clearColor.x = r;
-		_clearColor.y = g;
-		_clearColor.z = b;
-		_clearColor.w = a;
+		_state.clearColor.x = r;
+		_state.clearColor.y = g;
+		_state.clearColor.z = b;
+		_state.clearColor.w = a;
 
-		glClearColor(_clearColor.x, _clearColor.y, _clearColor.z, _clearColor.w);
+		glClearColor(_state.clearColor.x, _state.clearColor.y, _state.clearColor.z, _state.clearColor.w);
 	}
 
 	void Context::setClearDepth(double clearDepth)
 	{
 		assert(clearDepth >= 0.f && clearDepth <= 1);
 
-		_clearDepth = clearDepth;
-		glClearDepth(_clearDepth);
+		_state.clearDepth = clearDepth;
+		glClearDepth(_state.clearDepth);
 	}
 
 	void Context::setClearStencil(int32_t clearStencil)
 	{
-		_clearStencil = clearStencil;
-		glClearStencil(_clearStencil);
+		_state.clearStencil = clearStencil;
+		glClearStencil(_state.clearStencil);
 	}
 
 	void Context::setViewport(int32_t xOffset, int32_t yOffset, uint32_t width, uint32_t height)
 	{
-		_viewport.x = xOffset;
-		_viewport.y = yOffset;
-		_viewport.z = width;
-		_viewport.w = height;
+		_state.viewport.x = xOffset;
+		_state.viewport.y = yOffset;
+		_state.viewport.z = width;
+		_state.viewport.w = height;
 
-		glViewport(_viewport.x, _viewport.y, _viewport.z, _viewport.w);
+		glViewport(_state.viewport.x, _state.viewport.y, _state.viewport.z, _state.viewport.w);
 	}
 
 	void Context::setIsSeamlessCubeMapFilteringEnabled(bool isEnabled)
 	{
-		_isSeamlessCubeMapFilteringEnabled = isEnabled;
-		if (_isSeamlessCubeMapFilteringEnabled)
+		_state.isSeamlessCubeMapFilteringEnabled = isEnabled;
+		if (_state.isSeamlessCubeMapFilteringEnabled)
 		{
 			glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 		}
@@ -148,8 +332,8 @@ namespace spl
 
 	void Context::setIsDepthTestEnabled(bool isEnabled)
 	{
-		_isDepthTestEnabled = isEnabled;
-		if (_isDepthTestEnabled)
+		_state.isDepthTestEnabled = isEnabled;
+		if (_state.isDepthTestEnabled)
 		{
 			glEnable(GL_DEPTH_TEST);
 		}
@@ -161,7 +345,9 @@ namespace spl
 
 	void Context::setFaceCulling(FaceCulling faceCulling)
 	{
-		switch (faceCulling)
+		_state.faceCulling = faceCulling;
+
+		switch (_state.faceCulling)
 		{
 			case FaceCulling::Disabled:
 				glDisable(GL_CULL_FACE);
@@ -204,55 +390,58 @@ namespace spl
 
 	const scp::f32vec4& Context::getClearColor() const
 	{
-		return _clearColor;
+		return _state.clearColor;
 	}
 
 	double Context::getClearDepth() const
 	{
-		return _clearDepth;
+		return _state.clearDepth;
 	}
 
 	int32_t Context::getClearStencil() const
 	{
-		return _clearStencil;
+		return _state.clearStencil;
 	}
 
 	const scp::i32vec4& Context::getViewport() const
 	{
-		return _viewport;
+		return _state.viewport;
 	}
 
 	bool Context::getIsSeamlessCubeMapFilteringEnabled() const
 	{
-		return _isSeamlessCubeMapFilteringEnabled;
+		return _state.isSeamlessCubeMapFilteringEnabled;
 	}
 
 	bool Context::getIsDepthTestEnabled() const
 	{
-		return _isDepthTestEnabled;
+		return _state.isDepthTestEnabled;
 	}
 
 	FaceCulling Context::getFaceCulling() const
 	{
-		return _faceCulling;
+		return _state.faceCulling;
 	}
 
-	const Buffer* Context::getBufferBinding(BufferTarget target, uint32_t index) const
+	const Buffer* Context::getBufferBinding(BufferTarget target) const
 	{
-		if (_spl::isIndexedBufferTarget(target))
+		assert(!_spl::isIndexedBufferTarget(target));
+
+		return _state.bufferBindings[ContextState::bufferTargetToIndex(target)];
+	}
+
+	const IndexedBufferBinding& Context::getIndexedBufferBinding(BufferTarget target, uint32_t index) const
+	{
+		assert(_spl::isIndexedBufferTarget(target));
+
+		if (index < _state.indexedBufferBindings[ContextState::indexedBufferTargetToIndex(target)].size())
 		{
-			if (index < _indexedBufferBindings[_spl::bufferTargetContextIndex(target)].size())
-			{
-				return _indexedBufferBindings[_spl::bufferTargetContextIndex(target)][index];
-			}
-			else
-			{
-				return nullptr;
-			}
+			return _state.indexedBufferBindings[ContextState::indexedBufferTargetToIndex(target)][index];
 		}
 		else
 		{
-			return _bufferBindings[_spl::bufferTargetContextIndex(target)];
+			static constexpr IndexedBufferBinding noBinding = { nullptr, 0, 0 };
+			return noBinding;
 		}
 	}
 
@@ -260,9 +449,9 @@ namespace spl
 	{
 		assert(target != TextureTarget::Undefined);
 
-		if (textureUnit < _textureBindings.size())
+		if (textureUnit < _state.textureBindings.size())
 		{
-			return _textureBindings[textureUnit][static_cast<uint32_t>(target) - 1];
+			return _state.textureBindings[textureUnit][ContextState::textureTargetToIndex(target)];
 		}
 		else
 		{
@@ -272,12 +461,17 @@ namespace spl
 
 	const Framebuffer* Context::getFramebufferBinding(FramebufferTarget target) const
 	{
-		return _framebufferBindings[static_cast<uint32_t>(target)];
+		return _state.framebufferBindings[ContextState::framebufferTargetToIndex(target)];
 	}
 
 	const ShaderProgram* Context::getShaderBinding() const
 	{
-		return _shaderBinding;
+		return _state.shaderBinding;
+	}
+
+	const ContextState& Context::getState() const
+	{
+		return _state;
 	}
 
 	Window* Context::getWindow()
@@ -443,9 +637,9 @@ namespace spl
 	void Context::_setWindow(Window* window)
 	{
 		_window = window;
-		_framebufferBindings.fill(&window->getFramebuffer());
-		_viewport.z = window->getSize().x;
-		_viewport.w = window->getSize().y;
+		_state.framebufferBindings.fill(&window->getFramebuffer());
+		_state.viewport.z = window->getSize().x;
+		_state.viewport.w = window->getSize().y;
 	}
 
 	void Context::_onFirstActivation()

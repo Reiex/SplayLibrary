@@ -246,12 +246,12 @@ namespace spl
 		Context* context = Context::getCurrentContext();
 		assert(context);
 
-		if (textureUnit >= context->_textureBindings.size())
+		if (textureUnit >= context->_state.textureBindings.size())
 		{
-			context->_textureBindings.resize(textureUnit + 1, {});
+			context->_state.textureBindings.resize(textureUnit + 1, {});
 		}
 
-		context->_textureBindings[textureUnit][static_cast<uint32_t>(target) - 1] = &texture;
+		context->_state.textureBindings[textureUnit][ContextState::textureTargetToIndex(target)] = &texture;
 
 		glActiveTexture(GL_TEXTURE0 + textureUnit);
 		glBindTexture(_spl::textureTargetToGLenum(target), texture._texture);
@@ -264,13 +264,13 @@ namespace spl
 		Context* context = Context::getCurrentContext();
 		assert(context);
 
-		if (textureUnit < context->_textureBindings.size())
+		if (textureUnit < context->_state.textureBindings.size())
 		{
-			context->_textureBindings[textureUnit][static_cast<uint32_t>(target) - 1] = nullptr;
+			context->_state.textureBindings[textureUnit][ContextState::textureTargetToIndex(target)] = nullptr;
 		}
 		else
 		{
-			context->_textureBindings.resize(textureUnit + 1, {});
+			context->_state.textureBindings.resize(textureUnit + 1, {});
 		}
 
 		glActiveTexture(GL_TEXTURE0 + textureUnit);

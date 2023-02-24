@@ -107,7 +107,7 @@ namespace spl
 		Context* context = Context::getCurrentContext();
 		assert(context);
 
-		context->_framebufferBindings[static_cast<uint32_t>(target)] = &framebuffer;
+		context->_state.framebufferBindings[ContextState::framebufferTargetToIndex(target)] = &framebuffer;
 
 		glBindFramebuffer(_spl::framebufferTargetToGLenum(target), framebuffer._framebuffer);
 	}
