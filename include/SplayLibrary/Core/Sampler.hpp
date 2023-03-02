@@ -88,9 +88,8 @@ namespace spl
 
 			~Sampler();
 
-			static void bind(const Sampler& sampler, uint32_t textureUnit);
+			static void bind(const Sampler* sampler, uint32_t textureUnit);
 			static void bind(const Sampler* const* samplers, uint32_t firstUnit, uint32_t count);
-			static void unbind(uint32_t textureUnit, uint32_t count = 1);
 
 		private:
 

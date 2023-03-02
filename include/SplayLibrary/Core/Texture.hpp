@@ -284,9 +284,8 @@ namespace spl
 			virtual ~Texture();
 
 
-			static void bind(const Texture& texture, uint32_t textureUnit);
+			static void bind(const Texture* texture, uint32_t textureUnit);
 			static void bind(const Texture* const* textures, uint32_t firstUnit, uint32_t count);
-			static void unbind(uint32_t textureUnit, uint32_t count = 1);
 
 		protected:
 

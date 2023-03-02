@@ -110,16 +110,18 @@ namespace spl
 		}
 	}
 
-	void Framebuffer::bind(const Framebuffer& framebuffer, FramebufferTarget target)
+	void Framebuffer::bind(FramebufferTarget target, const Framebuffer* framebuffer)
 	{
-		Context::getCurrentContext()->_state.framebufferBindings[ContextState::framebufferTargetToIndex(target)] = &framebuffer;
-		glBindFramebuffer(_spl::framebufferTargetToGLenum(target), framebuffer._framebuffer);
-	}
+		Context::getCurrentContext()->_state.framebufferBindings[ContextState::framebufferTargetToIndex(target)] = framebuffer;
 
-	void Framebuffer::unbind(FramebufferTarget target)
-	{
-		Context::getCurrentContext()->_state.framebufferBindings[ContextState::framebufferTargetToIndex(target)] = nullptr;
-		glBindFramebuffer(_spl::framebufferTargetToGLenum(target), 0);
+		if (framebuffer)
+		{
+			glBindFramebuffer(_spl::framebufferTargetToGLenum(target), framebuffer->_framebuffer);
+		}
+		else
+		{
+			glBindFramebuffer(_spl::framebufferTargetToGLenum(target), 0);
+		}
 	}
 
 	void Framebuffer::clear(bool color, bool depth, bool stencil)

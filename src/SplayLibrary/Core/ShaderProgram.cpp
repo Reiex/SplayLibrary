@@ -199,7 +199,7 @@ namespace spl
 		return _resourcesInfos[static_cast<uint8_t>(programInterface)][index];
 	}
 
-	void ShaderProgram::setUniform(const std::string& name, uint32_t textureUnit, const Texture& texture) const
+	void ShaderProgram::setUniform(const std::string& name, uint32_t textureUnit, const Texture* texture) const
 	{
 		Texture::bind(texture, textureUnit);
 		_setUniform(name, GlslType::Int, &textureUnit, 1);
@@ -241,18 +241,20 @@ namespace spl
 		destroy();
 	}
 
-	void ShaderProgram::bind(const ShaderProgram& program)
+	void ShaderProgram::bind(const ShaderProgram* program)
 	{
-		assert(program.isValid());
+		assert(program == nullptr || program->isValid());
 
-		Context::getCurrentContext()->_state.shaderBinding = &program;
-		glUseProgram(program._program);
-	}
+		Context::getCurrentContext()->_state.shaderBinding = program;
 
-	void ShaderProgram::unbind()
-	{
-		Context::getCurrentContext()->_state.shaderBinding = nullptr;
-		glUseProgram(0);
+		if (program)
+		{
+			glUseProgram(program->_program);
+		}
+		else
+		{
+			glUseProgram(0);
+		}
 	}
 
 	namespace

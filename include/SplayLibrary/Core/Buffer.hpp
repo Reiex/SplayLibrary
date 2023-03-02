@@ -142,9 +142,8 @@ namespace spl
 			~Buffer();
 
 
-			static void bind(const Buffer& buffer, BufferTarget target, uint32_t index = -1, uintptr_t size = -1, uintptr_t offset = 0);
-			static void bind(const Buffer* const* buffers, uint32_t count, BufferTarget target, uint32_t firstIndex, const uintptr_t* sizes = nullptr, const uintptr_t* offsets = nullptr);
-			static void unbind(BufferTarget target, uint32_t index = -1, uint32_t count = 1);
+			static void bind(BufferTarget target, const Buffer* buffer, uint32_t index = -1, uintptr_t size = -1, uintptr_t offset = 0);
+			static void bind(BufferTarget target, const Buffer* const* buffers, uint32_t firstIndex, uint32_t count, const uintptr_t* sizes = nullptr, const uintptr_t* offsets = nullptr);
 
 		private:
 

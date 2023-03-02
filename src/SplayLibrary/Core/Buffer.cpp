@@ -380,9 +380,9 @@ namespace spl
 		destroy();
 	}
 
-	void Buffer::bind(const Buffer& buffer, BufferTarget target, uint32_t index, uintptr_t size, uintptr_t offset)
+	void Buffer::bind(BufferTarget target, const Buffer* buffer, uint32_t index, uintptr_t size, uintptr_t offset)
 	{
-		assert(buffer.isValid());
+		assert(buffer == nullptr || buffer->isValid());
 
 		Context* context = Context::getCurrentContext();
 
@@ -390,19 +390,27 @@ namespace spl
 		{
 			assert(index < context->_state.indexedBufferBindings[ContextState::indexedBufferTargetToIndex(target)].size());
 
-			if (size == -1)
+			if (buffer == nullptr)
+			{
+				assert(size == -1);
+				assert(offset == 0);
+
+				context->_state.indexedBufferBindings[ContextState::indexedBufferTargetToIndex(target)][index] = IndexedBufferBinding();
+				glBindBufferBase(_spl::bufferTargetToGLenum(target), index, 0);
+			}
+			else if (size == -1)
 			{
 				assert(offset == 0);
 
-				context->_state.indexedBufferBindings[ContextState::indexedBufferTargetToIndex(target)][index] = { &buffer, buffer._size, 0 };
-				glBindBufferBase(_spl::bufferTargetToGLenum(target), index, buffer._buffer);
+				context->_state.indexedBufferBindings[ContextState::indexedBufferTargetToIndex(target)][index] = { buffer, buffer->_size, 0 };
+				glBindBufferBase(_spl::bufferTargetToGLenum(target), index, buffer->_buffer);
 			}
 			else
 			{
-				assert(offset + size <= buffer._size);
+				assert(offset + size <= buffer->_size);
 
-				context->_state.indexedBufferBindings[ContextState::indexedBufferTargetToIndex(target)][index] = { &buffer, size, offset };
-				glBindBufferRange(_spl::bufferTargetToGLenum(target), index, buffer._buffer, offset, size);
+				context->_state.indexedBufferBindings[ContextState::indexedBufferTargetToIndex(target)][index] = { buffer, size, offset };
+				glBindBufferRange(_spl::bufferTargetToGLenum(target), index, buffer->_buffer, offset, size);
 			}
 		}
 		else
@@ -411,18 +419,38 @@ namespace spl
 			assert(size == -1);
 			assert(offset == 0);
 
-			context->_state.bufferBindings[ContextState::bufferTargetToIndex(target)] = &buffer;
-			glBindBuffer(_spl::bufferTargetToGLenum(target), buffer._buffer);
+			context->_state.bufferBindings[ContextState::bufferTargetToIndex(target)] = buffer;
+
+			if (buffer)
+			{
+				glBindBuffer(_spl::bufferTargetToGLenum(target), buffer->_buffer);
+			}
+			else
+			{
+				glBindBuffer(_spl::bufferTargetToGLenum(target), 0);
+			}
 		}
 	}
 
-	void Buffer::bind(const Buffer* const* buffers, uint32_t count, BufferTarget target, uint32_t firstIndex, const uintptr_t* sizes, const uintptr_t* offsets)
+	void Buffer::bind(BufferTarget target, const Buffer* const* buffers, uint32_t firstIndex, uint32_t count, const uintptr_t* sizes, const uintptr_t* offsets)
 	{
 		assert(_spl::isIndexedBufferTarget(target));
 
 		std::vector<IndexedBufferBinding>& contextBuffers = Context::getCurrentContext()->_state.indexedBufferBindings[ContextState::indexedBufferTargetToIndex(target)];
 
 		assert(firstIndex + count <= contextBuffers.size());
+
+		// If this is just unbinding, shortcut the call
+
+		if (buffers == nullptr)
+		{
+			assert(sizes == nullptr);
+			assert(offsets == nullptr);
+
+			glBindBuffersBase(_spl::bufferTargetToGLenum(target), firstIndex, count, nullptr);
+
+			return;
+		}
 
 		// Create an array with all buffer names and update current context buffers
 
@@ -433,18 +461,19 @@ namespace spl
 			{
 				names[i] = 0;
 
-				contextBuffers[j].buffer = nullptr;
-				contextBuffers[j].size = 4;
-				contextBuffers[j].offset = 0;
+				contextBuffers[j] = IndexedBufferBinding();
 			}
 			else
 			{
 				assert(buffers[i]->isValid());
+
 				names[i] = buffers[i]->_buffer;
 
 				contextBuffers[j].buffer = buffers[i];
-				contextBuffers[j].size = (sizes == nullptr ? buffers[i]->getSize() : sizes[i]);
-				contextBuffers[j].offset = (offsets == nullptr ? 0 : offsets[i]);
+				contextBuffers[j].size = (sizes ? buffers[i]->getSize() : sizes[i]);
+				contextBuffers[j].offset = (offsets ? 0 : offsets[i]);
+
+				assert(contextBuffers[j].offset + contextBuffers[j].size <= buffers[i]->_size);
 			}
 		}
 
@@ -469,27 +498,6 @@ namespace spl
 			}
 
 			glBindBuffersRange(_spl::bufferTargetToGLenum(target), firstIndex, count, names, reinterpret_cast<const GLintptr*>(offsets), reinterpret_cast<const GLsizeiptr*>(sizes));
-		}
-	}
-
-	void Buffer::unbind(BufferTarget target, uint32_t index, uint32_t count)
-	{
-		Context* context = Context::getCurrentContext();
-
-		if (_spl::isIndexedBufferTarget(target))
-		{
-			assert(index + count <= Context::getCurrentContext()->_state.indexedBufferBindings[ContextState::indexedBufferTargetToIndex(target)].size());
-
-			std::fill_n(Context::getCurrentContext()->_state.indexedBufferBindings[ContextState::indexedBufferTargetToIndex(target)].begin() + index, count, IndexedBufferBinding{ nullptr, 0, 0 });
-			glBindBuffersBase(_spl::bufferTargetToGLenum(target), index, count, nullptr);
-		}
-		else
-		{
-			assert(index == -1);
-			assert(count == 1);
-
-			context->_state.bufferBindings[ContextState::bufferTargetToIndex(target)] = nullptr;
-			glBindBuffer(_spl::bufferTargetToGLenum(target), 0);
 		}
 	}
 

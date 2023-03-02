@@ -209,14 +209,7 @@ namespace spl
 		{
 			if (_state.bufferBindings[i] != state.bufferBindings[i])
 			{
-				if (state.bufferBindings[i])
-				{
-					Buffer::bind(*state.bufferBindings[i], ContextState::indexToBufferTarget(i));
-				}
-				else
-				{
-					Buffer::unbind(ContextState::indexToBufferTarget(i));
-				}
+				Buffer::bind(ContextState::indexToBufferTarget(i), state.bufferBindings[i]);
 			}
 		}
 
@@ -235,33 +228,19 @@ namespace spl
 				offsets[j] = state.indexedBufferBindings[i][j].offset;
 			}
 
-			Buffer::bind(buffers.data(), count, ContextState::indexToIndexedBufferTarget(i), 0, sizes.data(), offsets.data());
+			Buffer::bind(ContextState::indexToIndexedBufferTarget(i), buffers.data(), count, 0, sizes.data(), offsets.data());
 		}
 
 		for (uint32_t i = 0; i < _state.textureBindings.size(); ++i)
 		{
 			if (_state.textureBindings[i] != state.textureBindings[i])
 			{
-				if (state.textureBindings[i])
-				{
-					Texture::bind(*state.textureBindings[i], i);
-				}
-				else
-				{
-					Texture::unbind(i);
-				}
+				Texture::bind(state.textureBindings[i], i);
 			}
 
 			if (_state.samplerBindings[i] != state.samplerBindings[i])
 			{
-				if (state.samplerBindings[i])
-				{
-					Sampler::bind(*state.samplerBindings[i], i);
-				}
-				else
-				{
-					Sampler::unbind(i);
-				}
+				Sampler::bind(state.samplerBindings[i], i);
 			}
 		}
 
@@ -269,27 +248,13 @@ namespace spl
 		{
 			if (_state.framebufferBindings[i] != state.framebufferBindings[i])
 			{
-				if (state.framebufferBindings[i])
-				{
-					Framebuffer::bind(*state.framebufferBindings[i], ContextState::indexToFramebufferTarget(i));
-				}
-				else
-				{
-					Framebuffer::unbind(ContextState::indexToFramebufferTarget(i));
-				}
+				Framebuffer::bind(ContextState::indexToFramebufferTarget(i), state.framebufferBindings[i]);
 			}
 		}
 
 		if (_state.shaderBinding != state.shaderBinding)
 		{
-			if (state.shaderBinding)
-			{
-				ShaderProgram::bind(*state.shaderBinding);
-			}
-			else
-			{
-				ShaderProgram::unbind();
-			}
+			ShaderProgram::bind(state.shaderBinding);
 		}
 
 		_state = state;
@@ -688,10 +653,10 @@ namespace spl
 
 		_loadImplementationDependentValues();
 
-		_state.indexedBufferBindings[0].resize(_implementationDependentValues.shader.maxAtomicCounterBufferBindings, { nullptr, 4, 0 });
-		_state.indexedBufferBindings[1].resize(_implementationDependentValues.shader.maxShaderStorageBufferBindings, { nullptr, 4, 0 });
-		_state.indexedBufferBindings[2].resize(_implementationDependentValues.transformFeedback.maxTransformFeedbackBuffers, { nullptr, 4, 0 });
-		_state.indexedBufferBindings[3].resize(_implementationDependentValues.shader.maxUniformBufferBindings, { nullptr, 4, 0 });
+		_state.indexedBufferBindings[0].resize(_implementationDependentValues.shader.maxAtomicCounterBufferBindings, IndexedBufferBinding());
+		_state.indexedBufferBindings[1].resize(_implementationDependentValues.shader.maxShaderStorageBufferBindings, IndexedBufferBinding());
+		_state.indexedBufferBindings[2].resize(_implementationDependentValues.transformFeedback.maxTransformFeedbackBuffers, IndexedBufferBinding());
+		_state.indexedBufferBindings[3].resize(_implementationDependentValues.shader.maxUniformBufferBindings, IndexedBufferBinding());
 		_state.textureBindings.resize(_implementationDependentValues.shader.maxCombinedTextureImageUnits);
 		_state.samplerBindings.resize(_implementationDependentValues.shader.maxCombinedTextureImageUnits);
 	}
@@ -966,8 +931,7 @@ namespace spl
 		{
 			if (_state.bufferBindings[i] == buffer)
 			{
-				Buffer::unbind(ContextState::indexToBufferTarget(i));
-				_state.bufferBindings[i] = nullptr;
+				Buffer::bind(ContextState::indexToBufferTarget(i), nullptr);
 			}
 		}
 
@@ -977,8 +941,7 @@ namespace spl
 			{
 				if (_state.indexedBufferBindings[i][j].buffer == buffer)
 				{
-					Buffer::unbind(ContextState::indexToIndexedBufferTarget(i), j);
-					_state.indexedBufferBindings[i][j] = { nullptr, 0, 0 };
+					Buffer::bind(ContextState::indexToIndexedBufferTarget(i), nullptr, j);
 				}
 			}
 		}
@@ -990,7 +953,7 @@ namespace spl
 		{
 			if (_state.textureBindings[i] == texture)
 			{
-				Texture::unbind(i);
+				Texture::bind(nullptr, i);
 			}
 		}
 	}
@@ -1001,7 +964,7 @@ namespace spl
 		{
 			if (_state.samplerBindings[i] == sampler)
 			{
-				Sampler::unbind(i);
+				Sampler::bind(nullptr, i);
 			}
 		}
 	}
@@ -1012,7 +975,7 @@ namespace spl
 		{
 			if (_state.framebufferBindings[i] == framebuffer)
 			{
-				Framebuffer::unbind(ContextState::indexToFramebufferTarget(i));
+				Framebuffer::bind(ContextState::indexToFramebufferTarget(i), nullptr);
 			}
 		}
 	}
@@ -1021,7 +984,7 @@ namespace spl
 	{
 		if (_state.shaderBinding == program)
 		{
-			ShaderProgram::unbind();
+			ShaderProgram::bind(nullptr);
 		}
 	}
 }

@@ -53,8 +53,7 @@ namespace spl
 
 			virtual ~Framebuffer();
 
-			static void bind(const Framebuffer& framebuffer, FramebufferTarget target);
-			static void unbind(FramebufferTarget target);
+			static void bind(FramebufferTarget target, const Framebuffer* framebuffer);
 
 			static void clear(bool color = true, bool depth = true, bool stencil = true);
 

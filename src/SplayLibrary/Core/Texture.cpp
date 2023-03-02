@@ -234,12 +234,12 @@ namespace spl
 		const void* data = params.data;
 		if (params.bufferData)
 		{
-			Buffer::bind(*params.bufferData, BufferTarget::PixelUnpack);
+			Buffer::bind(BufferTarget::PixelUnpack, params.bufferData);
 			data = reinterpret_cast<void*>(params.bufferOffset);
 		}
 		else
 		{
-			Buffer::unbind(BufferTarget::PixelUnpack);
+			Buffer::bind(BufferTarget::PixelUnpack, nullptr);
 		}
 
 		switch (_params.target)
@@ -296,7 +296,7 @@ namespace spl
 		// TODO: Instead of this, restore the buffer that was here before
 		if (params.bufferData)
 		{
-			Buffer::unbind(BufferTarget::PixelUnpack);
+			Buffer::bind(BufferTarget::PixelUnpack, nullptr);
 		}
 	}
 
@@ -453,16 +453,23 @@ namespace spl
 		destroy();
 	}
 
-	void Texture::bind(const Texture& texture, uint32_t textureUnit)
+	void Texture::bind(const Texture* texture, uint32_t textureUnit)
 	{
 		std::vector<const Texture*>& contextTextures = Context::getCurrentContext()->_state.textureBindings;
 
-		assert(texture.isValid());
+		assert(texture == nullptr || texture->isValid());
 		assert(textureUnit < contextTextures.size());
 
-		contextTextures[textureUnit] = &texture;
+		contextTextures[textureUnit] = texture;
 
-		glBindTextureUnit(textureUnit, texture._texture);
+		if (texture)
+		{
+			glBindTextureUnit(textureUnit, texture->_texture);
+		}
+		else
+		{
+			glBindTextureUnit(textureUnit, 0);
+		}
 	}
 
 	void Texture::bind(const Texture* const* textures, uint32_t firstUnit, uint32_t count)
@@ -471,34 +478,32 @@ namespace spl
 
 		assert(firstUnit + count <= contextTextures.size());
 
-		std::copy_n(textures, count, contextTextures.begin() + firstUnit);
-
-		uint32_t* names = reinterpret_cast<uint32_t*>(alloca(sizeof(uint32_t) * count));
-		for (uint32_t i = 0; i < count; ++i)
+		if (textures == nullptr)
 		{
-			if (textures[i] == nullptr)
-			{
-				names[i] = 0;
-			}
-			else
-			{
-				assert(textures[i]->isValid());
-				names[i] = textures[i]->_texture;
-			}
+			std::fill_n(contextTextures.begin() + firstUnit, count, nullptr);
+
+			glBindTextures(firstUnit, count, nullptr);
 		}
+		else
+		{
+			std::copy_n(textures, count, contextTextures.begin() + firstUnit);
 
-		glBindTextures(firstUnit, count, names);
-	}
+			uint32_t* names = reinterpret_cast<uint32_t*>(alloca(sizeof(uint32_t) * count));
+			for (uint32_t i = 0; i < count; ++i)
+			{
+				if (textures[i] == nullptr)
+				{
+					names[i] = 0;
+				}
+				else
+				{
+					assert(textures[i]->isValid());
+					names[i] = textures[i]->_texture;
+				}
+			}
 
-	void Texture::unbind(uint32_t textureUnit, uint32_t count)
-	{
-		std::vector<const Texture*>& contextTextures = Context::getCurrentContext()->_state.textureBindings;
-
-		assert(textureUnit + count <= contextTextures.size());
-
-		std::fill_n(contextTextures.begin() + textureUnit, count, nullptr);
-
-		glBindTextures(textureUnit, count, nullptr);
+			glBindTextures(firstUnit, count, names);
+		}
 	}
 
 	void Texture::_newTextureParameters()

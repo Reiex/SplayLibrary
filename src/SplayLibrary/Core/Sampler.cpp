@@ -223,13 +223,23 @@ namespace spl
 		_destroy();
 	}
 
-	void Sampler::bind(const Sampler& sampler, uint32_t textureUnit)
+	void Sampler::bind(const Sampler* sampler, uint32_t textureUnit)
 	{
-		assert(sampler.isValid());
-		assert(textureUnit < Context::getCurrentContext()->_state.samplerBindings.size());
+		std::vector<const Sampler*>& contextSamplers = Context::getCurrentContext()->_state.samplerBindings;
 
-		Context::getCurrentContext()->_state.samplerBindings[textureUnit] = &sampler;
-		glBindSampler(textureUnit, sampler._sampler);
+		assert(sampler == nullptr || sampler->isValid());
+		assert(textureUnit < contextSamplers.size());
+
+		contextSamplers[textureUnit] = sampler;
+
+		if (sampler)
+		{
+			glBindSampler(textureUnit, sampler->_sampler);
+		}
+		else
+		{
+			glBindSampler(textureUnit, 0);
+		}
 	}
 
 	void Sampler::bind(const Sampler* const* samplers, uint32_t firstUnit, uint32_t count)
@@ -238,31 +248,32 @@ namespace spl
 
 		assert(firstUnit + count <= contextSamplers.size());
 
-		std::copy_n(samplers, count, Context::getCurrentContext()->_state.samplerBindings.begin() + firstUnit);
-
-		uint32_t* names = reinterpret_cast<uint32_t*>(alloca(sizeof(uint32_t) * count));
-		for (uint32_t i = 0; i < count; ++i)
+		if (samplers == nullptr)
 		{
-			if (samplers[i] == nullptr)
-			{
-				names[i] = 0;
-			}
-			else
-			{
-				assert(samplers[i]->isValid());
-				names[i] = samplers[i]->_sampler;
-			}
+			std::fill_n(contextSamplers.begin() + firstUnit, count, nullptr);
+
+			glBindSamplers(firstUnit, count, nullptr);
 		}
+		else
+		{
+			std::copy_n(samplers, count, contextSamplers.begin() + firstUnit);
 
-		glBindSamplers(firstUnit, count, names);
-	}
+			uint32_t* names = reinterpret_cast<uint32_t*>(alloca(sizeof(uint32_t) * count));
+			for (uint32_t i = 0; i < count; ++i)
+			{
+				if (samplers[i] == nullptr)
+				{
+					names[i] = 0;
+				}
+				else
+				{
+					assert(samplers[i]->isValid());
+					names[i] = samplers[i]->_sampler;
+				}
+			}
 
-	void Sampler::unbind(uint32_t textureUnit, uint32_t count)
-	{
-		assert(textureUnit + count <= Context::getCurrentContext()->_state.samplerBindings.size());
-
-		std::fill_n(Context::getCurrentContext()->_state.samplerBindings.begin() + textureUnit, count, nullptr);
-		glBindSamplers(textureUnit, count, nullptr);
+			glBindSamplers(firstUnit, count, names);
+		}
 	}
 
 	void Sampler::_copyFrom(const Sampler& sampler)

@@ -16,30 +16,70 @@ namespace spl
 		glCreateVertexArrays(1, &_vao);
 	}
 
-	void VertexArray::bindElementBuffer(const Buffer& buffer)
+	void VertexArray::bindElementBuffer(const Buffer* buffer)
 	{
-		assert(buffer.isValid());
+		assert(buffer == nullptr || buffer->isValid());
 
-		glVertexArrayElementBuffer(_vao, buffer.getHandle());
-	}
-
-	void VertexArray::bindArrayBuffer(const Buffer& buffer, uint32_t bindingIndex, uintptr_t offset, uint32_t stride)
-	{
-		assert(buffer.isValid());
-
-		glVertexArrayVertexBuffer(_vao, bindingIndex, buffer.getHandle(), offset, stride);
-	}
-
-	void VertexArray::bindArrayBuffer(const Buffer* buffers, uint32_t count, uint32_t firstIndex, const uintptr_t* offsets, const uint32_t* strides)
-	{
-		uint32_t* names = reinterpret_cast<uint32_t*>(alloca(sizeof(uint32_t) * count));
-		for (uint32_t i = 0; i < count; ++i)
+		if (buffer)
 		{
-			assert(buffers[i].isValid());
-			names[i] = buffers[i].getHandle();
+			glVertexArrayElementBuffer(_vao, buffer->getHandle());
 		}
+		else
+		{
+			glVertexArrayElementBuffer(_vao, 0);
+		}
+	}
 
-		glVertexArrayVertexBuffers(_vao, firstIndex, count, names, reinterpret_cast<const GLintptr*>(offsets), reinterpret_cast<const GLsizei*>(strides));
+	void VertexArray::bindArrayBuffer(const Buffer* buffer, uint32_t bindingIndex, uint32_t stride, uintptr_t offset)
+	{
+		assert(buffer == nullptr || buffer->isValid());
+
+		if (buffer)
+		{
+			glVertexArrayVertexBuffer(_vao, bindingIndex, buffer->getHandle(), offset, stride);
+		}
+		else
+		{
+			glVertexArrayVertexBuffer(_vao, bindingIndex, 0, 0, 16);
+		}
+	}
+
+	void VertexArray::bindArrayBuffer(const Buffer* const* buffers, uint32_t firstIndex, uint32_t count, const uint32_t* strides, const uintptr_t* offsets)
+	{
+		if (!buffers)
+		{
+			assert(strides == nullptr);
+			assert(offsets == nullptr);
+
+			glVertexArrayVertexBuffers(_vao, firstIndex, count, nullptr, nullptr, nullptr);
+		}
+		else
+		{
+			assert(strides != nullptr);
+
+			uint32_t* names = reinterpret_cast<uint32_t*>(alloca(sizeof(uint32_t) * count));
+			GLintptr* offsetsGl = reinterpret_cast<GLintptr*>(alloca(sizeof(GLintptr) * count));
+			GLsizei* stridesGl = reinterpret_cast<GLsizei*>(alloca(sizeof(GLsizei) * count));
+			for (uint32_t i = 0; i < count; ++i)
+			{
+				if (buffers[i])
+				{
+					assert(buffers[i]->isValid());
+
+					names[i] = buffers[i]->getHandle();
+					offsetsGl[i] = offsets ? offsets[i] : 0;
+					stridesGl[i] = strides[i];
+				}
+				else
+				{
+					names[i] = 0;
+					offsetsGl[i] = 0;
+					stridesGl[i] = 16;
+				}
+			}
+
+			glVertexArrayVertexBuffers(_vao, firstIndex, count, names, offsetsGl, stridesGl);
+		}
 	}
 
 	void VertexArray::setAttributeFormat(uint32_t attributeIndex, GlslType type, uint32_t offsetInVertexStruct)
