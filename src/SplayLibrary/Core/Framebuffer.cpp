@@ -25,7 +25,7 @@ namespace spl
 	{
 	}
 
-	const TextureBase* Framebuffer::getTextureAttachment(FramebufferAttachment attachment) const
+	const Texture* Framebuffer::getTextureAttachment(FramebufferAttachment attachment) const
 	{
 		assert(_framebuffer != 0);
 
@@ -102,20 +102,30 @@ namespace spl
 		return _framebuffer;
 	}
 
+	Framebuffer::~Framebuffer()
+	{
+		if (_framebuffer != 0)
+		{
+			glDeleteFramebuffers(1, &_framebuffer);
+		}
+	}
+
 	void Framebuffer::bind(const Framebuffer& framebuffer, FramebufferTarget target)
 	{
-		Context* context = Context::getCurrentContext();
-		assert(context);
-
-		context->_state.framebufferBindings[ContextState::framebufferTargetToIndex(target)] = &framebuffer;
-
+		Context::getCurrentContext()->_state.framebufferBindings[ContextState::framebufferTargetToIndex(target)] = &framebuffer;
 		glBindFramebuffer(_spl::framebufferTargetToGLenum(target), framebuffer._framebuffer);
+	}
+
+	void Framebuffer::unbind(FramebufferTarget target)
+	{
+		Context::getCurrentContext()->_state.framebufferBindings[ContextState::framebufferTargetToIndex(target)] = nullptr;
+		glBindFramebuffer(_spl::framebufferTargetToGLenum(target), 0);
 	}
 
 	void Framebuffer::clear(bool color, bool depth, bool stencil)
 	{
 		GLbitfield bitfield = 0;
-		
+
 		if (color)
 		{
 			bitfield |= GL_COLOR_BUFFER_BIT;
@@ -132,19 +142,11 @@ namespace spl
 		glClear(bitfield);
 	}
 
-	Framebuffer::~Framebuffer()
-	{
-		if (_framebuffer != 0)
-		{
-			glDeleteFramebuffers(1, &_framebuffer);
-		}
-	}
-
 	void Framebuffer::_attachTexture(FramebufferAttachment attachment)
 	{
 		// TODO: Choose level / layer (glNamedFramebufferTextureLayer ?)
 		// TODO: Check that the texture type and format correspond to the attachment
-		glNamedFramebufferTexture(_framebuffer, _spl::framebufferAttachmentToGLenum(attachment), _textureAttachments[attachment]->getRawTexture().getHandle(), 0);
+		glNamedFramebufferTexture(_framebuffer, _spl::framebufferAttachmentToGLenum(attachment), _textureAttachments[attachment]->getHandle(), 0);
 
 		_updateDrawBuffers();
 	}

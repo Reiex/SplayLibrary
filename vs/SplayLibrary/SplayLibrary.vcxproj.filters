@@ -28,9 +28,6 @@
     <Filter Include="Header Files\Core\Texture">
       <UniqueIdentifier>{c6374b51-8bca-44f9-870a-0ede8f31e84f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Core\Texture\templates">
-      <UniqueIdentifier>{c7e29cd0-a987-4e3b-af6d-1ed8dfb622cf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Core\Texture">
       <UniqueIdentifier>{41564379-aa5e-49f9-a6c4-5b57d9c0d26c}</UniqueIdentifier>
     </Filter>
@@ -43,12 +40,15 @@
     <Filter Include="Source Files\Core\glad">
       <UniqueIdentifier>{3df9efdf-d4de-4685-87e1-870d9cca81ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Core\Texture\templates">
+      <UniqueIdentifier>{204f9d49-d941-4ab5-ba76-6cff11d50b00}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\SplayLibrary\Core\Buffer.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\SplayLibrary\Core\RawTexture.cpp">
+    <ClCompile Include="..\..\src\SplayLibrary\Core\Texture.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\SplayLibrary\Core\Window.cpp">
@@ -66,9 +66,6 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\Texture\Texture2D.cpp">
       <Filter>Source Files\Core\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\SplayLibrary\Core\Texture\TextureBase.cpp">
-      <Filter>Source Files\Core\Texture</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\SplayLibrary\Core\glad\glad.cpp">
       <Filter>Source Files\Core\glad</Filter>
     </ClCompile>
@@ -82,6 +79,9 @@
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\SplayLibrary\Core\Renderbuffer.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\SplayLibrary\Core\Sampler.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>
@@ -98,7 +98,7 @@
     <ClInclude Include="..\..\include\SplayLibrary\Core\Buffer.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Core\RawTexture.hpp">
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Texture.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Window.hpp">
@@ -124,15 +124,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Texture\Texture2D.hpp">
       <Filter>Header Files\Core\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Core\Texture\TextureBase.hpp">
-      <Filter>Header Files\Core\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Core\Texture\templates\Texture2D.hpp">
-      <Filter>Header Files\Core\Texture\templates</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Core\Texture\templates\TextureBase.hpp">
-      <Filter>Header Files\Core\Texture\templates</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Private\templates\PrivateNotIncluded.hpp">
       <Filter>Header Files\Private\templates</Filter>
@@ -172,6 +163,15 @@
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Renderbuffer.hpp">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Sampler.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\templates\Texture.hpp">
+      <Filter>Header Files\Core\templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\Texture\templates\Texture2D.hpp">
+      <Filter>Header Files\Core\Texture\templates</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

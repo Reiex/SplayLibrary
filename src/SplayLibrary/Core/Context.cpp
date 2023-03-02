@@ -60,11 +60,6 @@ namespace spl
 		}
 	}
 
-	uint8_t ContextState::textureTargetToIndex(TextureTarget target)
-	{
-		return static_cast<uint8_t>(target) - 1;
-	}
-
 	uint8_t ContextState::framebufferTargetToIndex(FramebufferTarget target)
 	{
 		return static_cast<uint8_t>(target);
@@ -118,12 +113,6 @@ namespace spl
 		}
 	}
 
-	TextureTarget ContextState::indexToTextureTarget(uint8_t index)
-	{
-		assert(index < 11);
-		return static_cast<TextureTarget>(index + 1);
-	}
-
 	FramebufferTarget ContextState::indexToFramebufferTarget(uint8_t index)
 	{
 		assert(index < 2);
@@ -167,19 +156,6 @@ namespace spl
 		_window(nullptr),
 		_hasBeenActivated(false)
 	{
-		_state.clearColor = { 0.f, 0.f, 0.f, 0.f };
-		_state.clearDepth = 1.0;
-		_state.clearStencil = 0;
-		_state.viewport = { 0, 0, 0, 0 };
-		_state.isSeamlessCubeMapFilteringEnabled = false;
-		_state.isDepthTestEnabled = false;
-		_state.faceCulling = FaceCulling::Disabled;
-
-		_state.bufferBindings.fill(nullptr);
-		_state.indexedBufferBindings.fill({});	// TODO: Replace dynamic size vectors with static size vectors (contexte state queries...) (same for _textureBindings)
-		_state.textureBindings = {};
-		_state.framebufferBindings.fill(nullptr);
-		_state.shaderBinding = nullptr;
 	}
 
 	const ImplementationDependentValues& Context::getImplementationDependentValues() const
@@ -214,6 +190,13 @@ namespace spl
 
 	void Context::setState(const ContextState& state)
 	{
+		assert(state.indexedBufferBindings[0].size() == _state.indexedBufferBindings[0].size());
+		assert(state.indexedBufferBindings[1].size() == _state.indexedBufferBindings[1].size());
+		assert(state.indexedBufferBindings[2].size() == _state.indexedBufferBindings[2].size());
+		assert(state.indexedBufferBindings[3].size() == _state.indexedBufferBindings[3].size());
+		assert(state.textureBindings.size() == _state.textureBindings.size());
+		assert(state.samplerBindings.size() == _state.samplerBindings.size());
+
 		setClearColor(state.clearColor.x, state.clearColor.y, state.clearColor.z, state.clearColor.w);
 		setClearDepth(state.clearDepth);
 		setClearStencil(state.clearStencil);
@@ -222,16 +205,18 @@ namespace spl
 		setIsDepthTestEnabled(state.isDepthTestEnabled);
 		setFaceCulling(state.faceCulling);
 
-		// TODO : Unbind everything in _state before binding everything in state
-		// TODO : Very important : When destroying/reallocating OpenGL resources UNBIND THEM !
-
-		_state = state;
-
 		for (uint8_t i = 0; i < _state.bufferBindings.size(); ++i)
 		{
-			if (_state.bufferBindings[i])
+			if (_state.bufferBindings[i] != state.bufferBindings[i])
 			{
-				Buffer::bind(*_state.bufferBindings[i], ContextState::indexToBufferTarget(i));
+				if (state.bufferBindings[i])
+				{
+					Buffer::bind(*state.bufferBindings[i], ContextState::indexToBufferTarget(i));
+				}
+				else
+				{
+					Buffer::unbind(ContextState::indexToBufferTarget(i));
+				}
 			}
 		}
 
@@ -245,9 +230,9 @@ namespace spl
 
 			for (uint32_t j = 0; j < count; ++j)
 			{
-				buffers[j] = _state.indexedBufferBindings[i][j].buffer;
-				sizes[j] = _state.indexedBufferBindings[i][j].size;
-				offsets[j] = _state.indexedBufferBindings[i][j].offset;
+				buffers[j] = state.indexedBufferBindings[i][j].buffer;
+				sizes[j] = state.indexedBufferBindings[i][j].size;
+				offsets[j] = state.indexedBufferBindings[i][j].offset;
 			}
 
 			Buffer::bind(buffers.data(), count, ContextState::indexToIndexedBufferTarget(i), 0, sizes.data(), offsets.data());
@@ -255,27 +240,59 @@ namespace spl
 
 		for (uint32_t i = 0; i < _state.textureBindings.size(); ++i)
 		{
-			for (uint8_t j = 0; j < _state.textureBindings[i].size(); ++j)
+			if (_state.textureBindings[i] != state.textureBindings[i])
 			{
-				if (_state.textureBindings[i][j])
+				if (state.textureBindings[i])
 				{
-					RawTexture::bind(*_state.textureBindings[i][j], ContextState::indexToTextureTarget(j), i);
+					Texture::bind(*state.textureBindings[i], i);
+				}
+				else
+				{
+					Texture::unbind(i);
+				}
+			}
+
+			if (_state.samplerBindings[i] != state.samplerBindings[i])
+			{
+				if (state.samplerBindings[i])
+				{
+					Sampler::bind(*state.samplerBindings[i], i);
+				}
+				else
+				{
+					Sampler::unbind(i);
 				}
 			}
 		}
 
 		for (uint8_t i = 0; i < _state.framebufferBindings.size(); ++i)
 		{
-			if (_state.framebufferBindings[i])
+			if (_state.framebufferBindings[i] != state.framebufferBindings[i])
 			{
-				Framebuffer::bind(*_state.framebufferBindings[i], ContextState::indexToFramebufferTarget(i));
+				if (state.framebufferBindings[i])
+				{
+					Framebuffer::bind(*state.framebufferBindings[i], ContextState::indexToFramebufferTarget(i));
+				}
+				else
+				{
+					Framebuffer::unbind(ContextState::indexToFramebufferTarget(i));
+				}
 			}
 		}
 
-		if (_state.shaderBinding)
+		if (_state.shaderBinding != state.shaderBinding)
 		{
-			ShaderProgram::bind(*_state.shaderBinding);
+			if (state.shaderBinding)
+			{
+				ShaderProgram::bind(*state.shaderBinding);
+			}
+			else
+			{
+				ShaderProgram::unbind();
+			}
 		}
+
+		_state = state;
 	}
 
 	void Context::setClearColor(float r, float g, float b, float a)
@@ -445,13 +462,23 @@ namespace spl
 		}
 	}
 
-	const RawTexture* Context::getTextureBinding(TextureTarget target, uint32_t textureUnit) const
+	const Texture* Context::getTextureBinding(uint32_t textureUnit) const
 	{
-		assert(target != TextureTarget::Undefined);
-
 		if (textureUnit < _state.textureBindings.size())
 		{
-			return _state.textureBindings[textureUnit][ContextState::textureTargetToIndex(target)];
+			return _state.textureBindings[textureUnit];
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	const Sampler* Context::getSamplerBinding(uint32_t textureUnit) const
+	{
+		if (textureUnit < _state.samplerBindings.size())
+		{
+			return _state.samplerBindings[textureUnit];
 		}
 		else
 		{
@@ -660,6 +687,13 @@ namespace spl
 		setFaceCulling(FaceCulling::FrontClockWise);
 
 		_loadImplementationDependentValues();
+
+		_state.indexedBufferBindings[0].resize(_implementationDependentValues.shader.maxAtomicCounterBufferBindings, { nullptr, 4, 0 });
+		_state.indexedBufferBindings[1].resize(_implementationDependentValues.shader.maxShaderStorageBufferBindings, { nullptr, 4, 0 });
+		_state.indexedBufferBindings[2].resize(_implementationDependentValues.transformFeedback.maxTransformFeedbackBuffers, { nullptr, 4, 0 });
+		_state.indexedBufferBindings[3].resize(_implementationDependentValues.shader.maxUniformBufferBindings, { nullptr, 4, 0 });
+		_state.textureBindings.resize(_implementationDependentValues.shader.maxCombinedTextureImageUnits);
+		_state.samplerBindings.resize(_implementationDependentValues.shader.maxCombinedTextureImageUnits);
 	}
 
 	namespace
@@ -924,5 +958,70 @@ namespace spl
 		loadValue(GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS,			&transformFeedback.maxTransformFeedbackSeparateAttribs);
 		loadValue(GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS,		&transformFeedback.maxTransformFeedbackSeparateComponents);
 		loadValue(GL_MAX_TRANSFORM_FEEDBACK_BUFFERS,					&transformFeedback.maxTransformFeedbackBuffers);
+	}
+
+	void Context::_unbindBuffer(const Buffer* buffer)
+	{
+		for (uint8_t i = 0; i < _state.bufferBindings.size(); ++i)
+		{
+			if (_state.bufferBindings[i] == buffer)
+			{
+				Buffer::unbind(ContextState::indexToBufferTarget(i));
+				_state.bufferBindings[i] = nullptr;
+			}
+		}
+
+		for (uint8_t i = 0; i < _state.indexedBufferBindings.size(); ++i)
+		{
+			for (uint32_t j = 0; j < _state.indexedBufferBindings[i].size(); ++j)
+			{
+				if (_state.indexedBufferBindings[i][j].buffer == buffer)
+				{
+					Buffer::unbind(ContextState::indexToIndexedBufferTarget(i), j);
+					_state.indexedBufferBindings[i][j] = { nullptr, 0, 0 };
+				}
+			}
+		}
+	}
+
+	void Context::_unbindTexture(const Texture* texture)
+	{
+		for (uint32_t i = 0; i < _state.textureBindings.size(); ++i)
+		{
+			if (_state.textureBindings[i] == texture)
+			{
+				Texture::unbind(i);
+			}
+		}
+	}
+
+	void Context::_unbindSampler(const Sampler* sampler)
+	{
+		for (uint32_t i = 0; i < _state.samplerBindings.size(); ++i)
+		{
+			if (_state.samplerBindings[i] == sampler)
+			{
+				Sampler::unbind(i);
+			}
+		}
+	}
+
+	void Context::_unbindFramebuffer(const Framebuffer* framebuffer)
+	{
+		for (uint8_t i = 0; i < _state.framebufferBindings.size(); ++i)
+		{
+			if (_state.framebufferBindings[i] == framebuffer)
+			{
+				Framebuffer::unbind(ContextState::indexToFramebufferTarget(i));
+			}
+		}
+	}
+
+	void Context::_unbindShaderProgram(const ShaderProgram* program)
+	{
+		if (_state.shaderBinding == program)
+		{
+			ShaderProgram::unbind();
+		}
 	}
 }

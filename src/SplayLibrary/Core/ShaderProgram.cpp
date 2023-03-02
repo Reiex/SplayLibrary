@@ -167,6 +167,8 @@ namespace spl
 
 	void ShaderProgram::destroy()
 	{
+		Context::getCurrentContext()->_unbindShaderProgram(this);
+
 		if (_program != 0)
 		{
 			glDeleteProgram(_program);
@@ -197,15 +199,10 @@ namespace spl
 		return _resourcesInfos[static_cast<uint8_t>(programInterface)][index];
 	}
 
-	void ShaderProgram::setUniform(const std::string& name, uint32_t textureUnit, const RawTexture& texture) const
+	void ShaderProgram::setUniform(const std::string& name, uint32_t textureUnit, const Texture& texture) const
 	{
-		RawTexture::bind(texture, texture.getCreationParams().target, textureUnit);
+		Texture::bind(texture, textureUnit);
 		_setUniform(name, GlslType::Int, &textureUnit, 1);
-	}
-
-	void ShaderProgram::setUniform(const std::string& name, uint32_t textureUnit, const TextureBase& texture) const
-	{
-		setUniform(name, textureUnit, texture.getRawTexture());
 	}
 
 	void ShaderProgram::setUniformBlockBinding(uint32_t shaderBindingIndex, uint32_t bufferBindingIndex) const
@@ -248,21 +245,13 @@ namespace spl
 	{
 		assert(program.isValid());
 
-		Context* context = Context::getCurrentContext();
-		assert(context);
-		
-		context->_state.shaderBinding = &program;
-
+		Context::getCurrentContext()->_state.shaderBinding = &program;
 		glUseProgram(program._program);
 	}
 
 	void ShaderProgram::unbind()
 	{
-		Context* context = Context::getCurrentContext();
-		assert(context);
-
-		context->_state.shaderBinding = nullptr;
-
+		Context::getCurrentContext()->_state.shaderBinding = nullptr;
 		glUseProgram(0);
 	}
 
