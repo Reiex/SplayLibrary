@@ -226,77 +226,146 @@ namespace spl
 	void Texture::update(const TextureUpdateParams& params)
 	{
 		assert(isValid());
-		assert((params.data == nullptr) != (params.bufferData == nullptr));
+		assert(
+			params.data != nullptr && params.bufferData == nullptr && params.framebufferData == nullptr
+			|| params.data == nullptr && params.bufferData != nullptr && params.framebufferData == nullptr
+			|| params.data == nullptr && params.bufferData == nullptr && params.framebufferData != nullptr
+		);
 
-		const uint32_t formatGL = _spl::textureFormatToGLenum(params.dataFormat);
-		const uint32_t dataTypeGL = _spl::textureDataTypeToGLenum(params.dataType);
-
-		const void* data = params.data;
-		if (params.bufferData)
+		if (params.framebufferData)
 		{
-			Buffer::bind(BufferTarget::PixelUnpack, params.bufferData);
-			data = reinterpret_cast<void*>(params.bufferOffset);
+			const Framebuffer* contextFramebuffer = Context::getCurrentContext()->getFramebufferBinding(FramebufferTarget::ReadFramebuffer);
+			if (contextFramebuffer != params.framebufferData)
+			{
+				Framebuffer::bind(FramebufferTarget::ReadFramebuffer, params.framebufferData);
+			}
+
+			switch (_params.target)
+			{
+				case TextureTarget::Texture1D:
+				{
+					assert(params.level < _params.levels);
+					assert(params.width > 0 && params.xOffset + params.width <= _params.width);
+					// TODO: assert on framebuffer size, framebuffer offset and update size...
+
+					glCopyTextureSubImage1D(_texture, params.level, params.xOffset, params.xFramebufferOffset, params.yFramebufferOffset, params.width);
+
+					break;
+				}
+				case TextureTarget::Texture2D:
+				case TextureTarget::Array1D:
+				case TextureTarget::Rectangle:
+				{
+					assert(params.level < _params.levels);
+					assert(params.width > 0 && params.xOffset + params.width <= _params.width);
+					assert(params.height > 0 && params.yOffset + params.height <= _params.height);
+					// TODO: assert on framebuffer size, framebuffer offset and update size...
+
+					glCopyTextureSubImage2D(_texture, params.level, params.xOffset, params.yOffset, params.xFramebufferOffset, params.yFramebufferOffset, params.width, params.height);
+
+					break;
+				}
+				case TextureTarget::Texture3D:
+				case TextureTarget::Array2D:
+				case TextureTarget::CubeMap:
+				case TextureTarget::CubeMapArray:
+				{
+					assert(params.level < _params.levels);
+					assert(params.width > 0 && params.xOffset + params.width <= _params.width);
+					assert(params.height > 0 && params.yOffset + params.height <= _params.height);
+					// TODO: assert on framebuffer size, framebuffer offset and update size...
+
+					glCopyTextureSubImage3D(_texture, params.level, params.xOffset, params.yOffset, params.zOffset, params.xFramebufferOffset, params.yFramebufferOffset, params.width, params.height);
+
+					break;
+				}
+				case TextureTarget::Buffer:
+				case TextureTarget::Multisample2D:
+				case TextureTarget::Multisample2DArray:
+				{
+					assert(false);	// These textures cannot be updated this way.
+					break;
+				}
+				default:
+				{
+					assert(false);
+					break;
+				}
+			}
+
+			if (contextFramebuffer != params.framebufferData)
+			{
+				Framebuffer::bind(FramebufferTarget::ReadFramebuffer, contextFramebuffer);
+			}
 		}
 		else
 		{
-			Buffer::bind(BufferTarget::PixelUnpack, nullptr);
-		}
+			const uint32_t formatGL = _spl::textureFormatToGLenum(params.dataFormat);
+			const uint32_t dataTypeGL = _spl::textureDataTypeToGLenum(params.dataType);
 
-		switch (_params.target)
-		{
-			case TextureTarget::Texture1D:
+			const void* data = params.bufferData ? reinterpret_cast<void*>(params.bufferOffset) : params.data;
+
+			const Buffer* contextUnpackBuffer = Context::getCurrentContext()->getBufferBinding(BufferTarget::PixelUnpack);
+			if (params.bufferData != contextUnpackBuffer)
 			{
-				assert(params.level < _params.levels);
-				assert(params.width > 0 && params.xOffset + params.width <= _params.width);
-
-				glTextureSubImage1D(_texture, params.level, params.xOffset, params.width, formatGL, dataTypeGL, data);
-
-				break;
+				Buffer::bind(BufferTarget::PixelUnpack, params.bufferData);
 			}
-			case TextureTarget::Texture2D:
-			case TextureTarget::Array1D:
-			case TextureTarget::Rectangle:
+
+			switch (_params.target)
 			{
-				assert(params.level < _params.levels);
-				assert(params.width > 0 && params.xOffset + params.width <= _params.width);
-				assert(params.height > 0 && params.yOffset + params.height <= _params.height);
+				case TextureTarget::Texture1D:
+				{
+					assert(params.level < _params.levels);
+					assert(params.width > 0 && params.xOffset + params.width <= _params.width);
 
-				glTextureSubImage2D(_texture, params.level, params.xOffset, params.yOffset, params.width, params.height, formatGL, dataTypeGL, data);
+					glTextureSubImage1D(_texture, params.level, params.xOffset, params.width, formatGL, dataTypeGL, data);
 
-				break;
+					break;
+				}
+				case TextureTarget::Texture2D:
+				case TextureTarget::Array1D:
+				case TextureTarget::Rectangle:
+				{
+					assert(params.level < _params.levels);
+					assert(params.width > 0 && params.xOffset + params.width <= _params.width);
+					assert(params.height > 0 && params.yOffset + params.height <= _params.height);
+
+					glTextureSubImage2D(_texture, params.level, params.xOffset, params.yOffset, params.width, params.height, formatGL, dataTypeGL, data);
+
+					break;
+				}
+				case TextureTarget::Texture3D:
+				case TextureTarget::Array2D:
+				case TextureTarget::CubeMap:
+				case TextureTarget::CubeMapArray:
+				{
+					assert(params.level < _params.levels);
+					assert(params.width > 0 && params.xOffset + params.width <= _params.width);
+					assert(params.height > 0 && params.yOffset + params.height <= _params.height);
+					assert(params.depth > 0 && params.zOffset + params.depth <= _params.depth);
+
+					glTextureSubImage3D(_texture, params.level, params.xOffset, params.yOffset, params.zOffset, params.width, params.height, params.depth, formatGL, dataTypeGL, data);
+
+					break;
+				}
+				case TextureTarget::Buffer:
+				case TextureTarget::Multisample2D:
+				case TextureTarget::Multisample2DArray:
+				{
+					assert(false);	// These textures cannot be updated this way.
+					break;
+				}
+				default:
+				{
+					assert(false);
+					break;
+				}
 			}
-			case TextureTarget::Texture3D:
-			case TextureTarget::Array2D:
-			case TextureTarget::CubeMap:
-			case TextureTarget::CubeMapArray:
+
+			if (params.bufferData != contextUnpackBuffer)
 			{
-				assert(params.level < _params.levels);
-				assert(params.width > 0 && params.xOffset + params.width <= _params.width);
-				assert(params.height > 0 && params.yOffset + params.height <= _params.height);
-				assert(params.depth > 0 && params.zOffset + params.depth <= _params.depth);
-
-				glTextureSubImage3D(_texture, params.level, params.xOffset, params.yOffset, params.zOffset, params.width, params.height, params.depth, formatGL, dataTypeGL, data);
-
-				break;
+				Buffer::bind(BufferTarget::PixelUnpack, contextUnpackBuffer);
 			}
-			case TextureTarget::Buffer:
-			case TextureTarget::Multisample2D:
-			case TextureTarget::Multisample2DArray:
-			{
-				assert(false);	// These textures cannot be updated this way.
-				break;
-			}
-			default:
-			{
-				assert(false);
-				break;
-			}
-		}
-
-		// TODO: Instead of this, restore the buffer that was here before
-		if (params.bufferData)
-		{
-			Buffer::bind(BufferTarget::PixelUnpack, nullptr);
 		}
 	}
 
@@ -315,62 +384,102 @@ namespace spl
 
 	void Texture::setBorderColor(float r, float g, float b, float a)
 	{
+		assert(isValid());
 
+		_borderColor.x = r;
+		_borderColor.y = g;
+		_borderColor.z = b;
+		_borderColor.w = a;
+		glTextureParameterfv(_texture, GL_TEXTURE_BORDER_COLOR, reinterpret_cast<const float*>(&_borderColor));
 	}
 
 	void Texture::setCompareMode(TextureCompareMode compareMode)
 	{
+		assert(isValid());
 
+		_compareMode = compareMode;
+		glTextureParameteri(_texture, GL_TEXTURE_COMPARE_MODE, _spl::textureCompareModeToGLenum(_compareMode));
 	}
 
 	void Texture::setCompareFunc(CompareFunc compareFunc)
 	{
+		assert(isValid());
 
+		_compareFunc = compareFunc;
+		glTextureParameteri(_texture, GL_TEXTURE_COMPARE_FUNC, _spl::compareFuncToGLenum(_compareFunc));
 	}
 
 	void Texture::setMinLod(float lod)
 	{
+		assert(isValid());
 
+		_minLod = lod;
+		glTextureParameterf(_texture, GL_TEXTURE_MIN_LOD, _minLod);
 	}
 
 	void Texture::setMaxLod(float lod)
 	{
+		assert(isValid());
 
+		_maxLod = lod;
+		glTextureParameterf(_texture, GL_TEXTURE_MAX_LOD, _maxLod);
 	}
 
 	void Texture::setLodBias(float bias)
 	{
+		assert(isValid());
 
+		_lodBias = bias;
+		glTextureParameterf(_texture, GL_TEXTURE_LOD_BIAS, _lodBias);
 	}
 
 	void Texture::setMinFiltering(TextureFiltering filtering)
 	{
+		assert(isValid());
 
+		_minFilter = filtering;
+		glTextureParameteri(_texture, GL_TEXTURE_MIN_FILTER, _spl::textureFilteringToGLenum(_minFilter));
 	}
 
 	void Texture::setMagFiltering(TextureFiltering filtering)
 	{
+		assert(isValid());
 
+		_magFilter = filtering;
+		glTextureParameteri(_texture, GL_TEXTURE_MAG_FILTER, _spl::textureFilteringToGLenum(_magFilter));
 	}
 
 	void Texture::setMaxAnisotropy(float maxAnisotropy)
 	{
+		assert(isValid());
+		assert(maxAnisotropy >= 1.f);
 
+		_maxAnisotropy = maxAnisotropy;
+		glTextureParameterf(_texture, GL_TEXTURE_MAX_ANISOTROPY, _maxAnisotropy);
 	}
 
 	void Texture::setWrappingS(TextureWrapping wrap)
 	{
+		assert(isValid());
 
+		_sWrap = wrap;
+		glTextureParameteri(_texture, GL_TEXTURE_WRAP_S, _spl::textureWrappingToGLenum(_sWrap));
 	}
 
 	void Texture::setWrappingT(TextureWrapping wrap)
 	{
+		assert(isValid());
 
+		_tWrap = wrap;
+		glTextureParameteri(_texture, GL_TEXTURE_WRAP_T, _spl::textureWrappingToGLenum(_tWrap));
 	}
 
 	void Texture::setWrappingR(TextureWrapping wrap)
 	{
+		assert(isValid());
 
+		_rWrap = wrap;
+		glTextureParameteri(_texture, GL_TEXTURE_WRAP_R, _spl::textureWrappingToGLenum(_rWrap));
 	}
 
 	bool Texture::isValid() const

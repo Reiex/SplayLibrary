@@ -120,12 +120,12 @@ namespace spl
 		glSamplerParameteri(_sampler, GL_TEXTURE_MAG_FILTER, _spl::textureFilteringToGLenum(_magFilter));
 	}
 
-	void Sampler::setMaxAnisotropy(float maxAnisostropy)
+	void Sampler::setMaxAnisotropy(float maxAnisotropy)
 	{
 		assert(isValid());
-		assert(maxAnisostropy >= 1.f);
+		assert(maxAnisotropy >= 1.f);
 
-		_maxAnisotropy = maxAnisostropy;
+		_maxAnisotropy = maxAnisotropy;
 		glSamplerParameterf(_sampler, GL_TEXTURE_MAX_ANISOTROPY, _maxAnisotropy);
 	}
 
