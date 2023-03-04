@@ -186,7 +186,7 @@ namespace scp
 	}
 
 	template<typename TValue>
-	constexpr void Quat<TValue>::getRotationMatrix(TValue& r00, TValue& r01, TValue& r02, TValue& r10, TValue& r11, TValue& r12, TValue& r20, TValue& r21, TValue& r22)
+	constexpr void Quat<TValue>::getRotationMatrix(TValue& r00, TValue& r01, TValue& r02, TValue& r10, TValue& r11, TValue& r12, TValue& r20, TValue& r21, TValue& r22) const
 	{
 		assert(std::abs(normSq() - _one) < 1e-2f);
 
@@ -211,6 +211,77 @@ namespace scp
 		r20 = xz2 - wy2;
 		r21 = wx2 + yz2;
 		r22 = ww - xx - yy + zz;
+	}
+
+	template<typename TValue>
+	constexpr void Quat<TValue>::setFromUnitVectorRotation(const TValue& xFrom, const TValue& yFrom, const TValue& zFrom, const TValue& xTo, const TValue& yTo, const TValue& zTo)
+	{
+		assert(std::abs(xFrom * xFrom + yFrom * yFrom + zFrom * zFrom - _one) < 1e-2f);
+		assert(std::abs(xTo * xTo + yTo * yTo + zTo * zTo - _one) < 1e-2f);
+
+		const TValue xN = yFrom * zTo - yTo * zFrom;
+		const TValue yN = zFrom * xTo - zTo * xFrom;
+		const TValue zN = xFrom * yTo - xTo * yFrom;
+		const TValue nLength = std::sqrt(xN * xN + yN * yN + zN * zN);
+
+		// if vFrom is colinear to vTo
+
+		if (nLength == _zero)
+		{
+			// if vFrom == vTo
+
+			if (std::signbit(xFrom) == std::signbit(yFrom))
+			{
+				w = _one;
+				x = _zero;
+				y = _zero;
+				z = _zero;
+			}
+
+			// if vFrom == -vTo
+
+			else
+			{
+				// if vFrom == (1, 0, 0) and vTo == (-1, 0, 0)
+
+				if (xFrom == _one)
+				{
+					w = _zero;
+					x = _zero;
+					y = _one;
+					z = _zero;
+				}
+
+				// if vFrom is a random vector and vTo == -vFrom
+
+				else
+				{
+					w = _zero;
+					x = _one - xFrom * xFrom;
+					y = -xFrom * yFrom;
+					z = -xFrom * zFrom;
+					const TValue invLength = _one / std::sqrt(x * x + y * y + z * z);
+					x *= invLength;
+					y *= invLength;
+					z *= invLength;
+				}
+			}
+		}
+
+		// if vFrom and vTo are not related
+
+		else
+		{
+			TValue angle = std::asin(nLength);
+			const TValue dotFromTo = xFrom * xTo + yFrom * yTo + zFrom * zTo;
+			if (dotFromTo < _zero)
+			{
+				angle = std::numbers::pi - angle;
+			}
+
+			const TValue nInvLength = _one / nLength;
+			setFromRotationAxisAngle(xN * nInvLength, yN * nInvLength, zN * nInvLength, angle);
+		}
 	}
 
 	template<typename TValue>

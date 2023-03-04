@@ -212,7 +212,6 @@ namespace spl
 	{
 		public:
 
-			// TODO: Give the possibility to not retrieve all the shader resource/interface informations directly !
 			ShaderProgram();
 			ShaderProgram(const std::filesystem::path& glslCompute, ShaderProgramFlags::Flags flags = ShaderProgramFlags::None);
 			ShaderProgram(const std::filesystem::path& glslVertex, const std::filesystem::path& glslFragment, ShaderProgramFlags::Flags flags = ShaderProgramFlags::None);
