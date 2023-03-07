@@ -249,6 +249,9 @@ namespace spl
 
 			void createNew(const TextureCreationParams& params);
 			void update(const TextureUpdateParams& params);
+			// TODO: glClearTexSubImage
+			// TODO: glInvalidateTexSubImage
+			// TODO: Texture views (new class that Texture inherits from ?)
 			void destroy();
 
 
