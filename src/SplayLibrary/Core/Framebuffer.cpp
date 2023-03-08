@@ -12,89 +12,120 @@ namespace spl
 {
 	Framebuffer::Framebuffer() :
 		_framebuffer(),
-		_textureAttachments(),
-		_renderbufferAttachments()
+		_attachments(Context::getCurrentContext()->getImplementationDependentValues().general.maxColorAttachments + 2, nullptr)
 	{
 		glCreateFramebuffers(1, &_framebuffer);
 	}
 
 	Framebuffer::Framebuffer(Window* window) :
 		_framebuffer(0),
-		_textureAttachments(),
-		_renderbufferAttachments()
+		_attachments()
 	{
 	}
 
-	const Texture* Framebuffer::getTextureAttachment(FramebufferAttachment attachment) const
+	void Framebuffer::attachRenderbuffer(FramebufferAttachment attachment, uint32_t attachmentIndex, Renderbuffer* renderbuffer)
 	{
-		assert(_framebuffer != 0);
+		assert(isValid());
+		assert(renderbuffer == nullptr || renderbuffer->isValid());
+		assert(attachmentIndex == 0 || attachment == FramebufferAttachment::ColorAttachment);
 
-		const auto it = _textureAttachments.find(attachment);
-		if (it != _textureAttachments.end())
+		attachmentIndex += static_cast<uint32_t>(attachment);
+		
+		assert(attachmentIndex < _attachments.size());
+
+		if (_attachments[attachmentIndex] != renderbuffer)
 		{
-			return it->second;
-		}
-		else
-		{
-			return nullptr;
-		}
-	}
+			if (_attachments[attachmentIndex] != nullptr)
+			{
+				uint32_t i = 0;
+				while (i < _attachments.size() && (_attachments[i] != _attachments[attachmentIndex] || i == attachmentIndex))
+				{
+					++i;
+				}
 
-	void Framebuffer::createNewRenderbufferAttachment(FramebufferAttachment attachment, TextureInternalFormat internalFormat, uint32_t width, uint32_t height, uint32_t samples)
-	{
-		assert(_framebuffer != 0);
+				if (i == _attachments.size())
+				{
+					_attachments[attachmentIndex]->_framebufferAttached.erase(this);
+				}
+			}
 
-		auto textureIt = _textureAttachments.find(attachment);
-		auto renderbufferIt = _renderbufferAttachments.find(attachment);
+			_attachments[attachmentIndex] = renderbuffer;
+			_attachments[attachmentIndex]->_framebufferAttached.insert(this);
 
-		if (textureIt != _textureAttachments.end())
-		{
-			delete textureIt->second;
-			_textureAttachments.erase(textureIt);
-		}
-		else if (renderbufferIt != _renderbufferAttachments.end())
-		{
-			delete renderbufferIt->second;
-		}
-
-		// TODO: Check that the render buffer type and format correspond to the attachment
-		_renderbufferAttachments[attachment] = new Renderbuffer(internalFormat, width, height, samples);
-		glNamedFramebufferRenderbuffer(_framebuffer, _spl::framebufferAttachmentToGLenum(attachment), GL_RENDERBUFFER, _renderbufferAttachments[attachment]->getHandle());
-	}
-
-	const Renderbuffer* Framebuffer::getRenderbufferAttachment(FramebufferAttachment attachment) const
-	{
-		assert(_framebuffer != 0);
-
-		const auto it = _renderbufferAttachments.find(attachment);
-		if (it != _renderbufferAttachments.end())
-		{
-			return it->second;
-		}
-		else
-		{
-			return nullptr;
-		}
-	}
-
-	void Framebuffer::removeAttachment(FramebufferAttachment attachment)
-	{
-		assert(_framebuffer != 0);
-
-		auto textureIt = _textureAttachments.find(attachment);
-		auto renderbufferIt = _renderbufferAttachments.find(attachment);
-
-		if (textureIt != _textureAttachments.end())
-		{
-			delete textureIt->second;
-			_textureAttachments.erase(textureIt);
-		}
-		else if (renderbufferIt != _renderbufferAttachments.end())
-		{
-			delete renderbufferIt->second;
+			const uint32_t name = renderbuffer ? renderbuffer->getHandle() : 0;
+			glNamedFramebufferRenderbuffer(_framebuffer, _spl::attachmentIndexToGLenum(attachmentIndex), GL_RENDERBUFFER, name);
 		}
 
 		_updateDrawBuffers();
+	}
+
+	void Framebuffer::attachTexture(FramebufferAttachment attachment, uint32_t attachmentIndex, Texture* texture, uint32_t layer, uint32_t level)
+	{
+		assert(isValid());
+		assert(texture == nullptr || texture->isValid());
+		assert(attachmentIndex == 0 || attachment == FramebufferAttachment::ColorAttachment);
+
+		attachmentIndex += static_cast<uint32_t>(attachment);
+
+		assert(attachmentIndex < _attachments.size());
+
+		if (_attachments[attachmentIndex] != texture)
+		{
+			if (_attachments[attachmentIndex] != nullptr)
+			{
+				uint32_t i = 0;
+				while (i < _attachments.size() && (_attachments[i] != _attachments[attachmentIndex] || i == attachmentIndex))
+				{
+					++i;
+				}
+
+				if (i == _attachments.size())
+				{
+					_attachments[attachmentIndex]->_framebufferAttached.erase(this);
+				}
+			}
+
+			_attachments[attachmentIndex] = texture;
+			_attachments[attachmentIndex]->_framebufferAttached.insert(this);
+
+			if (texture == nullptr)
+			{
+				glNamedFramebufferRenderbuffer(_framebuffer, _spl::attachmentIndexToGLenum(attachmentIndex), GL_RENDERBUFFER, 0);
+			}
+			else
+			{
+				const TextureCreationParams& params = texture->getCreationParams();
+
+				assert(params.target != TextureTarget::Buffer);
+				assert(level < params.levels);
+
+				if (layer == -1)
+				{
+					glNamedFramebufferTexture(_framebuffer, _spl::attachmentIndexToGLenum(attachmentIndex), texture->getHandle(), level);
+				}
+				else
+				{
+					assert(
+						params.target == TextureTarget::Texture3D
+						|| params.target == TextureTarget::Array1D
+						|| params.target == TextureTarget::Array2D
+						|| params.target == TextureTarget::CubeMap
+						|| params.target == TextureTarget::CubeMapArray
+						|| params.target == TextureTarget::Multisample2DArray
+					);
+					assert(layer < params.depth);
+
+					glNamedFramebufferTextureLayer(_framebuffer, _spl::attachmentIndexToGLenum(attachmentIndex), texture->getHandle(), level, layer);
+				}
+			}
+		}
+
+		_updateDrawBuffers();
+	}
+
+	bool Framebuffer::isValid() const
+	{
+		return _framebuffer != 0;
 	}
 
 	uint32_t Framebuffer::getHandle() const
@@ -106,6 +137,14 @@ namespace spl
 	{
 		if (_framebuffer != 0)
 		{
+			for (FramebufferAttachable* attachment : _attachments)
+			{
+				if (attachment != nullptr)
+				{
+					attachment->_framebufferAttached.erase(this);
+				}
+			}
+
 			glDeleteFramebuffers(1, &_framebuffer);
 		}
 	}
@@ -144,24 +183,25 @@ namespace spl
 		glClear(bitfield);
 	}
 
-	void Framebuffer::_attachTexture(FramebufferAttachment attachment)
+	void Framebuffer::_removeAttachment(const FramebufferAttachable* attachment)
 	{
-		// TODO: Choose level / layer (glNamedFramebufferTextureLayer ?)
-		// TODO: Check that the texture type and format correspond to the attachment
-		glNamedFramebufferTexture(_framebuffer, _spl::framebufferAttachmentToGLenum(attachment), _textureAttachments[attachment]->getHandle(), 0);
-
-		_updateDrawBuffers();
+		for (FramebufferAttachable*& elt : _attachments)
+		{
+			if (elt == attachment)
+			{
+				elt = nullptr;
+			}
+		}
 	}
 
 	void Framebuffer::_updateDrawBuffers()
 	{
-		constexpr uint8_t base = static_cast<uint8_t>(FramebufferAttachment::ColorAttachment0);
 		std::vector<GLenum> drawBuffers;
-		for (uint8_t i = 0; i < 32; ++i)
+		for (uint32_t i = 2; i < _attachments.size(); ++i)
 		{
-			if (_textureAttachments.find(static_cast<FramebufferAttachment>(base + i)) != _textureAttachments.end())
+			if (_attachments[i] != nullptr)
 			{
-				drawBuffers.push_back(_spl::framebufferAttachmentToGLenum(static_cast<FramebufferAttachment>(base + i)));
+				drawBuffers.push_back(_spl::attachmentIndexToGLenum(i));
 			}
 		}
 

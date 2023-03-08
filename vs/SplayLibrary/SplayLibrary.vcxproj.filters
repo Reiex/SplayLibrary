@@ -84,6 +84,9 @@
     <ClCompile Include="..\..\src\SplayLibrary\Core\Sampler.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\SplayLibrary\Core\FramebufferAttachable.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Event.hpp">
@@ -118,9 +121,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\CoreTypes.hpp">
       <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\SplayLibrary\Core\templates\Framebuffer.hpp">
-      <Filter>Header Files\Core\templates</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Texture\Texture2D.hpp">
       <Filter>Header Files\Core\Texture</Filter>
@@ -172,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\SplayLibrary\Core\Texture\templates\Texture2D.hpp">
       <Filter>Header Files\Core\Texture\templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\SplayLibrary\Core\FramebufferAttachable.hpp">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

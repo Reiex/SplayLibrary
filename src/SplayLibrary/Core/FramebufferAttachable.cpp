@@ -5,19 +5,18 @@
 //! \date 2021-2023
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#pragma once
+#include <SplayLibrary/Core/Core.hpp>
+#include <SplayLibrary/Private/PrivateNotIncluded.hpp>
 
+namespace spl
+{
+	void FramebufferAttachable::_detachFramebuffers()
+	{
+		for (Framebuffer* framebuffer : _framebufferAttached)
+		{
+			framebuffer->_removeAttachment(this);
+		}
 
-#include <SplayLibrary/Core/CoreDecl.hpp>
-
-#include <SciPP/SciPP.hpp>
-#include <Diskon/Diskon.hpp>
-#include <DejaVu/DejaVu.hpp>
-
-
-#include <SplayLibrary/Core/templates/Buffer.hpp>
-
-#include <SplayLibrary/Core/templates/Texture.hpp>
-
-#include <SplayLibrary/Core/templates/ShaderProgram.hpp>
-
+		_framebufferAttached.clear();
+	}
+}

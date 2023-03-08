@@ -234,7 +234,7 @@ namespace spl
 		uint32_t level = 0;
 	};
 
-	class Texture
+	class Texture : public FramebufferAttachable
 	{
 		public:
 
@@ -287,7 +287,7 @@ namespace spl
 			TextureWrapping getWrappingR() const;
 
 
-			virtual ~Texture();
+			virtual ~Texture() override;
 
 
 			static void bind(const Texture* texture, uint32_t textureUnit);

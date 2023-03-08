@@ -373,6 +373,8 @@ namespace spl
 	{
 		if (_texture != 0)
 		{
+			_detachFramebuffers();
+
 			Context::getCurrentContext()->_unbindTexture(this);
 
 			glDeleteTextures(1, &_texture);
