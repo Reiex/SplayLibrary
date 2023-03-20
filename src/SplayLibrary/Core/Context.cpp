@@ -190,6 +190,10 @@ namespace spl
 
 	void Context::setState(const ContextState& state)
 	{
+		assert(state.isBlendEnabled.size() == _state.isBlendEnabled.size());
+		assert(state.blendEquations.size() == _state.blendEquations.size());
+		assert(state.blendFuncs.size() == _state.blendFuncs.size());
+
 		assert(state.indexedBufferBindings[0].size() == _state.indexedBufferBindings[0].size());
 		assert(state.indexedBufferBindings[1].size() == _state.indexedBufferBindings[1].size());
 		assert(state.indexedBufferBindings[2].size() == _state.indexedBufferBindings[2].size());
@@ -197,13 +201,26 @@ namespace spl
 		assert(state.textureBindings.size() == _state.textureBindings.size());
 		assert(state.samplerBindings.size() == _state.samplerBindings.size());
 
+		setIsSeamlessCubeMapFilteringEnabled(state.isSeamlessCubeMapFilteringEnabled);
+		setViewport(state.viewport.x, state.viewport.y, state.viewport.z, state.viewport.w);
 		setClearColor(state.clearColor.x, state.clearColor.y, state.clearColor.z, state.clearColor.w);
 		setClearDepth(state.clearDepth);
 		setClearStencil(state.clearStencil);
-		setViewport(state.viewport.x, state.viewport.y, state.viewport.z, state.viewport.w);
-		setIsSeamlessCubeMapFilteringEnabled(state.isSeamlessCubeMapFilteringEnabled);
+		setFaceCullingMode(state.faceCullingMode);
+		setFaceCullingOrientation(state.faceCullingOrientation);
+		setIsDepthWriteEnabled(state.isDepthWriteEnabled);
 		setIsDepthTestEnabled(state.isDepthTestEnabled);
-		setFaceCulling(state.faceCulling);
+		setDepthTestFunc(state.depthTestFunc);
+		setIsStencilTestEnabled(state.isStencilTestEnabled);
+
+		for (uint32_t i = 0; i < _implementationDependentValues.general.maxDrawBuffers; ++i)
+		{
+			setIsBlendEnabled(i, state.isBlendEnabled[i]);
+			setBlendEquations(i, state.blendEquations[i][0], state.blendEquations[i][1]);
+			setBlendFuncs(i, state.blendFuncs[i][0], state.blendFuncs[i][1], state.blendFuncs[i][2], state.blendFuncs[i][3]);
+		}
+
+		setBlendColor(state.blendColor.x, state.blendColor.y, state.blendColor.z, state.blendColor.w);
 
 		for (uint8_t i = 0; i < _state.bufferBindings.size(); ++i)
 		{
@@ -260,6 +277,29 @@ namespace spl
 		_state = state;
 	}
 
+	void Context::setIsSeamlessCubeMapFilteringEnabled(bool isEnabled)
+	{
+		_state.isSeamlessCubeMapFilteringEnabled = isEnabled;
+		if (_state.isSeamlessCubeMapFilteringEnabled)
+		{
+			glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+		}
+		else
+		{
+			glDisable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+		}
+	}
+
+	void Context::setViewport(int32_t xOffset, int32_t yOffset, uint32_t width, uint32_t height)
+	{
+		_state.viewport.x = xOffset;
+		_state.viewport.y = yOffset;
+		_state.viewport.z = width;
+		_state.viewport.w = height;
+
+		glViewport(_state.viewport.x, _state.viewport.y, _state.viewport.z, _state.viewport.w);
+	}
+	
 	void Context::setClearColor(float r, float g, float b, float a)
 	{
 		assert(r >= 0.f && r <= 1);
@@ -288,28 +328,55 @@ namespace spl
 		_state.clearStencil = clearStencil;
 		glClearStencil(_state.clearStencil);
 	}
-
-	void Context::setViewport(int32_t xOffset, int32_t yOffset, uint32_t width, uint32_t height)
+	
+	void Context::setFaceCullingMode(FaceCullingMode mode)
 	{
-		_state.viewport.x = xOffset;
-		_state.viewport.y = yOffset;
-		_state.viewport.z = width;
-		_state.viewport.w = height;
+		_state.faceCullingMode = mode;
 
-		glViewport(_state.viewport.x, _state.viewport.y, _state.viewport.z, _state.viewport.w);
+		switch (_state.faceCullingMode)
+		{
+			case FaceCullingMode::Disabled:
+				glDisable(GL_CULL_FACE);
+				return;
+			case FaceCullingMode::ClockWise:
+				glEnable(GL_CULL_FACE);
+				glFrontFace(GL_CW);
+				return;
+			case FaceCullingMode::CounterClockWise:
+				glEnable(GL_CULL_FACE);
+				glFrontFace(GL_CCW);
+				return;
+			default:
+				assert(false);
+				return;
+		}
 	}
 
-	void Context::setIsSeamlessCubeMapFilteringEnabled(bool isEnabled)
+	void Context::setFaceCullingOrientation(FaceOrientation orientation)
 	{
-		_state.isSeamlessCubeMapFilteringEnabled = isEnabled;
-		if (_state.isSeamlessCubeMapFilteringEnabled)
+		_state.faceCullingOrientation = orientation;
+
+		switch (_state.faceCullingOrientation)
 		{
-			glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+			case FaceOrientation::Front:
+				glCullFace(GL_FRONT);
+				return;
+			case FaceOrientation::Back:
+				glCullFace(GL_BACK);
+				return;
+			case FaceOrientation::FrontAndBack:
+				glCullFace(GL_FRONT_AND_BACK);
+				return;
+			default:
+				assert(false);
+				return;
 		}
-		else
-		{
-			glDisable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-		}
+	}
+
+	void Context::setIsDepthWriteEnabled(bool isEnabled)
+	{
+		_state.isDepthWriteEnabled = isEnabled;
+		glDepthMask(_state.isDepthWriteEnabled);
 	}
 
 	void Context::setIsDepthTestEnabled(bool isEnabled)
@@ -325,49 +392,80 @@ namespace spl
 		}
 	}
 
-	void Context::setFaceCulling(FaceCulling faceCulling)
+	void Context::setDepthTestFunc(CompareFunc func)
 	{
-		_state.faceCulling = faceCulling;
+		_state.depthTestFunc = func;
+		glDepthFunc(_spl::compareFuncToGLenum(_state.depthTestFunc));
+	}
 
-		switch (_state.faceCulling)
+	void Context::setIsStencilTestEnabled(bool isEnabled)
+	{
+		_state.isStencilTestEnabled = isEnabled;
+		if (_state.isStencilTestEnabled)
 		{
-			case FaceCulling::Disabled:
-				glDisable(GL_CULL_FACE);
-				return;
-			case FaceCulling::BackClockWise:
-				glEnable(GL_CULL_FACE);
-				glCullFace(GL_BACK);
-				glFrontFace(GL_CW);
-				return;
-			case FaceCulling::BackCounterClockWise:
-				glEnable(GL_CULL_FACE);
-				glCullFace(GL_BACK);
-				glFrontFace(GL_CCW);
-				return;
-			case FaceCulling::FrontClockWise:
-				glEnable(GL_CULL_FACE);
-				glCullFace(GL_FRONT);
-				glFrontFace(GL_CW);
-				return;
-			case FaceCulling::FrontCounterClockWise:
-				glEnable(GL_CULL_FACE);
-				glCullFace(GL_FRONT);
-				glFrontFace(GL_CCW);
-				return;
-			case FaceCulling::FrontAndBackClockWise:
-				glEnable(GL_CULL_FACE);
-				glCullFace(GL_FRONT_AND_BACK);
-				glFrontFace(GL_CW);
-				return;
-			case FaceCulling::FrontAndBackCounterClockWise:
-				glEnable(GL_CULL_FACE);
-				glCullFace(GL_FRONT_AND_BACK);
-				glFrontFace(GL_CCW);
-				return;
-			default:
-				assert(false);
-				return;
+			glEnable(GL_STENCIL_TEST);
 		}
+		else
+		{
+			glDisable(GL_STENCIL_TEST);
+		}
+	}
+
+	void Context::setIsBlendEnabled(uint32_t drawBufferIndex, bool isEnabled)
+	{
+		assert(drawBufferIndex < _state.isBlendEnabled.size());
+
+		_state.isBlendEnabled[drawBufferIndex] = isEnabled;
+
+		if (isEnabled)
+		{
+			glEnablei(GL_BLEND, drawBufferIndex);
+		}
+		else
+		{
+			glDisablei(GL_BLEND, drawBufferIndex);
+		}
+	}
+
+	void Context::setBlendEquations(uint32_t drawBufferIndex, BlendEquation colorEquation, BlendEquation alphaEquation)
+	{
+		assert(drawBufferIndex < _state.blendEquations.size());
+
+		_state.blendEquations[drawBufferIndex] = { colorEquation, alphaEquation };
+		glBlendEquationSeparatei(drawBufferIndex, _spl::blendEquationToGLenum(colorEquation), _spl::blendEquationToGLenum(alphaEquation));
+	}
+
+	void Context::setBlendFuncs(uint32_t drawBufferIndex, BlendFunc srcColorFunc, BlendFunc srcAlphaFunc, BlendFunc dstColorFunc, BlendFunc dstAlphaFunc)
+	{
+		assert(drawBufferIndex < _state.blendFuncs.size());
+
+		_state.blendFuncs[drawBufferIndex] = { srcColorFunc, srcAlphaFunc, dstColorFunc, dstAlphaFunc };
+		glBlendFuncSeparatei(drawBufferIndex, _spl::blendFuncToGLenum(srcColorFunc), _spl::blendFuncToGLenum(srcAlphaFunc), _spl::blendFuncToGLenum(dstColorFunc), _spl::blendFuncToGLenum(dstAlphaFunc));
+	}
+
+	void Context::setBlendColor(float r, float g, float b, float a)
+	{
+		assert(r >= 0.f && r <= 1);
+		assert(g >= 0.f && g <= 1);
+		assert(b >= 0.f && b <= 1);
+		assert(a >= 0.f && a <= 1);
+
+		_state.blendColor.x = r;
+		_state.blendColor.y = g;
+		_state.blendColor.z = b;
+		_state.blendColor.w = a;
+
+		glBlendColor(_state.clearColor.x, _state.clearColor.y, _state.clearColor.z, _state.clearColor.w);
+	}
+
+	bool Context::getIsSeamlessCubeMapFilteringEnabled() const
+	{
+		return _state.isSeamlessCubeMapFilteringEnabled;
+	}
+
+	const scp::i32vec4& Context::getViewport() const
+	{
+		return _state.viewport;
 	}
 
 	const scp::f32vec4& Context::getClearColor() const
@@ -385,14 +483,19 @@ namespace spl
 		return _state.clearStencil;
 	}
 
-	const scp::i32vec4& Context::getViewport() const
+	FaceCullingMode Context::getFaceCullingMode() const
 	{
-		return _state.viewport;
+		return _state.faceCullingMode;
 	}
 
-	bool Context::getIsSeamlessCubeMapFilteringEnabled() const
+	FaceOrientation Context::getFaceCullingOrientation() const
 	{
-		return _state.isSeamlessCubeMapFilteringEnabled;
+		return _state.faceCullingOrientation;
+	}
+
+	bool Context::getIsDepthWriteEnabled() const
+	{
+		return _state.isDepthWriteEnabled;
 	}
 
 	bool Context::getIsDepthTestEnabled() const
@@ -400,9 +503,37 @@ namespace spl
 		return _state.isDepthTestEnabled;
 	}
 
-	FaceCulling Context::getFaceCulling() const
+	CompareFunc Context::getDepthTestFunc() const
 	{
-		return _state.faceCulling;
+		return _state.depthTestFunc;
+	}
+
+	bool Context::getIsStencilTestEnabled() const
+	{
+		return _state.isStencilTestEnabled;
+	}
+
+	bool Context::getIsBlendEnabled(uint32_t drawBufferIndex) const
+	{
+		assert(drawBufferIndex < _state.isBlendEnabled.size());
+		return _state.isBlendEnabled[drawBufferIndex];
+	}
+
+	const std::array<BlendEquation, 2>& Context::getBlendEquations(uint32_t drawBufferIndex) const
+	{
+		assert(drawBufferIndex < _state.blendEquations.size());
+		return _state.blendEquations[drawBufferIndex];
+	}
+
+	const std::array<BlendFunc, 4>& Context::getBlendFuncs(uint32_t drawBufferIndex) const
+	{
+		assert(drawBufferIndex < _state.blendFuncs.size());
+		return _state.blendFuncs[drawBufferIndex];
+	}
+
+	const scp::f32vec4& Context::getBlendColor() const
+	{
+		return _state.blendColor;
 	}
 
 	const Buffer* Context::getBufferBinding(BufferTarget target) const
@@ -647,11 +778,11 @@ namespace spl
 			glDisable(GL_DEBUG_OUTPUT);
 		}
 
-		setIsSeamlessCubeMapFilteringEnabled(true);
-		setIsDepthTestEnabled(true);
-		setFaceCulling(FaceCulling::FrontClockWise);
-
 		_loadImplementationDependentValues();
+
+		_state.isBlendEnabled.resize(_implementationDependentValues.general.maxDrawBuffers, false);
+		_state.blendEquations.resize(_implementationDependentValues.general.maxDrawBuffers, { BlendEquation::Add, BlendEquation::Add });
+		_state.blendFuncs.resize(_implementationDependentValues.general.maxDrawBuffers, { BlendFunc::One, BlendFunc::One, BlendFunc::Zero, BlendFunc::Zero });
 
 		_state.indexedBufferBindings[0].resize(_implementationDependentValues.shader.maxAtomicCounterBufferBindings, IndexedBufferBinding());
 		_state.indexedBufferBindings[1].resize(_implementationDependentValues.shader.maxShaderStorageBufferBindings, IndexedBufferBinding());
