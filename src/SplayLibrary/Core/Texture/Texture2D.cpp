@@ -59,6 +59,6 @@ namespace spl
 
 		update(updateParams);
 
-		delete infos.image;
+		(*infos.imageFree)(infos.image);
 	}
 }
