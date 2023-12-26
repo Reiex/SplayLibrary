@@ -18,7 +18,7 @@ namespace spl
 		Disabled
 	};
 
-	class Window
+	class SPL_API Window
 	{
 		public:
 

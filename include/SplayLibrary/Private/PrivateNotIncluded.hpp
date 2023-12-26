@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <SplayLibrary/Core/glad/glad.hpp>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <SplayLibrary/Private/PrivateIncluded.hpp>

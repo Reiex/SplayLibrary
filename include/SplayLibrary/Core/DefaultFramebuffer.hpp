@@ -12,7 +12,7 @@
 
 namespace spl
 {
-	class DefaultFramebuffer : public Framebuffer
+	class SPL_API DefaultFramebuffer : public Framebuffer
 	{
 		public:
 

@@ -48,7 +48,7 @@ namespace spl
 		MirrorClampToEdge
 	};
 
-	class Sampler
+	class SPL_API Sampler
 	{
 		public:
 

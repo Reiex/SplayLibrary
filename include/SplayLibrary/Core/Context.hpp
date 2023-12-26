@@ -388,7 +388,7 @@ namespace spl
 		uintptr_t offset = 0;
 	};
 
-	struct ContextState
+	struct SPL_API ContextState
 	{
 		bool isSeamlessCubeMapFilteringEnabled = false;
 		scp::i32vec4 viewport = { 0, 0, 0, 0 };
@@ -424,7 +424,7 @@ namespace spl
 		static FramebufferTarget indexToFramebufferTarget(uint8_t index);
 	};
 
-	class Context
+	class SPL_API Context
 	{
 		public:
 

@@ -11,7 +11,7 @@
 
 namespace spl
 {
-	class FramebufferAttachable
+	class SPL_API FramebufferAttachable
 	{
 		protected:
 

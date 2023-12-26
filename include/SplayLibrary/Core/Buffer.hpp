@@ -90,7 +90,7 @@ namespace spl
 	}
 
 
-	class Buffer
+	class SPL_API Buffer
 	{
 		public:
 

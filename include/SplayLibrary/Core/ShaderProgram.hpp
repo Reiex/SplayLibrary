@@ -208,7 +208,7 @@ namespace spl
 		bool isPerPatch = false;
 	};
 
-	class ShaderProgram
+	class SPL_API ShaderProgram
 	{
 		public:
 

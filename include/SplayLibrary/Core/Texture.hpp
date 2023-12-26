@@ -234,7 +234,7 @@ namespace spl
 		uint32_t level = 0;
 	};
 
-	class Texture : public FramebufferAttachable
+	class SPL_API Texture : public FramebufferAttachable
 	{
 		public:
 

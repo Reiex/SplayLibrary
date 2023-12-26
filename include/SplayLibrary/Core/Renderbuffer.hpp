@@ -11,7 +11,7 @@
 
 namespace spl
 {
-	class Renderbuffer : public FramebufferAttachable
+	class SPL_API Renderbuffer : public FramebufferAttachable
 	{
 		public:
 

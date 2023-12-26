@@ -25,7 +25,7 @@ namespace spl
 		};
 	}
 
-	class ShaderModule
+	class SPL_API ShaderModule
 	{
 		public:
 

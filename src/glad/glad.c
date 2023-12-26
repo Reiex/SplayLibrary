@@ -632,7 +632,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <SplayLibrary/Core/glad/glad.hpp>
+#include <glad/glad.h>
 
 static void* get_proc(const char *namez);
 

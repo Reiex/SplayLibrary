@@ -31,6 +31,17 @@
 #include <Diskon/DiskonTypes.hpp>
 #include <DejaVu/DejaVuTypes.hpp>
 
+#if defined(_WIN32)
+	#ifdef SPLAYLIBRARY_EXPORTS
+		#define SPL_API __declspec(dllexport)
+	#else
+		#define SPL_API __declspec(dllimport)
+	#endif
+#elif defined(__linux__)
+	#define SPL_API
+#else
+	#error "Unrecognized platform"
+#endif
 
 namespace spl
 {

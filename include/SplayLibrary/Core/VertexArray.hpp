@@ -37,7 +37,7 @@ namespace spl
 		UnsignedInt
 	};
 
-	class VertexArray
+	class SPL_API VertexArray
 	{
 		public:
 

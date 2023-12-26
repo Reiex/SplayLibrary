@@ -24,7 +24,7 @@ namespace spl
 		ColorAttachment
 	};
 
-	class Framebuffer
+	class SPL_API Framebuffer
 	{
 		public:
 
