@@ -17,31 +17,33 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 # Add external dependencies
 
-option(SPLAYLIBRARY_ADD_DEPENDENCIES "Add external dependencies to the project" ON)
-
-if(SPLAYLIBRARY_ADD_DEPENDENCIES)
-
+if(NOT TARGET scipp)
     set(SCIPP_ADD_EXAMPLES OFF)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/external/SciPP)
+endif()
 
+if(NOT TARGET ruc)
     set(RUC_ADD_EXAMPLES OFF)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/external/Ruc)
+endif()
 
+if(NOT TARGET diskon)
     set(DISKON_ADD_EXAMPLES OFF)
-    set(DISKON_ADD_DEPENDENCIES OFF)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/external/Diskon)
+endif()
 
+if(NOT TARGET dejavu)
     set(DEJAVU_ADD_EXAMPLES OFF)
-    set(DEJAVU_ADD_DEPENDENCIES OFF)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/external/DejaVu)
+endif()
 
-    set(BUILD_SHARED_LIBS OFF)
+if(NOT TARGET glfw)
+    set(BUILD_SHARED_LIBS ON)
     set(GLFW_BUILD_EXAMPLES OFF)
     set(GLFW_BUILD_TESTS OFF)
     set(GLFW_BUILD_DOCS OFF)
     set(GLFW_INSTALL OFF)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/external/GLFW)
-
 endif()
 
 # SplayLibrary
@@ -121,12 +123,7 @@ target_compile_definitions(
 target_link_libraries(
     splaylibrary
     diskon
-    glfw3
-)
-
-target_link_directories(
-    splaylibrary
-    PUBLIC ${CMAKE_BINARY_DIR}/external/GLFW/src
+    $<TARGET_LINKER_FILE:glfw>
 )
 
 # SplayLibrary examples
@@ -159,7 +156,6 @@ if(SPLAYLIBRARY_ADD_EXAMPLES)
 
     target_link_libraries(
         splaylibrary-examples
-        diskon
         splaylibrary
     )
 
