@@ -11,7 +11,7 @@
 
 namespace spl
 {
-	class Texture2D : public Texture
+	class SPL_API Texture2D : public Texture
 	{
 		public:
 
